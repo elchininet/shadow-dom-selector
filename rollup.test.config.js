@@ -9,9 +9,9 @@ export default [
         input: 'src/index.ts',
         output: [
             {
-                file: 'demo/scripts/dom-subtree-selector.js',
+                file: 'demo/scripts/shadow-query-selector.js',
                 format: 'iife',
-                name: 'DomSubtreeSelector'
+                name: 'ShadowQuerySelector'
             }
         ]
     },

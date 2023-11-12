@@ -1,7 +1,7 @@
-import DomSubtreeSelector from '../src';
+import ShadowQuerySelector from '../src';
 
 declare global {
   interface Window {
-    DomSubtreeSelector: typeof DomSubtreeSelector;
+    ShadowQuerySelector: typeof ShadowQuerySelector;
   }
 }

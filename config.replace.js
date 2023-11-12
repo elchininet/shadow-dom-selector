@@ -1,5 +1,5 @@
 module.exports = {
     files: 'dist/index.d.ts',
     from: /export \{.*/,
-    to: 'export = DomSubtreeSelector;',
+    to: 'export = ShadowQuerySelector;',
 };

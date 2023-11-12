@@ -17,7 +17,7 @@ export default [
                 file: `dist/index.js`,
                 format: 'umd',
                 exports: 'default',
-                name: 'DomSubtreeSelector'
+                name: 'ShadowQuerySelector'
             },
             {
                 file: `dist/esm/index.js`,

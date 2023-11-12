@@ -1,4 +1,4 @@
-describe('DomSubtreeSelector spec', () => {
+describe('ShadowQuerySelector spec', () => {
 
   beforeEach(() => {
     cy.visit('http://localhost:3000');
@@ -9,8 +9,8 @@ describe('DomSubtreeSelector spec', () => {
       .then(async (win) => {
 
         const document = win.document;
-        const DomSubtreeSelector = win.DomSubtreeSelector;
-        const selector = new DomSubtreeSelector({ retries: 1, retriesDelay: 0 });
+        const ShadowQuerySelector = win.ShadowQuerySelector;
+        const selector = new ShadowQuerySelector({ retries: 1, retriesDelay: 0 });
 
         const section = document.querySelector('section');
         const allSections = document.querySelectorAll('section');
@@ -41,8 +41,8 @@ describe('DomSubtreeSelector spec', () => {
     cy.window()
       .then((win) => {
 
-        const DomSubtreeSelector = win.DomSubtreeSelector;
-        const selector = new DomSubtreeSelector();
+        const ShadowQuerySelector = win.ShadowQuerySelector;
+        const selector = new ShadowQuerySelector();
 
         const ul = selector.querySelector('#section$ article$ ul');
         expect(ul).to.not.null;
@@ -74,8 +74,8 @@ describe('DomSubtreeSelector spec', () => {
       .then((win) => {
 
         const document = win.document;
-        const DomSubtreeSelector = win.DomSubtreeSelector;
-        const selector = new DomSubtreeSelector();
+        const ShadowQuerySelector = win.ShadowQuerySelector;
+        const selector = new ShadowQuerySelector();
 
         expect(
           selector.querySelectorAll('section$ .article$ ul li')
@@ -97,8 +97,8 @@ describe('DomSubtreeSelector spec', () => {
       .then((win) => {
 
         const document = win.document;
-        const DomSubtreeSelector = win.DomSubtreeSelector;
-        const selector = new DomSubtreeSelector();
+        const ShadowQuerySelector = win.ShadowQuerySelector;
+        const selector = new ShadowQuerySelector();
 
         expect(
           selector.queryShadowRootSelector('section$')
@@ -126,8 +126,8 @@ describe('DomSubtreeSelector spec', () => {
       .then(async (win) => {
 
         const document = win.document;
-        const DomSubtreeSelector = win.DomSubtreeSelector;
-        const selector = new DomSubtreeSelector();
+        const ShadowQuerySelector = win.ShadowQuerySelector;
+        const selector = new ShadowQuerySelector();
 
         expect(
           await selector.promisableQuerySelector('section')
@@ -168,8 +168,8 @@ describe('DomSubtreeSelector spec', () => {
       .then(async (win) => {
 
         const document = win.document;
-        const DomSubtreeSelector = win.DomSubtreeSelector;
-        const selector = new DomSubtreeSelector();
+        const ShadowQuerySelector = win.ShadowQuerySelector;
+        const selector = new ShadowQuerySelector();
 
         expect(
           await selector.promisableQuerySelectorAll('section')
@@ -214,8 +214,8 @@ describe('DomSubtreeSelector spec', () => {
       .then(async (win) => {
 
         const document = win.document;
-        const DomSubtreeSelector = win.DomSubtreeSelector;
-        const selector = new DomSubtreeSelector();
+        const ShadowQuerySelector = win.ShadowQuerySelector;
+        const selector = new ShadowQuerySelector();
 
         expect(
           await selector.promisableQueryShadowRootSelector('section$')

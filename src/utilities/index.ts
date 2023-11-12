@@ -128,13 +128,11 @@ export const querySelector = <E extends Element = Element>(
     }
 
     for (let index = 0; index <= lastIndex; index++) {
-
         if (index === 0) {
             foundElement = element.querySelector(selectorArray[index]);
         } else {
             foundElement = foundElement.shadowRoot?.querySelector<E>(`${HOST_SELECTOR} ${selectorArray[index]}`) || null;
         }
-
     }
 
     return foundElement as E || null;
@@ -225,18 +223,22 @@ export const promisableQuerySelector = async <E extends Element = Element>(
     for (let index = 0; index <= lastIndex; index++) {
 
         if (index === 0) {
+
             foundElement = await getPromisableElement(
                 element,
                 selectorArray[index],
                 retries,
                 retriesDelay
             );
+
         } else {
+
             const shadowRoot = await getPromisableShadowRoot(
                 foundElement,
                 retries,
                 retriesDelay
             );
+
             foundElement = shadowRoot
                 ? await getPromisableElement<E>(
                     shadowRoot,

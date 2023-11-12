@@ -2,7 +2,7 @@ import { Options } from '@types';
 import { DEFAULT_OPTIONS } from '@constants';
 import * as utilities from '@utilities';
 
-export default class DomSubtreeSelector {
+export default class ShadowQuerySelector {
 
     constructor(options: Options = {}) {
         this.options = {
