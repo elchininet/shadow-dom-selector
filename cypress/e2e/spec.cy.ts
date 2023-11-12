@@ -1,4 +1,4 @@
-describe('ShadowQuerySelector spec', () => {
+describe('ShadowDomSelector spec', () => {
 
   beforeEach(() => {
     cy.visit('http://localhost:3000');
@@ -9,8 +9,8 @@ describe('ShadowQuerySelector spec', () => {
       .then(async (win) => {
 
         const document = win.document;
-        const ShadowQuerySelector = win.ShadowQuerySelector;
-        const selector = new ShadowQuerySelector({ retries: 1, retriesDelay: 0 });
+        const ShadowDomSelector = win.ShadowDomSelector;
+        const selector = new ShadowDomSelector({ retries: 1, retriesDelay: 0 });
 
         const section = document.querySelector('section');
         const allSections = document.querySelectorAll('section');
@@ -41,8 +41,8 @@ describe('ShadowQuerySelector spec', () => {
     cy.window()
       .then((win) => {
 
-        const ShadowQuerySelector = win.ShadowQuerySelector;
-        const selector = new ShadowQuerySelector();
+        const ShadowDomSelector = win.ShadowDomSelector;
+        const selector = new ShadowDomSelector();
 
         const ul = selector.querySelector('#section$ article$ ul');
         expect(ul).to.not.null;
@@ -74,8 +74,8 @@ describe('ShadowQuerySelector spec', () => {
       .then((win) => {
 
         const document = win.document;
-        const ShadowQuerySelector = win.ShadowQuerySelector;
-        const selector = new ShadowQuerySelector();
+        const ShadowDomSelector = win.ShadowDomSelector;
+        const selector = new ShadowDomSelector();
 
         expect(
           selector.querySelectorAll('section$ .article$ ul li')
@@ -97,8 +97,8 @@ describe('ShadowQuerySelector spec', () => {
       .then((win) => {
 
         const document = win.document;
-        const ShadowQuerySelector = win.ShadowQuerySelector;
-        const selector = new ShadowQuerySelector();
+        const ShadowDomSelector = win.ShadowDomSelector;
+        const selector = new ShadowDomSelector();
 
         expect(
           selector.queryShadowRootSelector('section$')
@@ -126,8 +126,8 @@ describe('ShadowQuerySelector spec', () => {
       .then(async (win) => {
 
         const document = win.document;
-        const ShadowQuerySelector = win.ShadowQuerySelector;
-        const selector = new ShadowQuerySelector();
+        const ShadowDomSelector = win.ShadowDomSelector;
+        const selector = new ShadowDomSelector();
 
         expect(
           await selector.promisableQuerySelector('section')
@@ -168,8 +168,8 @@ describe('ShadowQuerySelector spec', () => {
       .then(async (win) => {
 
         const document = win.document;
-        const ShadowQuerySelector = win.ShadowQuerySelector;
-        const selector = new ShadowQuerySelector();
+        const ShadowDomSelector = win.ShadowDomSelector;
+        const selector = new ShadowDomSelector();
 
         expect(
           await selector.promisableQuerySelectorAll('section')
@@ -214,8 +214,8 @@ describe('ShadowQuerySelector spec', () => {
       .then(async (win) => {
 
         const document = win.document;
-        const ShadowQuerySelector = win.ShadowQuerySelector;
-        const selector = new ShadowQuerySelector();
+        const ShadowDomSelector = win.ShadowDomSelector;
+        const selector = new ShadowDomSelector();
 
         expect(
           await selector.promisableQueryShadowRootSelector('section$')

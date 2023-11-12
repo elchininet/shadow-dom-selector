@@ -9,9 +9,9 @@ export default [
         input: 'src/index.ts',
         output: [
             {
-                file: 'demo/scripts/shadow-query-selector.js',
+                file: 'demo/scripts/shadow-dom-selector.js',
                 format: 'iife',
-                name: 'ShadowQuerySelector'
+                name: 'ShadowDomSelector'
             }
         ]
     },

@@ -2,7 +2,7 @@ import { Options } from '@types';
 import { DEFAULT_OPTIONS } from '@constants';
 import * as utilities from '@utilities';
 
-export default class ShadowQuerySelector {
+export default class ShadowDomSelector {
 
     constructor(options: Options = {}) {
         this.options = {

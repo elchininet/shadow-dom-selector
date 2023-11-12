@@ -1,7 +1,7 @@
-import ShadowQuerySelector from '../src';
+import ShadowDomSelector from '../src';
 
 declare global {
   interface Window {
-    ShadowQuerySelector: typeof ShadowQuerySelector;
+    ShadowDomSelector: typeof ShadowDomSelector;
   }
 }

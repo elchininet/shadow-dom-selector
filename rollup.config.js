@@ -17,7 +17,7 @@ export default [
                 file: `dist/index.js`,
                 format: 'umd',
                 exports: 'default',
-                name: 'ShadowQuerySelector'
+                name: 'ShadowDomSelector'
             },
             {
                 file: `dist/esm/index.js`,

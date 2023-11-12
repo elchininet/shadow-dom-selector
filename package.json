@@ -1,7 +1,7 @@
 {
-  "name": "shadow-query-selector",
+  "name": "shadow-dom-selector",
   "version": "1.0.0",
-  "description": "A very small JavaScript utility to query DOM elements through the ShadowDom subtrees in a sync or an async way",
+  "description": "A very small JavaScript utility to query DOM elements through the Shadow Dom subtrees in a sync or an async way",
   "main": "index.js",
   "author": "ElChiniNet",
   "license": "Apache-2.0",
