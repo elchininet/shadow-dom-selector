@@ -1,0 +1,4 @@
+/node_modules
+/dist
+/tests/html/*.js
+/tests/html/*.d.ts

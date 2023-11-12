@@ -1,0 +1,23 @@
+{
+  "name": "dom-subtree-selector",
+  "version": "1.0.0",
+  "description": "A very small JavaScript utility to query DOM elements through the ShadowDom subtrees in a sync or an async way",
+  "main": "index.js",
+  "author": "ElChiniNet",
+  "license": "Apache-2.0",
+  "scripts": {
+    "build": "yarn clean && rollup --config rollup.config.js --bundleConfigAsCjs && yarn modify-dts",
+    "clean": "rm -rf dist",
+    "modify-dts": "replace-in-file --configFile=config.replace.js",
+    "test": "jest --verbose",
+    "serve-test": "rollup --config rollup.test.config.js --bundleConfigAsCjs -w"
+  },
+  "devDependencies": {
+    "replace-in-file": "^7.0.2",
+    "rollup": "^4.3.1",
+    "rollup-plugin-serve": "^2.0.2",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-ts": "^3.4.5",
+    "typescript": "^5.2.2"
+  }
+}
