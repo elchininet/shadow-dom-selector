@@ -37,11 +37,11 @@ export default class ShadowDomSelector {
         return utilities.queryShadowRootSelector(selector, rootElement);
     }
 
-    public promisableQuerySelector<E extends Element = Element>(
+    public asyncQuerySelector<E extends Element = Element>(
         selector: string,
         rootElement: Document | Element = document
     ): Promise<E | null > {
-        return utilities.promisableQuerySelector(
+        return utilities.asyncQuerySelector(
             selector,
             rootElement,
             this.options.retries,
@@ -49,11 +49,11 @@ export default class ShadowDomSelector {
         );
     }
 
-    public promisableQuerySelectorAll<E extends Element = Element>(
+    public asyncQuerySelectorAll<E extends Element = Element>(
         selector: string,
         rootElement: Document | Element = document
     ): Promise<NodeListOf<E>> {
-        return utilities.promisableQuerySelectorAll(
+        return utilities.asyncQuerySelectorAll(
             selector,
             rootElement,
             this.options.retries,
@@ -61,11 +61,11 @@ export default class ShadowDomSelector {
         );
     }
 
-    public promisableQueryShadowRootSelector(
+    public asyncQueryShadowRootSelector(
         selector: string,
         rootElement: Document | Element = document
     ) {
-        return utilities.promisableQueryShadowRootSelector(
+        return utilities.asyncQueryShadowRootSelector(
             selector,
             rootElement,
             this.options.retries,

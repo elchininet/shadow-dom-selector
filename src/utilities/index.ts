@@ -200,7 +200,7 @@ export const queryShadowRootSelector = (
 
 };
 
-export const promisableQuerySelector = async <E extends Element = Element>(
+export const asyncQuerySelector = async <E extends Element = Element>(
     selector: string | string[],
     element: Document | Element,
     retries: number,
@@ -216,7 +216,7 @@ export const promisableQuerySelector = async <E extends Element = Element>(
 
     if (!selectorArray[lastIndex].length) {
         throw new Error(
-            getCannotErrorText('promisableQuerySelector', 'promisableQueryShadowRootSelector')
+            getCannotErrorText('asyncQuerySelector', 'asyncQueryShadowRootSelector')
         );
     }    
 
@@ -259,7 +259,7 @@ export const promisableQuerySelector = async <E extends Element = Element>(
 
 };
 
-export const promisableQuerySelectorAll = async <E extends Element = Element>(
+export const asyncQuerySelectorAll = async <E extends Element = Element>(
     selector: string,
     element: Document | Element,
     retries: number,
@@ -275,7 +275,7 @@ export const promisableQuerySelectorAll = async <E extends Element = Element>(
 
     if (!lastSelector.length) {
         throw new Error(
-            getCannotErrorText('promisableQuerySelectorAll')
+            getCannotErrorText('asyncQuerySelectorAll')
         );
     }
 
@@ -290,7 +290,7 @@ export const promisableQuerySelectorAll = async <E extends Element = Element>(
         document.querySelectorAll(INVALID_SELECTOR);
     }
 
-    const lastElement = await promisableQuerySelector(
+    const lastElement = await asyncQuerySelector(
         selectorArray,
         element,
         retries,
@@ -315,7 +315,7 @@ export const promisableQuerySelectorAll = async <E extends Element = Element>(
 
 }
 
-export const promisableQueryShadowRootSelector = async(
+export const asyncQueryShadowRootSelector = async(
     selector: string,
     element: Document | Element,
     retries: number,
@@ -331,11 +331,11 @@ export const promisableQueryShadowRootSelector = async(
 
     if (lastSelector.length) {
         throw new Error(
-            getMustErrorText('promisableQueryShadowRootSelector', 'promisableQuerySelector')
+            getMustErrorText('asyncQueryShadowRootSelector', 'asyncQuerySelector')
         );
     }
 
-    const lastElement = await promisableQuerySelector(
+    const lastElement = await asyncQuerySelector(
         selectorArray,
         element,
         retries,
