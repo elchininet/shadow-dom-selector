@@ -9,15 +9,19 @@
     "build": "yarn clean && rollup --config rollup.config.js --bundleConfigAsCjs && yarn modify-dts",
     "clean": "rm -rf dist",
     "modify-dts": "replace-in-file --configFile=config.replace.js",
-    "test": "jest --verbose",
-    "serve-test": "rollup --config rollup.test.config.js --bundleConfigAsCjs -w"
+    "demo": "rollup --config rollup.test.config.js --bundleConfigAsCjs -w",
+    "test": "cypress run",
+    "test:open": "cypress open",
+    "test:ci": "start-server-and-test demo http://localhost:3000 test"
   },
   "devDependencies": {
+    "cypress": "^13.5.0",
     "replace-in-file": "^7.0.2",
     "rollup": "^4.3.1",
     "rollup-plugin-serve": "^2.0.2",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-ts": "^3.4.5",
+    "start-server-and-test": "^2.0.2",
     "typescript": "^5.2.2"
   }
 }

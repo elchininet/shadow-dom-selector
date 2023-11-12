@@ -1,4 +1,5 @@
+.DS_Store
 /node_modules
 /dist
-/tests/html/*.js
-/tests/html/*.d.ts
+/demo/scripts/*.js
+/demo/scripts/*.d.ts

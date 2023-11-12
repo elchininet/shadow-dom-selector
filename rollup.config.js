@@ -15,17 +15,13 @@ export default [
         output: [
             {
                 file: `dist/index.js`,
-                format: 'cjs',
-                exports: 'default'
+                format: 'umd',
+                exports: 'default',
+                name: 'DomSubtreeSelector'
             },
             {
                 file: `dist/esm/index.js`,
                 format: 'es'
-            },
-            {
-                file: 'dist/web/dom-subtree-selector.js',
-                format: 'iife',
-                name: 'DomSubtreeSelector'
             }
         ]
     }

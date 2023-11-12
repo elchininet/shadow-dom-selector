@@ -4,18 +4,12 @@ import serve from 'rollup-plugin-serve';
 export default [
     {
         plugins: [
-            ts(),
-            serve({
-                open: true,
-                contentBase: 'tests/html',
-                host: 'localhost',
-                port: 3000,
-            })
+            ts()
         ],
-        input: 'tests/html-bundle.ts',
+        input: 'src/index.ts',
         output: [
             {
-                file: 'tests/html/bundle.js',
+                file: 'demo/scripts/dom-subtree-selector.js',
                 format: 'iife',
                 name: 'DomSubtreeSelector'
             }
@@ -23,15 +17,23 @@ export default [
     },
     {
         plugins: [
-            ts()
+            ts(),
+            serve({
+                open: true,
+                contentBase: [
+                    'demo/',
+                    'demo/scripts/'
+                ],
+                host: 'localhost',
+                port: 3000,
+            })
         ],
-        input: 'src/index.ts',
+        input: 'demo/demo.ts',
         output: [
             {
-                file: 'tests/html/dom-subtree-selector.js',
-                format: 'iife',
-                name: 'DomSubtreeSelector'
+                file: 'demo/scripts/demo.js',
+                format: 'iife'
             }
         ]
-    },
+    }
 ];

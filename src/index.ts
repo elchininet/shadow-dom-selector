@@ -2,7 +2,7 @@ import { Options } from '@types';
 import { DEFAULT_OPTIONS } from '@constants';
 import * as utilities from '@utilities';
 
-export default class domSubtreeSelector {
+export default class DomSubtreeSelector {
 
     constructor(options: Options = {}) {
         this.options = {

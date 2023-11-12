@@ -132,16 +132,12 @@ export const querySelector = <E extends Element = Element>(
         if (index === 0) {
             foundElement = element.querySelector(selectorArray[index]);
         } else {
-            foundElement.shadowRoot?.querySelector<E>(`${HOST_SELECTOR} ${selectorArray[index]}`) || null;
-        }
-
-        if (foundElement === null) {
-            return null;
+            foundElement = foundElement.shadowRoot?.querySelector<E>(`${HOST_SELECTOR} ${selectorArray[index]}`) || null;
         }
 
     }
 
-    return foundElement as E;
+    return foundElement as E || null;
 
 }
 

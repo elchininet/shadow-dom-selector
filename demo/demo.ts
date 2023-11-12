@@ -43,4 +43,16 @@ document.addEventListener('DOMContentLoaded', () => {
     shadowArticle.appendChild(list);
     document.body.appendChild(section);
 
+    setTimeout(() => {
+        const delayedListContainer = document.createElement('div');
+        delayedListContainer.classList.add('delayed-list-container');
+        const delayedList = document.createElement('ul');
+        delayedList.innerHTML = ELEMENTS_STRINGS.list.map(text => `<li>Delayed ${text}</li>`).join('');
+
+        const shadowDelayedList = delayedListContainer.attachShadow({ mode: 'open' });
+        shadowDelayedList.appendChild(delayedList);
+        shadowArticle.appendChild(delayedListContainer);
+        
+    }, 500);
+
 });

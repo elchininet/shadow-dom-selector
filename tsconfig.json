@@ -1,22 +1,23 @@
 {
-    "compilerOptions": {
-      "outDir": "./dist/",
-      "module": "esnext",
-      "target": "ES5",
-      "lib": ["DOM", "ES2017"],
-      "moduleResolution": "node",
-      "esModuleInterop": true,
-      "resolveJsonModule": true,
-      "declaration": true,
-      "noImplicitAny": true,
-      "removeComments": true,
-      "baseUrl": "./src",
-      "paths": {
-        "@types": ["@types"],
-        "@constants": ["constants"],
-        "@utilities": ["utilities"]
-      }
-    },
-    "include": ["src/**/*.ts"],
-    "exclude": ["node_modules"]
-  }
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "module": "esnext",
+    "target": "ES5",
+    "lib": ["DOM", "ES2017"],
+    "types": ["cypress", "node"],
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "noImplicitAny": true,
+    "removeComments": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@types": ["@types"],
+      "@constants": ["constants"],
+      "@utilities": ["utilities"]
+    }
+  },
+  "include": ["src/**/*.ts", "cypress/**/*.ts"],
+  "exclude": ["node_modules"]
+}
