@@ -114,7 +114,7 @@ export function querySelector<E extends Element = Element>(
     let foundElement: E | null = null;
     const selectorArray = Array.isArray(selector)
         ? selector
-        : getSelectorsArray(selector, SHADOW_ROOT_SELECTOR); 
+        : getSelectorsArray(selector, SHADOW_ROOT_SELECTOR);
 
     const lastIndex = selectorArray.length - 1;
 
@@ -218,7 +218,7 @@ export async function asyncQuerySelector<E extends Element = Element>(
         throw new Error(
             getCannotErrorText('asyncQuerySelector', 'asyncQueryShadowRootSelector')
         );
-    }    
+    }
 
     for (let index = 0; index <= lastIndex; index++) {
 

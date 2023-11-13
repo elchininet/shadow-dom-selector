@@ -10,13 +10,18 @@
     "clean": "rm -rf dist .nyc_output coverage || true",
     "demo": "rollup --config rollup.test.config.js --bundleConfigAsCjs -w",
     "coverage:report": "nyc report --reporter=lcov --reporter=text-summary",
+    "lint": "eslint \"src/**/*.ts\" \"demo/**/*.ts\"",
     "test": "cypress run",
     "test:open": "cypress open",
     "test:ci": "start-server-and-test demo http://localhost:3000 test && yarn coverage:report"
   },
   "devDependencies": {
     "@cypress/code-coverage": "^3.12.9",
+    "@types/eslint": "^8.44.7",
+    "@typescript-eslint/eslint-plugin": "^6.10.0",
+    "@typescript-eslint/parser": "^6.10.0",
     "cypress": "^13.5.0",
+    "eslint": "^8.53.0",
     "rollup": "^4.3.1",
     "rollup-plugin-istanbul": "^5.0.0",
     "rollup-plugin-serve": "^2.0.2",

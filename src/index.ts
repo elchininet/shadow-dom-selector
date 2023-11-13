@@ -5,7 +5,7 @@ export function querySelector<E extends Element = Element>(
     selector: string,
     rootElement: Document | Element = document
 ): E | null {
-    return lib.querySelector(selector, rootElement); 
+    return lib.querySelector(selector, rootElement);
 }
 
 export function querySelectorAll<E extends Element = Element>(
