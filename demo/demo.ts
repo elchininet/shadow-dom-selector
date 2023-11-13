@@ -1,3 +1,8 @@
+import * as ShadowDomSelector from '../src';
+
+// @ts-ignore
+window.ShadowDomSelector = ShadowDomSelector;
+
 document.addEventListener('DOMContentLoaded', () => {
 
     const SELECTORS = {

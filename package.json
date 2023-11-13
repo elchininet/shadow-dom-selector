@@ -6,17 +6,18 @@
   "author": "ElChiniNet",
   "license": "Apache-2.0",
   "scripts": {
-    "build": "yarn clean && rollup --config rollup.config.js --bundleConfigAsCjs && yarn modify-dts",
-    "clean": "rm -rf dist",
-    "modify-dts": "replace-in-file --configFile=config.replace.js",
+    "build": "yarn clean && rollup --config rollup.config.js --bundleConfigAsCjs",
+    "clean": "rm -rf dist .nyc_output coverage || true",
     "demo": "rollup --config rollup.test.config.js --bundleConfigAsCjs -w",
-    "test": "cypress run",
+    "coverage:instrument": "nyc instrument --compact=false src instrumented",
+    "coverage:report": "nyc report --reporter=text-summary",
+    "test": "yarn coverage:instrument && cypress run",
     "test:open": "cypress open",
-    "test:ci": "start-server-and-test demo http://localhost:3000 test"
+    "test:ci": "start-server-and-test demo http://localhost:3000 test && yarn coverage:report"
   },
   "devDependencies": {
+    "@cypress/code-coverage": "^3.12.9",
     "cypress": "^13.5.0",
-    "replace-in-file": "^7.0.2",
     "rollup": "^4.3.1",
     "rollup-plugin-serve": "^2.0.2",
     "rollup-plugin-terser": "^7.0.2",

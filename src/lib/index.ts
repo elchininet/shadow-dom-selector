@@ -4,11 +4,11 @@ import {
     INVALID_SELECTOR
 } from '@constants';
 
-const getSelectorsArray = (selector: string, shadowRootSelector: string): string[] => {
+function getSelectorsArray(selector: string, shadowRootSelector: string): string[] {
     return selector
         .split(shadowRootSelector)
         .map((subSelector) => subSelector.trim());
-};
+}
 
 function getPromisableElement<E extends Element>(
     root: Document | Element | ShadowRoot,
@@ -65,11 +65,11 @@ function getPromisableElement<E extends Element>(
     });
 }
 
-const getPromisableShadowRoot = (
+function getPromisableShadowRoot(
     element: Element,
     retries: number,
     retriesDelay: number,
-): Promise<ShadowRoot | null> => {
+): Promise<ShadowRoot | null> {
     return new Promise<ShadowRoot | null>((resolve) => {
         let attempts = 0;
         const getShadowRoot = () => {
@@ -87,34 +87,34 @@ const getPromisableShadowRoot = (
         };
         getShadowRoot();
     });
-};
+}
 
-const getCannotErrorText = (
+function getCannotErrorText(
     method: string,
     insteadMethod?: string
-): string => {
+): string {
     const instead = insteadMethod
         ? ` If you want to select a shadowRoot, use ${insteadMethod} instead.`
         : '';
     return `${method} cannot be used with a selector ending in a shadowRoot (${SHADOW_ROOT_SELECTOR}).${instead}`;
-};
+}
 
-const getMustErrorText = (
+function getMustErrorText(
     method: string,
     insteadMethod?: string
-): string => {
+): string {
     const instead = insteadMethod
         ? ` If you don't want to select a shadowRoot, use ${insteadMethod} instead.`
         : '';
     return `${method} must be used with a selector ending in a shadowRoot (${SHADOW_ROOT_SELECTOR}).${instead}`;
-};
+}
 
-export const querySelector = <E extends Element = Element>(
+export function querySelector<E extends Element = Element>(
     selector: string | string[],
     element: Document | Element
-): E | null => {
+): E | null {
 
-    let foundElement: Element | null = null;
+    let foundElement: E | null = null;
     const selectorArray = Array.isArray(selector)
         ? selector
         : getSelectorsArray(selector, SHADOW_ROOT_SELECTOR); 
@@ -127,22 +127,28 @@ export const querySelector = <E extends Element = Element>(
         );
     }
 
+console.log(selectorArray);
     for (let index = 0; index <= lastIndex; index++) {
         if (index === 0) {
             foundElement = element.querySelector(selectorArray[index]);
+            console.log(selectorArray[index]);
+            console.log(document.body.innerHTML);
         } else {
             foundElement = foundElement.shadowRoot?.querySelector<E>(`${HOST_SELECTOR} ${selectorArray[index]}`) || null;
         }
+        if (foundElement === null) {
+            return null;
+        }
     }
 
-    return foundElement as E || null;
+    return foundElement;
 
 }
 
-export const querySelectorAll = <E extends Element = Element>(
+export function querySelectorAll<E extends Element = Element>(
     selector: string,
     element: Document | Element
-): NodeListOf<E> => {
+): NodeListOf<E> {
 
     const selectorArray = getSelectorsArray(
         selector.trim(),
@@ -173,10 +179,10 @@ export const querySelectorAll = <E extends Element = Element>(
 
 }
 
-export const queryShadowRootSelector = (
+export function queryShadowRootSelector(
     selector: string,
     element: Document | Element
-): ShadowRoot | null => {
+): ShadowRoot | null {
 
     const selectorArray = getSelectorsArray(
         selector,
@@ -198,14 +204,14 @@ export const queryShadowRootSelector = (
 
     return lastElement?.shadowRoot || null;
 
-};
+}
 
-export const asyncQuerySelector = async <E extends Element = Element>(
+export async function asyncQuerySelector<E extends Element = Element>(
     selector: string | string[],
     element: Document | Element,
     retries: number,
     retriesDelay: number
-): Promise<E | null> => {
+): Promise<E | null> {
 
     let foundElement: Element | null = null;
     const selectorArray = Array.isArray(selector)
@@ -257,14 +263,14 @@ export const asyncQuerySelector = async <E extends Element = Element>(
 
     return foundElement as E;
 
-};
+}
 
-export const asyncQuerySelectorAll = async <E extends Element = Element>(
+export async function asyncQuerySelectorAll<E extends Element = Element>(
     selector: string,
     element: Document | Element,
     retries: number,
     retriesDelay: number
-): Promise<NodeListOf<E>> => {
+): Promise<NodeListOf<E>> {
 
     const selectorArray = getSelectorsArray(
         selector.trim(),
@@ -315,12 +321,12 @@ export const asyncQuerySelectorAll = async <E extends Element = Element>(
 
 }
 
-export const asyncQueryShadowRootSelector = async(
+export async function asyncQueryShadowRootSelector(
     selector: string,
     element: Document | Element,
     retries: number,
     retriesDelay: number
-): Promise<ShadowRoot | null> => {
+): Promise<ShadowRoot | null> {
 
     const selectorArray = getSelectorsArray(
         selector,
@@ -350,4 +356,4 @@ export const asyncQueryShadowRootSelector = async(
 
     return shadowRoot || null;
 
-};
+}

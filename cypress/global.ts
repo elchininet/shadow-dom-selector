@@ -1,4 +1,4 @@
-import ShadowDomSelector from '../src';
+import * as ShadowDomSelector from '../src';
 
 declare global {
   interface Window {

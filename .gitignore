@@ -3,3 +3,6 @@
 /dist
 /demo/scripts/*.js
 /demo/scripts/*.d.ts
+/instrumented
+/coverage
+/.nyc_output
