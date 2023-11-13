@@ -101,12 +101,9 @@ function getCannotErrorText(
 
 function getMustErrorText(
     method: string,
-    insteadMethod?: string
+    insteadMethod: string
 ): string {
-    const instead = insteadMethod
-        ? ` If you don't want to select a shadowRoot, use ${insteadMethod} instead.`
-        : '';
-    return `${method} must be used with a selector ending in a shadowRoot (${SHADOW_ROOT_SELECTOR}).${instead}`;
+    return `${method} must be used with a selector ending in a shadowRoot (${SHADOW_ROOT_SELECTOR}). If you don't want to select a shadowRoot, use ${insteadMethod} instead.`;
 }
 
 export function querySelector<E extends Element = Element>(
@@ -127,12 +124,9 @@ export function querySelector<E extends Element = Element>(
         );
     }
 
-console.log(selectorArray);
     for (let index = 0; index <= lastIndex; index++) {
         if (index === 0) {
             foundElement = element.querySelector(selectorArray[index]);
-            console.log(selectorArray[index]);
-            console.log(document.body.innerHTML);
         } else {
             foundElement = foundElement.shadowRoot?.querySelector<E>(`${HOST_SELECTOR} ${selectorArray[index]}`) || null;
         }
@@ -292,8 +286,7 @@ export async function asyncQuerySelectorAll<E extends Element = Element>(
             retries,
             retriesDelay,
             true
-        ) ||
-        document.querySelectorAll(INVALID_SELECTOR);
+        );
     }
 
     const lastElement = await asyncQuerySelector(

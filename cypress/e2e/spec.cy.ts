@@ -66,6 +66,14 @@ describe('ShadowDomSelector spec', () => {
         );
 
         expect(
+          querySelector('section$ article$ li:nth-of-type(4)')
+        ).to.null;
+        
+        expect(
+          querySelector('section$ article$ ul$ li')
+        ).to.null;
+
+        expect(
           () => querySelector('section$ article$')
         ).to.throw(
           'querySelector cannot be used with a selector ending in a shadowRoot'
@@ -87,6 +95,10 @@ describe('ShadowDomSelector spec', () => {
         ).to.deep.equal(
           document.querySelector('section').shadowRoot.querySelector('.article').shadowRoot.querySelectorAll('ul li')
         );
+
+        expect(
+          querySelectorAll('section$ .article$ ul$ li').length
+        ).to.equal(0);
 
         expect(
           () => querySelectorAll('section$ article$ ul$')
@@ -116,6 +128,14 @@ describe('ShadowDomSelector spec', () => {
         ).to.equal(
           document.querySelector('section').shadowRoot.querySelector('.article').shadowRoot
         );
+
+        expect(
+          queryShadowRootSelector('section$ .article$ ul$')
+        ).to.null;
+
+        expect(
+          queryShadowRootSelector('section$ .article$ h3$')
+        ).to.null;
 
         expect(
           () => queryShadowRootSelector('section$ article$ ul li')
@@ -157,6 +177,10 @@ describe('ShadowDomSelector spec', () => {
         ).to.equal(
           'Delayed List item 2'
         );
+
+        expect(
+          await asyncQuerySelector('#section$ .article$ > ul$ li')
+        ).to.null;
 
         cy.wrap(null).then(() => {
           return asyncQuerySelector('section$ article$')
@@ -205,6 +229,20 @@ describe('ShadowDomSelector spec', () => {
         });
 
         cy.wrap(null).then(() => {
+          return asyncQuerySelectorAll('#section$ .article$ > .delayed-list-container$ ul$ li')
+            .then(ul => {
+              expect(ul.length).to.equal(0);
+            })
+        });
+
+        cy.wrap(null).then(() => {
+          return asyncQuerySelectorAll('div.container ul')
+            .then(ul => {
+              expect(ul.length).to.equal(0);
+            })
+        });
+
+        cy.wrap(null).then(() => {
           return asyncQuerySelectorAll('section$ article$')
             .catch((error: Error) => {
               expect(error.message).to.contain('asyncQuerySelectorAll cannot be used with a selector ending in a shadowRoot')
@@ -238,6 +276,13 @@ describe('ShadowDomSelector spec', () => {
           return asyncQueryShadowRootSelector('#section$ .article$ > .delayed-list-container$')
             .then(shadowRoot => {
               expect(shadowRoot).not.null;
+            })
+        });
+
+        cy.wrap(null).then(() => {
+          return asyncQueryShadowRootSelector('#section$ .article$ > .empty-div$', document, 10, 5)
+            .then(shadowRoot => {
+              expect(shadowRoot).null;
             })
         });
 

@@ -51,12 +51,19 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         const delayedListContainer = document.createElement('div');
         delayedListContainer.classList.add('delayed-list-container');
-        const delayedList = document.createElement('ul');
-        delayedList.innerHTML = ELEMENTS_STRINGS.list.map(text => `<li>Delayed ${text}</li>`).join('');
 
-        const shadowDelayedList = delayedListContainer.attachShadow({ mode: 'open' });
-        shadowDelayedList.appendChild(delayedList);
+        const emptyDiv = document.createElement('div');
+        emptyDiv.classList.add('empty-div');
+
         shadowArticle.appendChild(delayedListContainer);
+        shadowArticle.appendChild(emptyDiv);
+
+        setTimeout(() => {
+            const delayedList = document.createElement('ul');
+            delayedList.innerHTML = ELEMENTS_STRINGS.list.map(text => `<li>Delayed ${text}</li>`).join('');
+            const shadowDelayedList = delayedListContainer.attachShadow({ mode: 'open' });
+            shadowDelayedList.appendChild(delayedList);
+        }, 500);
         
     }, 500);
 
