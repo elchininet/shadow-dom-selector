@@ -2,7 +2,37 @@
   "name": "shadow-dom-selector",
   "version": "1.0.0",
   "description": "A very small JavaScript utility to query DOM elements through the Shadow Dom subtrees in a sync or an async way",
-  "main": "index.js",
+  "keywords": [
+    "query-selector",
+    "dom",
+    "dom-query",
+    "dom-selector",
+    "shadow-dom",
+    "shadow-root",
+    "shadow-root-selector",
+    "shadow-root-query",
+    "query-selector-all",
+    "javascript-library",
+    "library"
+  ],
+  "main": "dist/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      }
+    }
+  },
+  "files": [
+    "dist/**/*"
+  ],
   "author": "ElChiniNet",
   "license": "Apache-2.0",
   "scripts": {

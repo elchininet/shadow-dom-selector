@@ -7,4 +7,5 @@ export default defineConfig({
       return config;
     },
   },
+  screenshotOnRunFailure: false
 });

@@ -6,3 +6,4 @@
 /instrumented
 /coverage
 /.nyc_output
+/cypress/screenshots

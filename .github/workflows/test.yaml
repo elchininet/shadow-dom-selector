@@ -26,15 +26,7 @@ jobs:
             ~/.cache
           key: dependencies-v1-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
       - name: Install
-        run: |
-          yarn install --frozen-lockfile
-          npx cypress verify
-          npx cypress info
-          npx cypress version
-          npx cypress version --component package
-          npx cypress version --component binary
-          npx cypress version --component electron
-          npx cypress version --component node
+        run: yarn install --frozen-lockfile
       - name: Linting Code
         run: yarn lint
       - name: TypeScript Check
