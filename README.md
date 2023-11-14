@@ -149,16 +149,131 @@ ShadowDomSelector.asyncQueryShadowRootSelector;
 #### querySelector
 
 ```typescript
-querySelector(
-    selector: string,
-    rootElement?: Document | Element = document
-);
+querySelector(selectors);
+```
+
+```typescript
+querySelector(root, selectors);
 ```
 
 | Parameter    | Optional      | Description                                        |
 | ------------ | ------------- | -------------------------------------------------- |
-| selector     | no            | A string containing one selector to match. It cannot contain multiple selectors and it cannot end in a Shadow DOM (`$`) |
-| rootElement  | yes           | The element from where the query should be performed, by default it is `document` |
+| selectors    | no            | A string containing one or more selectors to match. It cannot end in a Shadow DOM (`$`) |
+| root         | yes           | The element from where the query should be performed, it defaults to `document` |
+
+#### querySelectorAll
+
+```typescript
+querySelectorAll(selectors);
+```
+
+```typescript
+querySelectorAll(root, selectors);
+```
+
+| Parameter    | Optional      | Description                                        |
+| ------------ | ------------- | -------------------------------------------------- |
+| selectors    | no            | A string containing one or more selectors to match. It cannot end in a Shadow DOM (`$`) |
+| root         | yes           | The element from where the query should be performed, it defaults to `document` |
+
+#### queryShadowRootSelector
+
+```typescript
+queryShadowRootSelector(selectors);
+```
+
+```typescript
+queryShadowRootSelector(root, selectors);
+```
+
+| Parameter    | Optional      | Description                                        |
+| ------------ | ------------- | -------------------------------------------------- |
+| selectors    | no            | A string containing one or more selectors to match. It must end in a Shadow DOM (`$`) |
+| root         | yes           | The element from where the query should be performed, it defaults to `document` |
+
+#### asyncQuerySelector
+
+```typescript
+asyncQuerySelector(selectors);
+```
+
+```typescript
+asyncQuerySelector(root, selectors);
+```
+
+```typescript
+asyncQuerySelector(root, selectors, asyncParams);
+```
+
+```typescript
+// asyncParams properties
+{
+  retries?: number; // how many retries before giving up (defaults to 50)
+  delay?: number; // delay between each retry (defaults to 50)
+}
+```
+
+| Parameter    | Optional      | Description                                        |
+| ------------ | ------------- | -------------------------------------------------- |
+| selectors    | no            | A string containing one or more selectors to match. It cannot end in a Shadow DOM (`$`) |
+| root         | yes           | The element from where the query should be performed, it defaults to `document` |
+| asyncParams  | yes           | An object containing the parameters which control the retries |
+
+#### asyncQuerySelectorAll
+
+```typescript
+asyncQuerySelectorAll(selectors);
+```
+
+```typescript
+asyncQuerySelectorAll(root, selectors);
+```
+
+```typescript
+asyncQuerySelectorAll(root, selectors, asyncParams);
+```
+
+```typescript
+// asyncParams properties
+{
+  retries?: number; // how many retries before giving up (defaults to 50)
+  delay?: number; // delay between each retry (defaults to 50)
+}
+```
+
+| Parameter    | Optional      | Description                                        |
+| ------------ | ------------- | -------------------------------------------------- |
+| selectors    | no            | A string containing one or more selectors to match. It cannot end in a Shadow DOM (`$`) |
+| root         | yes           | The element from where the query should be performed, it defaults to `document` |
+| asyncParams  | yes           | An object containing the parameters which control the retries |
+
+#### asyncQueryShadowRootSelector
+
+```typescript
+asyncQueryShadowRootSelector(selectors);
+```
+
+```typescript
+asyncQueryShadowRootSelector(root, selectors);
+```
+
+```typescript
+asyncQueryShadowRootSelector(root, selectors, asyncParams);
+```
+
+```typescript
+// asyncParams properties
+{
+  retries?: number; // how many retries before giving up (defaults to 50)
+  delay?: number; // delay between each retry (defaults to 50)
+}
+```
+
+| Parameter    | Optional      | Description                                        |
+| ------------ | ------------- | -------------------------------------------------- |
+| selectors    | no            | A string containing one or more selectors to match. It must end in a Shadow DOM (`$`) |
+| root         | yes           | The element from where the query should be performed, it defaults to `document` |
+| asyncParams  | yes           | An object containing the parameters which control the retries |
 
 
 [Shadow DOM]: https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_shadow_DOM
