@@ -68,6 +68,18 @@ export function shadowRootQuerySelectorInternal(
     root: Document | Element
 ): ShadowRoot | null {
 
+    if (
+        path.length === 1 &&
+        !path[0].length
+    ) {
+        if (root instanceof Document) {
+            throw new SyntaxError(
+                getDocumentShadowRootError()
+            );
+        }
+        return root.shadowRoot;
+    }
+
     const lastElement = querySelectorInternal(
         path,
         root
@@ -202,6 +214,22 @@ export async function asyncShadowRootQuerySelectorInternal(
     retries: number,
     delay: number
 ): Promise<ShadowRoot | null> {
+
+    if (
+        path.length === 1 &&
+        !path[0].length
+    ) {
+        if (root instanceof Document) {
+            throw new SyntaxError(
+                getDocumentShadowRootError()
+            );
+        }
+        return getPromisableShadowRoot(
+            root,
+            retries,
+            delay
+        );
+    }
 
     const lastElement = await asyncQuerySelectorInternal(
         path,

@@ -191,6 +191,15 @@ describe('ShadowDomSelector spec', () => {
         );
 
         expect(
+          shadowRootQuerySelector(
+            document.querySelector('section'),
+            '$'
+          )
+        ).to.equal(
+          document.querySelector('section').shadowRoot
+        );
+
+        expect(
           shadowRootQuerySelector('section$ .article$ ul$')
         ).to.null;
 
@@ -206,6 +215,12 @@ describe('ShadowDomSelector spec', () => {
 
         expect(
           () => shadowRootQuerySelector('$ section$ article$')
+        ).to.throw(
+          'You can not select a shadowRoot'
+        );
+
+        expect(
+          () => shadowRootQuerySelector('$')
         ).to.throw(
           'You can not select a shadowRoot'
         );
@@ -528,6 +543,15 @@ describe('ShadowDomSelector spec', () => {
         );
 
         expect(
+          await asyncShadowRootQuerySelector(
+            document.querySelector('section'),
+            '$'
+          )
+        ).to.equal(
+          document.querySelector('section').shadowRoot
+        );
+
+        expect(
           await asyncShadowRootQuerySelector('#section$ div$', { retries: 1, delay: 0 })
         ).to.null;
 
@@ -547,6 +571,13 @@ describe('ShadowDomSelector spec', () => {
 
         cy.wrap(null).then(() => {
           return asyncShadowRootQuerySelector('$ section$ article$')
+            .catch((error: Error) => {
+              expect(error.message).to.contain('You can not select a shadowRoot');
+            });
+        });
+
+        cy.wrap(null).then(() => {
+          return asyncShadowRootQuerySelector('$')
             .catch((error: Error) => {
               expect(error.message).to.contain('You can not select a shadowRoot');
             });
