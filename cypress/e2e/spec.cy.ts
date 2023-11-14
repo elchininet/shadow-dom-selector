@@ -191,6 +191,15 @@ describe('ShadowDomSelector spec', () => {
         );
 
         expect(
+          shadowRootQuerySelector(
+            document.querySelector('section'),
+            '$'
+          )
+        ).to.equal(
+          document.querySelector('section').shadowRoot
+        );
+
+        expect(
           shadowRootQuerySelector('section$ .article$ ul$')
         ).to.null;
 
@@ -525,6 +534,15 @@ describe('ShadowDomSelector spec', () => {
           )
         ).to.equal(
           document.querySelector('section').shadowRoot.querySelector('article').shadowRoot
+        );
+
+        expect(
+          await asyncShadowRootQuerySelector(
+            document.querySelector('section'),
+            '$'
+          )
+        ).to.equal(
+          document.querySelector('section').shadowRoot
         );
 
         expect(
