@@ -10,7 +10,7 @@ jobs:
   test:
     runs-on: ubuntu-20.04
     container:
-      image: node:18
+      image: cypress/browsers
     steps:
       - name: Checkout
         uses: actions/checkout@v4
