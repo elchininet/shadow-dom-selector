@@ -27,7 +27,7 @@ jobs:
           key: dependencies-v1-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
       - name: Publish
         run: |
-          yarn install --frozen-lockfile --ignore-scripts --prefer-offline
+          yarn install --frozen-lockfile --ignore-scripts
           npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
