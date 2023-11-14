@@ -219,6 +219,12 @@ describe('ShadowDomSelector spec', () => {
           'You can not select a shadowRoot'
         );
 
+        expect(
+          () => shadowRootQuerySelector('$')
+        ).to.throw(
+          'You can not select a shadowRoot'
+        );
+
       });
   });
 
@@ -565,6 +571,13 @@ describe('ShadowDomSelector spec', () => {
 
         cy.wrap(null).then(() => {
           return asyncShadowRootQuerySelector('$ section$ article$')
+            .catch((error: Error) => {
+              expect(error.message).to.contain('You can not select a shadowRoot');
+            });
+        });
+
+        cy.wrap(null).then(() => {
+          return asyncShadowRootQuerySelector('$')
             .catch((error: Error) => {
               expect(error.message).to.contain('You can not select a shadowRoot');
             });
