@@ -80,6 +80,12 @@ describe('ShadowDomSelector spec', () => {
         );
 
         expect(
+          querySelector('section$ li, section$ article$ li')
+        ).to.equal(
+          document.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelector('li')
+        );
+
+        expect(
           querySelector(document.body, '$ article$ li')
         ).to.null;
 
@@ -128,6 +134,12 @@ describe('ShadowDomSelector spec', () => {
         );
 
         expect(
+          querySelectorAll('section$ li, section$ article$ li')
+        ).to.deep.equal(
+          document.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelectorAll('li')
+        );
+
+        expect(
           querySelectorAll('section$ .article$ ul$ li').length
         ).to.equal(0);
 
@@ -168,6 +180,12 @@ describe('ShadowDomSelector spec', () => {
 
         expect(
           queryShadowRootSelector(document.querySelector('section'), '$ article$')
+        ).to.equal(
+          document.querySelector('section').shadowRoot.querySelector('article').shadowRoot
+        );
+
+        expect(
+          queryShadowRootSelector('section$ div$, section$ article$')
         ).to.equal(
           document.querySelector('section').shadowRoot.querySelector('article').shadowRoot
         );
@@ -222,9 +240,15 @@ describe('ShadowDomSelector spec', () => {
         );
 
         expect(
-          (await asyncQuerySelector('#section$ .article$ > .delayed-list-container$ ul > li:nth-of-type(2)')).textContent
+          (await asyncQuerySelector('#section$ .article$ > .delayed-list-container$ ul > li:nth-of-type(2)', { retries: 50, delay: 50 })).textContent
         ).to.equal(
           'Delayed List item 2'
+        );
+
+        expect(
+          await asyncQuerySelector('section$ div, section$ article$ li:nth-of-type(2)')
+        ).to.equal(
+          document.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelector('li:nth-of-type(2)')
         );
 
         expect(
@@ -319,6 +343,12 @@ describe('ShadowDomSelector spec', () => {
           document.querySelector('#section').shadowRoot.querySelectorAll('.article')
         );
 
+        expect(
+          await asyncQuerySelectorAll('#section$ div li, #section$ .article$ li')
+        ).to.deep.equal(
+          document.querySelector('#section').shadowRoot.querySelector('.article').shadowRoot.querySelectorAll('li')
+        );
+
         cy.wrap(null).then(() => {
           return asyncQuerySelectorAll('#section$ .article$ > ul > li')
             .then(lists => {
@@ -328,7 +358,7 @@ describe('ShadowDomSelector spec', () => {
         });
 
         cy.wrap(null).then(() => {
-          return asyncQuerySelectorAll('#section$ .article$ > .delayed-list-container$ ul > li')
+          return asyncQuerySelectorAll('#section$ .article$ > .delayed-list-container$ ul > li', { retries: 50, delay: 50 })
             .then(lists => {
               expect(lists.length).to.equal(3);
               expect(lists[1].textContent).to.equal('Delayed List item 2');
@@ -437,8 +467,14 @@ describe('ShadowDomSelector spec', () => {
           document.querySelector('#section').shadowRoot.querySelector('.article').shadowRoot
         );
 
+        expect(
+          await asyncQueryShadowRootSelector('#section$ div$, #section$ .article$')
+        ).to.deep.equal(
+          document.querySelector('#section').shadowRoot.querySelector('.article').shadowRoot
+        );
+
         cy.wrap(null).then(() => {
-          return asyncQueryShadowRootSelector('#section$ .article$ > .delayed-list-container$')
+          return asyncQueryShadowRootSelector('#section$ .article$ > .delayed-list-container$', { retries: 50, delay: 50 })
             .then(shadowRoot => {
               expect(shadowRoot).not.null;
             });

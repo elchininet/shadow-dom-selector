@@ -177,7 +177,7 @@ export async function asyncQuerySelectorAll<E extends Element = Element>(
             delay
         );
 
-        if (foundElements) {
+        if (foundElements?.length) {
             return foundElements;
         }
 

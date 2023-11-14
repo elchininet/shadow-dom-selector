@@ -208,8 +208,8 @@ asyncQuerySelector(root, selectors, asyncParams);
 ```typescript
 // asyncParams properties
 {
-  retries?: number; // how many retries before giving up (defaults to 50)
-  delay?: number; // delay between each retry (defaults to 50)
+  retries?: number; // how many retries before giving up (defaults to 10)
+  delay?: number; // delay between each retry (defaults to 10)
 }
 ```
 
@@ -236,8 +236,8 @@ asyncQuerySelectorAll(root, selectors, asyncParams);
 ```typescript
 // asyncParams properties
 {
-  retries?: number; // how many retries before giving up (defaults to 50)
-  delay?: number; // delay between each retry (defaults to 50)
+  retries?: number; // how many retries before giving up (defaults to 10)
+  delay?: number; // delay between each retry (defaults to 10)
 }
 ```
 
@@ -264,8 +264,8 @@ asyncQueryShadowRootSelector(root, selectors, asyncParams);
 ```typescript
 // asyncParams properties
 {
-  retries?: number; // how many retries before giving up (defaults to 50)
-  delay?: number; // delay between each retry (defaults to 50)
+  retries?: number; // how many retries before giving up (defaults to 10)
+  delay?: number; // delay between each retry (defaults to 10)
 }
 ```
 
