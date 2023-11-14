@@ -12,8 +12,13 @@
     "coverage:report": "nyc report --reporter=lcov --reporter=text-summary",
     "lint": "eslint \"src/**/*.ts\" \"demo/**/*.ts\"",
     "test": "cypress run",
+    "test:ts": "tsc --noEmit",
     "test:open": "cypress open",
-    "test:ci": "start-server-and-test demo http://localhost:3000 test && yarn coverage:report"
+    "test:ci": "start-server-and-test demo http://localhost:3000 test && yarn coverage:report",
+    "prepare": "yarn build",
+    "prepublishOnly": "yarn lint && yarn test:ts && yarn test:ci",
+    "version": "git add .",
+    "postversion": "git push && git push --tags"
   },
   "devDependencies": {
     "@cypress/code-coverage": "^3.12.9",
