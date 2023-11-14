@@ -4,6 +4,8 @@ A very small JavaScript utility to query DOM elements through the [Shadow DOM] s
 
 [![Deployment Status](https://github.com/elchininet/shadow-dom-selector/actions/workflows/deploy.yaml/badge.svg)](https://github.com/elchininet/shadow-dom-selector/actions/workflows/deploy.yaml) &nbsp; [![Coverage Status](https://coveralls.io/repos/github/elchininet/shadow-dom-selector/badge.svg?branch=master)](https://coveralls.io/github/elchininet/shadow-dom-selector?branch=master) &nbsp; [![npm version](https://badge.fury.io/js/shadow-dom-selector.svg)](https://badge.fury.io/js/shadow-dom-selector)
 
+## Introduction
+
 Having a DOM tree formed of Shadow DOM subtrees like the next one:
 
 ```html
@@ -100,6 +102,63 @@ const shadow = asyncQueryShadowRootSelector('article$ div$')
 
 All these three functions allow you to to specify the amount of retries and the delay between each one of them. Consult the API section for more details.
 
+## Install
+
+#### npm
+
+```bash
+npm install shadow-dom-selector
+```
+
+#### yarn
+
+```bash
+yarn add shadow-dom-selector
+```
+
+#### PNPM
+
+```bash
+pnpm add shadow-dom-selector
+```
+
+#### In the browser
+
+It is possible to include a compiled version of the package directly in an HTML file. It will create a global `ShadowDomSelector` object containing all the exported functions that can be accessed from anywhere in your JavaScript code.
+
+1. Copy the JavaScript file `index.js`, located in the root of the `dist/` folder
+2. Put it in the folder that you prefer in your web server
+3. Include it in your HTML file
+
+```html
+<script src="wherever/you/want/to/place/index.js"></script>
+```
+
+```javascript
+/* There will be a global variable named ShadowDomSelector containing all the functions */
+ShadowDomSelector.querySelector;
+ShadowDomSelector.querySelectorAll;
+ShadowDomSelector.queryShadowRootSelector;
+ShadowDomSelector.asyncQuerySelector;
+ShadowDomSelector.asyncQuerySelectorAll;
+ShadowDomSelector.asyncQueryShadowRootSelector;
+```
+
+## API
+
+#### querySelector
+
+```typescript
+querySelector(
+    selector: string,
+    rootElement?: Document | Element = document
+);
+```
+
+| Parameter    | Optional      | Description                                        |
+| ------------ | ------------- | -------------------------------------------------- |
+| selector     | no            | A string containing one selector to match. It cannot contain multiple selectors and it cannot end in a Shadow DOM (`$`) |
+| rootElement  | yes           | The element from where the query should be performed, by default it is `document` |
 
 
 [Shadow DOM]: https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_shadow_DOM

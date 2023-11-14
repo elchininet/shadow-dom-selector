@@ -13,7 +13,10 @@
     "removeComments": true,
     "baseUrl": "./src",
     "paths": {
+      "@types": ["@types"],
       "@constants": ["constants"],
+      "@selectors": ["selectors"],
+      "@utilities": ["utilities"],
       "@lib": ["lib"]
     }
   },

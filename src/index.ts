@@ -1,71 +1,172 @@
-import { DEFAULT_RETRIES, DEFAULT_RETRIES_DELAY } from '@constants';
+import { AsyncParams } from '@types';
+import { DEFAULT_RETRIES, DEFAULT_DELAY } from '@constants';
 import * as lib from '@lib';
+import { isParamsWithRoot } from '@utilities';
 
 export function querySelector<E extends Element = Element>(
-    selector: string,
-    rootElement: Document | Element = document
+    root: Document | Element,
+    selectors: string
+): E | null;
+export function querySelector<E extends Element = Element>(
+    selectors: string
+): E | null;
+export function querySelector<E extends Element = Element>(
+    ...params: [Document | Element, string] | [string]
 ): E | null {
-    return lib.querySelector(selector, rootElement);
+    const [rootOrSelector, selectors] = params;
+    if (typeof rootOrSelector === 'string') {
+        return lib.querySelector(
+            rootOrSelector,
+            document
+        );
+    }
+    return lib.querySelector(
+        selectors,
+        rootOrSelector
+    );
 }
 
 export function querySelectorAll<E extends Element = Element>(
-    selector: string,
-    rootElement: Document | Element = document
+    root: Document | Element,
+    selectors: string
+): NodeListOf<E>;
+export function querySelectorAll<E extends Element = Element>(
+    selectors: string
+): NodeListOf<E>;
+export function querySelectorAll<E extends Element = Element>(
+    ...params: [Document | Element, string] | [string]
 ): NodeListOf<E> {
+    const [rootOrSelector, selectors] = params;
+    if (typeof rootOrSelector === 'string') {
+        return lib.querySelectorAll(
+            rootOrSelector,
+            document
+        );
+    }
     return lib.querySelectorAll(
-        selector,
-        rootElement
+        selectors,
+        rootOrSelector
     );
 }
 
 export function queryShadowRootSelector(
-    selector: string,
-    rootElement: Document | Element = document
+    root: Document | Element,
+    selectors: string
+): ShadowRoot | null;
+export function queryShadowRootSelector(
+    selectors: string
+): ShadowRoot | null;
+export function queryShadowRootSelector(
+    ...params: [Document | Element, string] | [string]
 ): ShadowRoot | null {
+    const [rootOrSelector, selectors] = params;
+    if (typeof rootOrSelector === 'string') {
+        return lib.queryShadowRootSelector(
+            rootOrSelector,
+            document
+        );
+    }
     return lib.queryShadowRootSelector(
-        selector,
-        rootElement
+        selectors,
+        rootOrSelector
     );
 }
 
 export async function asyncQuerySelector<E extends Element = Element>(
-    selector: string,
-    rootElement: Document | Element = document,
-    retries = DEFAULT_RETRIES,
-    retriesDelay = DEFAULT_RETRIES_DELAY
+    root: Document | Element,
+    selectors: string,
+    asyncParams?: AsyncParams,
+): Promise<E | null >;
+export async function asyncQuerySelector<E extends Element = Element>(
+    selectors: string,
+    asyncParams?: AsyncParams,
+): Promise<E | null >;
+export async function asyncQuerySelector<E extends Element = Element>(
+    ...params: [Document | Element, string, AsyncParams?] | [string, AsyncParams?]
 ): Promise<E | null > {
-    return lib.asyncQuerySelector(
-        selector,
-        rootElement,
-        retries,
-        retriesDelay
+
+    if (isParamsWithRoot(params)) {
+        const [root, selectors, asyncParams] = params;
+        return await lib.asyncQuerySelector(
+            selectors,
+            root,
+            asyncParams?.retries || DEFAULT_RETRIES,
+            asyncParams?.delay || DEFAULT_DELAY
+        );
+    }
+
+    const [selectors, asyncParams] = params;
+
+    return await lib.asyncQuerySelector(
+        selectors,
+        document,
+        asyncParams?.retries || DEFAULT_RETRIES,
+        asyncParams?.delay || DEFAULT_DELAY
     );
 }
 
 export async function asyncQuerySelectorAll<E extends Element = Element>(
-    selector: string,
-    rootElement: Document | Element = document,
-    retries = DEFAULT_RETRIES,
-    retriesDelay = DEFAULT_RETRIES_DELAY
+    root: Document | Element,
+    selectors: string,
+    asyncParams?: AsyncParams
+): Promise<NodeListOf<E>>;
+export async function asyncQuerySelectorAll<E extends Element = Element>(
+    selectors: string,
+    asyncParams?: AsyncParams
+): Promise<NodeListOf<E>>;
+export async function asyncQuerySelectorAll<E extends Element = Element>(
+    ...params: [Document | Element, string, AsyncParams?] | [string, AsyncParams?]
 ): Promise<NodeListOf<E>> {
+    
+    if (isParamsWithRoot(params)) {
+        const [root, selectors, asyncParams] = params;
+        return await lib.asyncQuerySelectorAll(
+            selectors,
+            root,
+            asyncParams?.retries || DEFAULT_RETRIES,
+            asyncParams?.delay || DEFAULT_DELAY
+        );
+    }
+
+    const [selectors, asyncParams] = params;
+    
     return lib.asyncQuerySelectorAll(
-        selector,
-        rootElement,
-        retries,
-        retriesDelay
+        selectors,
+        document,
+        asyncParams?.retries || DEFAULT_RETRIES,
+        asyncParams?.delay || DEFAULT_DELAY
     );
 }
 
 export async function asyncQueryShadowRootSelector(
-    selector: string,
-    rootElement: Document | Element = document,
-    retries = DEFAULT_RETRIES,
-    retriesDelay = DEFAULT_RETRIES_DELAY
+    root: Document | Element,
+    selectors: string,
+    asyncParams?: AsyncParams
+): Promise<ShadowRoot | null>;
+export async function asyncQueryShadowRootSelector(
+    selectors: string,
+    asyncParams?: AsyncParams
+): Promise<ShadowRoot | null>;
+export async function asyncQueryShadowRootSelector(
+    ...params: [Document | Element, string, AsyncParams?] | [string, AsyncParams?]
 ): Promise<ShadowRoot | null> {
+
+    if (isParamsWithRoot(params)) {
+        const [root, selectors, asyncParams] = params;
+        return await lib.asyncQueryShadowRootSelector(
+            selectors,
+            root,
+            asyncParams?.retries || DEFAULT_RETRIES,
+            asyncParams?.delay || DEFAULT_DELAY
+        );
+    }
+
+    const [selectors, asyncParams] = params;
+    
     return lib.asyncQueryShadowRootSelector(
-        selector,
-        rootElement,
-        retries,
-        retriesDelay
+        selectors,
+        document,
+        asyncParams?.retries || DEFAULT_RETRIES,
+        asyncParams?.delay || DEFAULT_DELAY
     );
 }
