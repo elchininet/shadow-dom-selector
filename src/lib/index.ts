@@ -2,10 +2,10 @@ import { INVALID_SELECTOR } from '@constants';
 import {
     querySelectorInternal,
     querySelectorAllInternal,
-    queryShadowRootSelectorInternal,
+    shadowRootQuerySelectorInternal,
     asyncQuerySelectorInternal,
     asyncQuerySelectorAllInternal,
-    asyncQueryShadowRootSelectorInternal
+    asyncShadowRootQuerySelectorInternal
 } from '@selectors';
 import {
     getSubtreePaths,
@@ -21,7 +21,7 @@ export function querySelector<E extends Element>(
     const selectorsPaths = getSubtreePaths(selectors, (path: string[]): string[] => {
         if (!path[path.length - 1].length) {
             throw new SyntaxError(
-                getCannotErrorText('querySelector', 'queryShadowRootSelector')
+                getCannotErrorText('querySelector', 'shadowRootQuerySelector')
             );
         }
         return path;
@@ -79,7 +79,7 @@ export function querySelectorAll<E extends Element = Element>(
 
 }
 
-export function queryShadowRootSelector(
+export function shadowRootQuerySelector(
     selectors: string,
     root: Document | Element
 ): ShadowRoot | null {
@@ -88,7 +88,7 @@ export function queryShadowRootSelector(
         const lastSelector = path.pop();
         if (lastSelector.length) {
             throw new SyntaxError(
-                getMustErrorText('queryShadowRootSelector', 'querySelector')
+                getMustErrorText('shadowRootQuerySelector', 'querySelector')
             );
         }
         return path;
@@ -98,7 +98,7 @@ export function queryShadowRootSelector(
 
     for (let index = 0; index < total; index++) {
 
-        const shadowRoot = queryShadowRootSelectorInternal(
+        const shadowRoot = shadowRootQuerySelectorInternal(
             selectorsPaths[index],
             root
         );
@@ -123,7 +123,7 @@ export async function asyncQuerySelector<E extends Element = Element>(
     const selectorsPaths = getSubtreePaths(selectors, (path: string[]): string[] => {
         if (!path[path.length - 1].length) {
             throw new SyntaxError(
-                getCannotErrorText('asyncQuerySelector', 'asyncQueryShadowRootSelector')
+                getCannotErrorText('asyncQuerySelector', 'asyncShadowRootQuerySelector')
             );
         }
         return path;
@@ -187,7 +187,7 @@ export async function asyncQuerySelectorAll<E extends Element = Element>(
 
 }
 
-export async function asyncQueryShadowRootSelector(
+export async function asyncShadowRootQuerySelector(
     selectors: string,
     root: Document | Element,
     retries: number,
@@ -198,7 +198,7 @@ export async function asyncQueryShadowRootSelector(
         const lastSelector = path.pop();
         if (lastSelector.length) {
             throw new SyntaxError(
-                getMustErrorText('asyncQueryShadowRootSelector', 'asyncQuerySelector')
+                getMustErrorText('asyncShadowRootQuerySelector', 'asyncQuerySelector')
             );
         }
         return path;
@@ -208,7 +208,7 @@ export async function asyncQueryShadowRootSelector(
 
     for (let index = 0; index < total; index++) {
 
-        const shadowRoot = await asyncQueryShadowRootSelectorInternal(
+        const shadowRoot = await asyncShadowRootQuerySelectorInternal(
             selectorsPaths[index],
             root,
             retries,

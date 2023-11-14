@@ -38,12 +38,12 @@ const shadow = document.querySelector('section').shadowRoot.querySelector('artic
 `shadow-dom-selector` allows you to do the same in the next way:
 
 ```javascript
-import { querySelector, querySelectorAll, queryShadowRootSelector } from 'shadow-dom-selector';
+import { querySelector, querySelectorAll, shadowRootQuerySelector } from 'shadow-dom-selector';
 
 // $ character at the end of a selector means to select its Shadom DOM  
 const secondLi querySelector('section$ article$ ul > li');
 const allLis querySelectorAll('section$ article$ ul > li');
-const shadow = queryShadowRootSelector('section$ article$');
+const shadow = shadowRootQuerySelector('section$ article$');
 ```
 
 It will traverse all the Shadow DOM subtrees removing all the hassle of writing long concatenated queries.
@@ -67,19 +67,19 @@ const shadow = document.querySelector('article')?.shadowRoot?.querySelector('div
 Which will return `undefined` if some element doesn‘t exist. With `shadow-dom-selector`, you just need to write the query and it will return the same that is returned by the native `querySelector` and `querySelectorAll` if the query cannot be satisfied.
 
 ```javascript
-import { querySelector, querySelectorAll, queryShadowRootSelector } from 'shadow-dom-selector';
+import { querySelector, querySelectorAll, shadowRootQuerySelector } from 'shadow-dom-selector';
 
 const element = querySelector('article$ div$ section > h1'); // null
 const elements = querySelectorAll('article div$ p'); // empty NodeList
-const shadow = queryShadowRootSelector('article$ div$'); // null
+const shadow = shadowRootQuerySelector('article$ div$'); // null
 ```
 
 ### Async queries
 
-If the elements are not already rendered into the DOM in the moment that the query is made you will receive `null`. `shadow-dom-selector` allows to wait for the elements to appear, allowing you to decide how many times it will try to query for the element before giving up and returning `null` or an empty `NodeList`.
+If the elements are not already rendered into the DOM in the moment that the query is made you will receive `null`. `shadow-dom-selector` allows it to wait for the elements to appear, allowing you to decide how many times it will try to query for the element before giving up and returning `null` or an empty `NodeList`.
 
 ```javascript
-import { asyncQuerySelector, asyncQuerySelectorAll, asyncQueryShadowRootSelector } from 'shadow-dom-selector';
+import { asyncQuerySelector, asyncQuerySelectorAll, asyncShadowRootQuerySelector } from 'shadow-dom-selector';
 
 const element = asyncQuerySelector('article$ div$ section > h1')
     .then((h1) => {
@@ -93,14 +93,14 @@ const elements = asyncQuerySelectorAll('article div$ p')
         // If they are not found after all the retries, it will return an empty NodeList
     });
 
-const shadow = asyncQueryShadowRootSelector('article$ div$')
+const shadow = asyncShadowRootQuerySelector('article$ div$')
     .then((shadowRoot) => {
         // Do stuff with the shadowRoot
         // If it is not found after all the retries, it will return null
     });
 ```
 
-All these three functions allow you to to specify the amount of retries and the delay between each one of them. Consult the API section for more details.
+All these three functions allow you to to specify the amount of retries and the delay between each one of them. Consult the [API](#api) section for more details.
 
 ## Install
 
@@ -138,10 +138,10 @@ It is possible to include a compiled version of the package directly in an HTML 
 /* There will be a global variable named ShadowDomSelector containing all the functions */
 ShadowDomSelector.querySelector;
 ShadowDomSelector.querySelectorAll;
-ShadowDomSelector.queryShadowRootSelector;
+ShadowDomSelector.shadowRootQuerySelector;
 ShadowDomSelector.asyncQuerySelector;
 ShadowDomSelector.asyncQuerySelectorAll;
-ShadowDomSelector.asyncQueryShadowRootSelector;
+ShadowDomSelector.asyncShadowRootQuerySelector;
 ```
 
 ## API
@@ -176,14 +176,14 @@ querySelectorAll(root, selectors);
 | selectors    | no            | A string containing one or more selectors to match. It cannot end in a Shadow DOM (`$`) |
 | root         | yes           | The element from where the query should be performed, it defaults to `document` |
 
-#### queryShadowRootSelector
+#### shadowRootQuerySelector
 
 ```typescript
-queryShadowRootSelector(selectors);
+shadowRootQuerySelector(selectors);
 ```
 
 ```typescript
-queryShadowRootSelector(root, selectors);
+shadowRootQuerySelector(root, selectors);
 ```
 
 | Parameter    | Optional      | Description                                        |
@@ -247,18 +247,18 @@ asyncQuerySelectorAll(root, selectors, asyncParams);
 | root         | yes           | The element from where the query should be performed, it defaults to `document` |
 | asyncParams  | yes           | An object containing the parameters which control the retries |
 
-#### asyncQueryShadowRootSelector
+#### asyncShadowRootQuerySelector
 
 ```typescript
-asyncQueryShadowRootSelector(selectors);
+asyncShadowRootQuerySelector(selectors);
 ```
 
 ```typescript
-asyncQueryShadowRootSelector(root, selectors);
+asyncShadowRootQuerySelector(root, selectors);
 ```
 
 ```typescript
-asyncQueryShadowRootSelector(root, selectors, asyncParams);
+asyncShadowRootQuerySelector(root, selectors, asyncParams);
 ```
 
 ```typescript

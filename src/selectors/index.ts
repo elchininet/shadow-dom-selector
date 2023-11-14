@@ -63,7 +63,7 @@ export function querySelectorAllInternal<E extends Element>(
 
 }
 
-export function queryShadowRootSelectorInternal(
+export function shadowRootQuerySelectorInternal(
     path: string[],
     root: Document | Element
 ): ShadowRoot | null {
@@ -196,7 +196,7 @@ export async function asyncQuerySelectorAllInternal<E extends Element>(
 
 }
 
-export async function asyncQueryShadowRootSelectorInternal(
+export async function asyncShadowRootQuerySelectorInternal(
     path: string[],
     root: Document | Element,
     retries: number,

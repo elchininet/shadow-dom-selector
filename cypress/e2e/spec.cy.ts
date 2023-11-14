@@ -158,54 +158,54 @@ describe('ShadowDomSelector spec', () => {
       });
   });
 
-  it('queryShadowRootSelector tests', () => {
+  it('shadowRootQuerySelector tests', () => {
     cy.window()
       .then((win) => {
 
         const document = win.document;
         const ShadowDomSelector = win.ShadowDomSelector;
-        const { queryShadowRootSelector } = ShadowDomSelector;
+        const { shadowRootQuerySelector } = ShadowDomSelector;
 
         expect(
-          queryShadowRootSelector('section$')
+          shadowRootQuerySelector('section$')
         ).to.equal(
           document.querySelector('section').shadowRoot
         );
 
         expect(
-          queryShadowRootSelector('section$ .article$')
+          shadowRootQuerySelector('section$ .article$')
         ).to.equal(
           document.querySelector('section').shadowRoot.querySelector('.article').shadowRoot
         );
 
         expect(
-          queryShadowRootSelector(document.querySelector('section'), '$ article$')
+          shadowRootQuerySelector(document.querySelector('section'), '$ article$')
         ).to.equal(
           document.querySelector('section').shadowRoot.querySelector('article').shadowRoot
         );
 
         expect(
-          queryShadowRootSelector('section$ div$, section$ article$')
+          shadowRootQuerySelector('section$ div$, section$ article$')
         ).to.equal(
           document.querySelector('section').shadowRoot.querySelector('article').shadowRoot
         );
 
         expect(
-          queryShadowRootSelector('section$ .article$ ul$')
+          shadowRootQuerySelector('section$ .article$ ul$')
         ).to.null;
 
         expect(
-          queryShadowRootSelector('section$ .article$ h3$')
+          shadowRootQuerySelector('section$ .article$ h3$')
         ).to.null;
 
         expect(
-          () => queryShadowRootSelector('section$ article$ ul li')
+          () => shadowRootQuerySelector('section$ article$ ul li')
         ).to.throw(
-          'queryShadowRootSelector must be used with a selector ending in a shadowRoot'
+          'shadowRootQuerySelector must be used with a selector ending in a shadowRoot'
         );
 
         expect(
-          () => queryShadowRootSelector('$ section$ article$')
+          () => shadowRootQuerySelector('$ section$ article$')
         ).to.throw(
           'You can not select a shadowRoot'
         );
@@ -447,41 +447,41 @@ describe('ShadowDomSelector spec', () => {
       });
   });
 
-  it('asyncQueryShadowRootSelector tests', () => {
+  it('asyncShadowRootQuerySelector tests', () => {
     cy.window()
       .then(async (win) => {
 
         const document = win.document;
         const ShadowDomSelector = win.ShadowDomSelector;
-        const { asyncQueryShadowRootSelector } = ShadowDomSelector;
+        const { asyncShadowRootQuerySelector } = ShadowDomSelector;
 
         expect(
-          await asyncQueryShadowRootSelector('section$')
+          await asyncShadowRootQuerySelector('section$')
         ).to.equal(
           document.querySelector('section').shadowRoot
         );
 
         expect(
-          await asyncQueryShadowRootSelector('#section$ .article$')
+          await asyncShadowRootQuerySelector('#section$ .article$')
         ).to.deep.equal(
           document.querySelector('#section').shadowRoot.querySelector('.article').shadowRoot
         );
 
         expect(
-          await asyncQueryShadowRootSelector('#section$ div$, #section$ .article$')
+          await asyncShadowRootQuerySelector('#section$ div$, #section$ .article$')
         ).to.deep.equal(
           document.querySelector('#section').shadowRoot.querySelector('.article').shadowRoot
         );
 
         cy.wrap(null).then(() => {
-          return asyncQueryShadowRootSelector('#section$ .article$ > .delayed-list-container$', { retries: 50, delay: 50 })
+          return asyncShadowRootQuerySelector('#section$ .article$ > .delayed-list-container$', { retries: 50, delay: 50 })
             .then(shadowRoot => {
               expect(shadowRoot).not.null;
             });
         });
 
         expect(
-          await asyncQueryShadowRootSelector(
+          await asyncShadowRootQuerySelector(
             document.querySelector('section'),
             '$ article$'
           )
@@ -490,7 +490,7 @@ describe('ShadowDomSelector spec', () => {
         );
 
         expect(
-          await asyncQueryShadowRootSelector(
+          await asyncShadowRootQuerySelector(
             document.querySelector('section'),
             '$ article$',
             { retries: 5 }
@@ -500,7 +500,7 @@ describe('ShadowDomSelector spec', () => {
         );
 
         expect(
-          await asyncQueryShadowRootSelector(
+          await asyncShadowRootQuerySelector(
             document.querySelector('section'),
             '$ article$',
             { delay: 10 },
@@ -510,7 +510,7 @@ describe('ShadowDomSelector spec', () => {
         );
 
         expect(
-          await asyncQueryShadowRootSelector(
+          await asyncShadowRootQuerySelector(
             'section$ article$',
             { retries: 10 }
           )
@@ -519,7 +519,7 @@ describe('ShadowDomSelector spec', () => {
         );
 
         expect(
-          await asyncQueryShadowRootSelector(
+          await asyncShadowRootQuerySelector(
             'section$ article$',
             { delay: 1 }
           )
@@ -528,25 +528,25 @@ describe('ShadowDomSelector spec', () => {
         );
 
         expect(
-          await asyncQueryShadowRootSelector('#section$ div$', { retries: 1, delay: 0 })
+          await asyncShadowRootQuerySelector('#section$ div$', { retries: 1, delay: 0 })
         ).to.null;
 
         cy.wrap(null).then(() => {
-          return asyncQueryShadowRootSelector('#section$ .article$ > .empty-div$', { retries: 10, delay: 5 })
+          return asyncShadowRootQuerySelector('#section$ .article$ > .empty-div$', { retries: 10, delay: 5 })
             .then(shadowRoot => {
               expect(shadowRoot).null;
             });
         });
 
         cy.wrap(null).then(() => {
-          return asyncQueryShadowRootSelector('section$ article$ > .delayed-list-container$ ul > li')
+          return asyncShadowRootQuerySelector('section$ article$ > .delayed-list-container$ ul > li')
             .catch((error: Error) => {
-              expect(error.message).to.contain('asyncQueryShadowRootSelector must be used with a selector ending in a shadowRoot');
+              expect(error.message).to.contain('asyncShadowRootQuerySelector must be used with a selector ending in a shadowRoot');
             });
         });
 
         cy.wrap(null).then(() => {
-          return asyncQueryShadowRootSelector('$ section$ article$')
+          return asyncShadowRootQuerySelector('$ section$ article$')
             .catch((error: Error) => {
               expect(error.message).to.contain('You can not select a shadowRoot');
             });

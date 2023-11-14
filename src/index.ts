@@ -49,24 +49,24 @@ export function querySelectorAll<E extends Element = Element>(
     );
 }
 
-export function queryShadowRootSelector(
+export function shadowRootQuerySelector(
     root: Document | Element,
     selectors: string
 ): ShadowRoot | null;
-export function queryShadowRootSelector(
+export function shadowRootQuerySelector(
     selectors: string
 ): ShadowRoot | null;
-export function queryShadowRootSelector(
+export function shadowRootQuerySelector(
     ...params: [Document | Element, string] | [string]
 ): ShadowRoot | null {
     const [rootOrSelector, selectors] = params;
     if (typeof rootOrSelector === 'string') {
-        return lib.queryShadowRootSelector(
+        return lib.shadowRootQuerySelector(
             rootOrSelector,
             document
         );
     }
-    return lib.queryShadowRootSelector(
+    return lib.shadowRootQuerySelector(
         selectors,
         rootOrSelector
     );
@@ -138,22 +138,22 @@ export async function asyncQuerySelectorAll<E extends Element = Element>(
     );
 }
 
-export async function asyncQueryShadowRootSelector(
+export async function asyncShadowRootQuerySelector(
     root: Document | Element,
     selectors: string,
     asyncParams?: AsyncParams
 ): Promise<ShadowRoot | null>;
-export async function asyncQueryShadowRootSelector(
+export async function asyncShadowRootQuerySelector(
     selectors: string,
     asyncParams?: AsyncParams
 ): Promise<ShadowRoot | null>;
-export async function asyncQueryShadowRootSelector(
+export async function asyncShadowRootQuerySelector(
     ...params: [Document | Element, string, AsyncParams?] | [string, AsyncParams?]
 ): Promise<ShadowRoot | null> {
 
     if (isParamsWithRoot(params)) {
         const [root, selectors, asyncParams] = params;
-        return await lib.asyncQueryShadowRootSelector(
+        return await lib.asyncShadowRootQuerySelector(
             selectors,
             root,
             asyncParams?.retries || DEFAULT_RETRIES,
@@ -163,7 +163,7 @@ export async function asyncQueryShadowRootSelector(
 
     const [selectors, asyncParams] = params;
     
-    return lib.asyncQueryShadowRootSelector(
+    return lib.asyncShadowRootQuerySelector(
         selectors,
         document,
         asyncParams?.retries || DEFAULT_RETRIES,
