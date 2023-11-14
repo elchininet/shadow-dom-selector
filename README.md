@@ -158,7 +158,7 @@ querySelector(root, selectors);
 
 | Parameter    | Optional      | Description                                        |
 | ------------ | ------------- | -------------------------------------------------- |
-| selectors    | no            | A string containing one or more selectors to match. It cannot end in a Shadow DOM (`$`) |
+| selectors    | no            | A string containing one or more selectors to match. Selectors cannot end in a Shadow DOM (`$`) |
 | root         | yes           | The element from where the query should be performed, it defaults to `document` |
 
 #### querySelectorAll
@@ -173,7 +173,7 @@ querySelectorAll(root, selectors);
 
 | Parameter    | Optional      | Description                                        |
 | ------------ | ------------- | -------------------------------------------------- |
-| selectors    | no            | A string containing one or more selectors to match. It cannot end in a Shadow DOM (`$`) |
+| selectors    | no            | A string containing one or more selectors to match. Selectors cannot end in a Shadow DOM (`$`) |
 | root         | yes           | The element from where the query should be performed, it defaults to `document` |
 
 #### shadowRootQuerySelector
@@ -188,7 +188,7 @@ shadowRootQuerySelector(root, selectors);
 
 | Parameter    | Optional      | Description                                        |
 | ------------ | ------------- | -------------------------------------------------- |
-| selectors    | no            | A string containing one or more selectors to match. It must end in a Shadow DOM (`$`) |
+| selectors    | no            | A string containing one or more selectors to match. Selectors must end in a Shadow DOM (`$`) |
 | root         | yes           | The element from where the query should be performed, it defaults to `document` |
 
 #### asyncQuerySelector
@@ -215,7 +215,7 @@ asyncQuerySelector(root, selectors, asyncParams);
 
 | Parameter    | Optional      | Description                                        |
 | ------------ | ------------- | -------------------------------------------------- |
-| selectors    | no            | A string containing one or more selectors to match. It cannot end in a Shadow DOM (`$`) |
+| selectors    | no            | A string containing one or more selectors to match. Selectors cannot end in a Shadow DOM (`$`) |
 | root         | yes           | The element from where the query should be performed, it defaults to `document` |
 | asyncParams  | yes           | An object containing the parameters which control the retries |
 
@@ -243,7 +243,7 @@ asyncQuerySelectorAll(root, selectors, asyncParams);
 
 | Parameter    | Optional      | Description                                        |
 | ------------ | ------------- | -------------------------------------------------- |
-| selectors    | no            | A string containing one or more selectors to match. It cannot end in a Shadow DOM (`$`) |
+| selectors    | no            | A string containing one or more selectors to match. Selectors cannot end in a Shadow DOM (`$`) |
 | root         | yes           | The element from where the query should be performed, it defaults to `document` |
 | asyncParams  | yes           | An object containing the parameters which control the retries |
 
@@ -271,7 +271,7 @@ asyncShadowRootQuerySelector(root, selectors, asyncParams);
 
 | Parameter    | Optional      | Description                                        |
 | ------------ | ------------- | -------------------------------------------------- |
-| selectors    | no            | A string containing one or more selectors to match. It must end in a Shadow DOM (`$`) |
+| selectors    | no            | A string containing one or more selectors to match. Selectors must end in a Shadow DOM (`$`) |
 | root         | yes           | The element from where the query should be performed, it defaults to `document` |
 | asyncParams  | yes           | An object containing the parameters which control the retries |
 
