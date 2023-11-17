@@ -202,6 +202,10 @@ asyncQuerySelector(root, selectors);
 ```
 
 ```typescript
+asyncQuerySelector(selectors, asyncParams);
+```
+
+```typescript
 asyncQuerySelector(root, selectors, asyncParams);
 ```
 
@@ -230,6 +234,10 @@ asyncQuerySelectorAll(root, selectors);
 ```
 
 ```typescript
+asyncQuerySelectorAll(selectors, asyncParams);
+```
+
+```typescript
 asyncQuerySelectorAll(root, selectors, asyncParams);
 ```
 
@@ -255,6 +263,10 @@ asyncShadowRootQuerySelector(selectors);
 
 ```typescript
 asyncShadowRootQuerySelector(root, selectors);
+```
+
+```typescript
+asyncShadowRootQuerySelector(selectors, asyncParams);
 ```
 
 ```typescript
