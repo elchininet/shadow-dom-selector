@@ -142,6 +142,14 @@ export function getMustErrorText(
     return `${method} must be used with a selector ending in a shadowRoot (${SHADOW_ROOT_SELECTOR}). If you don't want to select a shadowRoot, use ${insteadMethod} instead.`;
 }
 
+export function getElementPromise(
+    element: Document | Element | ShadowRoot | Promise<NodeListOf<Element> | ShadowRoot | null>
+): Promise<Document | Element | NodeListOf<Element> | ShadowRoot | null> {
+    return element instanceof Promise
+        ? element
+        : Promise.resolve(element);
+}
+
 export function getDocumentShadowRootError(): string {
     return `You can not select a shadowRoot (${SHADOW_ROOT_SELECTOR}) of the document.`;
 }
