@@ -1,4 +1,4 @@
-import {
+import type {
     AsyncSelectorBase,
     AsyncSelectorProxy,
     AsyncParams
@@ -322,4 +322,9 @@ const getShadowDomSelectorProxy = (
             get: getter
         }
     ) as AsyncSelectorProxy;
+};
+
+export type {
+    AsyncParams,
+    AsyncSelectorProxy
 };
