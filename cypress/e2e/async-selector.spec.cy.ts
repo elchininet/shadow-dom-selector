@@ -1,4 +1,4 @@
-describe('ShadowDomSelector Selector class spec', () => {
+describe('ShadowDomSelector AsyncSelector class spec', () => {
 
   beforeEach(() => {
     cy.visit('http://localhost:3000');
@@ -9,9 +9,9 @@ describe('ShadowDomSelector Selector class spec', () => {
       .then(async (win) => {
 
         const doc = win.document;
-        const Selector = win.ShadowDomSelector.Selector;
+        const AsyncSelector = win.ShadowDomSelector.AsyncSelector;
 
-        const selector = Selector({
+        const selector = AsyncSelector({
           retries: 1,
           delay: 5
         });
@@ -36,9 +36,9 @@ describe('ShadowDomSelector Selector class spec', () => {
       .then(async (win) => {
 
         const doc = win.document;
-        const Selector = win.ShadowDomSelector.Selector;
+        const AsyncSelector = win.ShadowDomSelector.AsyncSelector;
 
-        const selector = Selector();
+        const selector = AsyncSelector();
 
         const article = doc
           .querySelector('section')
@@ -79,14 +79,14 @@ describe('ShadowDomSelector Selector class spec', () => {
       .then(async (win) => {
 
         const doc = win.document;
-        const Selector = win.ShadowDomSelector.Selector;
+        const AsyncSelector = win.ShadowDomSelector.AsyncSelector;
 
         const article = doc
           .querySelector('section')
           .shadowRoot
           .querySelector('article');
 
-        const selector = Selector(article);
+        const selector = AsyncSelector(article);
 
         expect(await selector.element).to.equal(article);
         
@@ -105,9 +105,9 @@ describe('ShadowDomSelector Selector class spec', () => {
     cy.window()
       .then(async (win) => {
 
-        const Selector = win.ShadowDomSelector.Selector;
+        const AsyncSelector = win.ShadowDomSelector.AsyncSelector;
 
-        const selector = Selector({
+        const selector = AsyncSelector({
           retries: 100
         });
 
@@ -128,9 +128,9 @@ describe('ShadowDomSelector Selector class spec', () => {
     cy.window()
       .then(async (win) => {
 
-        const Selector = win.ShadowDomSelector.Selector;
+        const AsyncSelector = win.ShadowDomSelector.AsyncSelector;
 
-        const selector = Selector({
+        const selector = AsyncSelector({
           retries: 7,
           delay: 13
         });
@@ -146,45 +146,44 @@ describe('ShadowDomSelector Selector class spec', () => {
 
   });
 
-  it('Should throw errors', () => {
+  it('Non existent elements', () => {
 
     cy.window()
       .then(async (win) => {
 
         const doc = win.document;
-        const Selector = win.ShadowDomSelector.Selector;
+        const AsyncSelector = win.ShadowDomSelector.AsyncSelector;
 
-        const selector = Selector({
+        const selector = AsyncSelector({
           delay: 5
         });
 
-        const selectorFromSection = Selector(
+        const selectorFromSection = AsyncSelector(
           doc.querySelector('section').shadowRoot,
           {
             delay: 5
           }
         );
 
-        cy.wrap(null).then(async () => {
-          return selector.section.$.$.element
-            .catch((error: Error) => {
-              expect(error.message).to.equal('Cannot query a shadowRoot of a shadowRoot');
-            });
-        });
+        expect(
+          await selector.article.element
+        ).to.null;
 
-        cy.wrap(null).then(async () => {
-          return selectorFromSection.$.element
-            .catch((error: Error) => {
-              expect(error.message).to.equal('Cannot query a shadowRoot of a shadowRoot');
-            });
-        });
+        expect(
+          await selector.$.element
+        ).to.null;
 
-        cy.wrap(null).then(async () => {
-          return selector.all
-            .catch((error: Error) => {
-              expect(error.message).to.equal('Cannot call "all" method in the starting element');
-            });
-        });
+        expect(
+          await selector.section.$.$.element
+        ).to.null;
+
+        expect(
+          await selectorFromSection.$.element
+        ).to.null;
+
+        expect(
+          (await selector.all).length
+        ).to.equal(0);
 
       });
 

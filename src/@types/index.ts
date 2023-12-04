@@ -3,16 +3,16 @@ export interface AsyncParams {
     delay?: number;
 }
 
-export type SelectorBase = {
+export type AsyncSelectorBase = {
     _element: Document | Element | ShadowRoot | Promise<NodeListOf<Element> | ShadowRoot | null>;
     asyncParams: AsyncParams;
 };
 
-export type SelectorInstance = SelectorBase & {
+export type AsyncSelectorInstance = AsyncSelectorBase & {
     element: Promise<Document | Element | ShadowRoot | null>;
     all: Promise<NodeListOf<Element>>;
 };
 
-export type SelectorProxy = SelectorInstance & {
-    [prop: string]: SelectorProxy;
+export type AsyncSelectorProxy = AsyncSelectorInstance & {
+    [prop: string]: AsyncSelectorProxy;
 };

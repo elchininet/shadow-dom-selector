@@ -1,6 +1,6 @@
 import {
-    SelectorBase,
-    SelectorProxy,
+    AsyncSelectorBase,
+    AsyncSelectorProxy,
     AsyncParams
 } from '@types';
 import {
@@ -187,17 +187,17 @@ export async function asyncShadowRootQuerySelector(
 }
 
 
-export function Selector(
+export function AsyncSelector(
     asyncParams?: AsyncParams
-): SelectorProxy;
-export function Selector(
-    element: Document | Element | ShadowRoot,
+): AsyncSelectorProxy;
+export function AsyncSelector(
+    root: Document | Element | ShadowRoot,
     asyncParams?: AsyncParams
-): SelectorProxy;
-export function Selector (
+): AsyncSelectorProxy;
+export function AsyncSelector (
     firstParameter: Document | Element | ShadowRoot | AsyncParams,
     secondParameter?: AsyncParams
-): SelectorProxy {
+): AsyncSelectorProxy {
     if (firstParameter instanceof Node) {
         const params = {
             retries: DEFAULT_RETRIES,
@@ -221,13 +221,13 @@ export function Selector (
 }
 
 const getShadowDomSelectorProxy = (
-    selector: SelectorBase
-): SelectorProxy => {
-    function getter(selector: SelectorBase, prop: `${ShadowDomSelectorProps.ELEMENT}`): Promise<Document | Element | ShadowRoot | null>;
-    function getter(selector: SelectorBase, prop: `${ShadowDomSelectorProps.ALL}`): Promise<NodeListOf<Element>>;
-    function getter(selector: SelectorBase, prop: `${ShadowDomSelectorProps.PARAMS}`): AsyncParams;
-    function getter(selector: SelectorBase, prop: string): SelectorProxy;
-    function getter(selector: SelectorBase, prop: string): Promise<Document | Element | ShadowRoot | NodeListOf<Element> | null> | AsyncParams | SelectorProxy {
+    selector: AsyncSelectorBase
+): AsyncSelectorProxy => {
+    function getter(selector: AsyncSelectorBase, prop: `${ShadowDomSelectorProps.ELEMENT}`): Promise<Document | Element | ShadowRoot | null>;
+    function getter(selector: AsyncSelectorBase, prop: `${ShadowDomSelectorProps.ALL}`): Promise<NodeListOf<Element>>;
+    function getter(selector: AsyncSelectorBase, prop: `${ShadowDomSelectorProps.PARAMS}`): AsyncParams;
+    function getter(selector: AsyncSelectorBase, prop: string): AsyncSelectorProxy;
+    function getter(selector: AsyncSelectorBase, prop: string): Promise<Document | Element | ShadowRoot | NodeListOf<Element> | null> | AsyncParams | AsyncSelectorProxy {
         if (prop === ShadowDomSelectorProps.PARAMS) {
             return selector[prop];
         }
@@ -244,24 +244,19 @@ const getShadowDomSelectorProxy = (
         if (prop === ShadowDomSelectorProps.ALL) {
             const element = getElementPromise(selector._element);
             return element
-                .then((element: Element | ShadowRoot | NodeListOf<Element> | null) => {
-                    if (element === null) {
-                        return document.querySelectorAll(INVALID_SELECTOR);
-                    }
+                .then((element: Document | Element | ShadowRoot | NodeListOf<Element> | null) => {
                     if (element instanceof NodeList) {
                         return element;
                     }
-                    throw new SyntaxError(`Cannot call "${ShadowDomSelectorProps.ALL}" method in the starting element`);
+                    return document.querySelectorAll(INVALID_SELECTOR);
                 });
         }
         if (prop === SHADOW_ROOT_SELECTOR) {
             const element = getElementPromise(selector._element);
             const promisableShadowRoot = element
                 .then((element: Element | ShadowRoot | NodeListOf<Element> | null) => {
-                    if (element instanceof ShadowRoot) {
-                        throw new SyntaxError('Cannot query a shadowRoot of a shadowRoot');
-                    }
                     if (
+                        element instanceof ShadowRoot ||
                         element === null ||
                         (
                             element instanceof NodeList &&
@@ -327,5 +322,5 @@ const getShadowDomSelectorProxy = (
         {
             get: getter
         }
-    ) as SelectorProxy;
+    ) as AsyncSelectorProxy;
 };
