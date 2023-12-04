@@ -38,9 +38,10 @@ const shadow = document.querySelector('section').shadowRoot.querySelector('artic
 `shadow-dom-selector` allows you to do the same in the next way:
 
 ```javascript
+// $ character at the end of a selector means to select its Shadom DOM
+
 import { querySelector, querySelectorAll, shadowRootQuerySelector } from 'shadow-dom-selector';
 
-// $ character at the end of a selector means to select its Shadom DOM  
 const secondLi querySelector('section$ article$ ul > li');
 const allLis querySelectorAll('section$ article$ ul > li');
 const shadow = shadowRootQuerySelector('section$ article$');
@@ -56,12 +57,29 @@ With the same previous DOM tree, if we do this:
 const element = document.querySelector('article').shadowRoot.querySelector('div').shadowRoot.querySelector('section > h1');
 ```
 
-It will throw an error, because none of the elements in those queries exists. If you don‘t know if the elements exist or not, you will require to use [optional chaining] or wrap all the code in conditions:
+It will throw an error, because none of the elements in those queries exist. If you don‘t know if the elements exist or not, you will require to wrap all the code in conditions or use [optional chaining] if your target is `ES2015` or greater:
 
 ```javascript
+// With conditions
+const article = document.querySelector('article');
+if (article) {
+  const articleShadowRoot = article.shadowRoot;
+  if (articleShadowRoot) {
+    const div = articleShadowRoot.querySelector('div');
+    if (div) {
+      const shadow = div.shadowRoot;
+      if (shadow) {
+        const element = shadow.querySelector('section > h1');
+        const elements = shadow.querySelectorAll('p');
+      }
+    }
+  }
+}
+
+// With optional chaining in ES2015+
+const shadow = document.querySelector('article')?.shadowRoot?.querySelector('div')?.shadowRoot;
 const element = document.querySelector('article')?.shadowRoot?.querySelector('div')?.shadowRoot?.querySelector('section > h1');
 const elements = document.querySelector('article')?.shadowRoot?.querySelector('div')?.shadowRoot?.querySelectorAll('p');
-const shadow = document.querySelector('article')?.shadowRoot?.querySelector('div')?.shadowRoot;
 ```
 
 Which will return `undefined` if some element doesn‘t exist. With `shadow-dom-selector`, you just need to write the query and it will return the same that is returned by the native `querySelector` and `querySelectorAll` if the query cannot be satisfied.
@@ -69,38 +87,62 @@ Which will return `undefined` if some element doesn‘t exist. With `shadow-dom-
 ```javascript
 import { querySelector, querySelectorAll, shadowRootQuerySelector } from 'shadow-dom-selector';
 
-const element = querySelector('article$ div$ section > h1'); // null
-const elements = querySelectorAll('article div$ p'); // empty NodeList
 const shadow = shadowRootQuerySelector('article$ div$'); // null
+const element = querySelector('article$ div$ section > h1'); // null
+const elements = querySelectorAll('article$ div$ p'); // empty NodeList
 ```
 
 ### Async queries
 
-If the elements are not already rendered into the DOM in the moment that the query is made you will receive `null`. `shadow-dom-selector` allows it to wait for the elements to appear, allowing you to decide how many times it will try to query for the element before giving up and returning `null` or an empty `NodeList`.
+If the elements are not already rendered into the DOM in the moment that the query is made you will receive `null`. `shadow-dom-selector` allows you to wait for the elements to appear deciding how many times it will try to query for the element before giving up and returning `null` or an empty `NodeList`.
 
 ```javascript
+// Using the async methods
 import { asyncQuerySelector, asyncQuerySelectorAll, asyncShadowRootQuerySelector } from 'shadow-dom-selector';
 
-const element = asyncQuerySelector('article$ div$ section > h1')
-    .then((h1) => {
-        // Do stuff with the h1 element
-        // If it is not found after all the retries, it will return null
-    });
+asyncShadowRootQuerySelector('article$ div$')
+  .then((shadowRoot) => {
+      // Do stuff with the shadowRoot
+      // If it is not found after all the retries, it will return null
+  });
 
-const elements = asyncQuerySelectorAll('article div$ p')
-    .then((paragraphs) => {
-        // Do stuff with the paragraphs
-        // If they are not found after all the retries, it will return an empty NodeList
-    });
+asyncQuerySelector('article$ div$ section > h1')
+  .then((h1) => {
+      // Do stuff with the h1 element
+      // If it is not found after all the retries, it will return null
+  });
 
-const shadow = asyncShadowRootQuerySelector('article$ div$')
-    .then((shadowRoot) => {
-        // Do stuff with the shadowRoot
-        // If it is not found after all the retries, it will return null
-    });
+asyncQuerySelectorAll('article$ div$ p')
+  .then((paragraphs) => {
+      // Do stuff with the paragraphs
+      // If they are not found after all the retries, it will return an empty NodeList
+  });
+
+// Using async dot notation
+import { AsyncSelector } from 'shadow-dom-selector';
+
+const selector = AsyncSelector();
+
+selector.article.$.div.$.element
+  .then((shadowRoot) => {
+    // Do stuff with the shadowRoot
+    // If it is not found after all the retries, it will return null
+  });
+
+selector.article.$.div.$['section > h1'].element
+  .then((h1) => {
+    // Do stuff with the h1 element
+    // If it is not found after all the retries, it will return null
+  });
+
+selector.article.$.div.$.p.all
+  .then((paragraphs) => {
+    // Do stuff with the paragraphs
+    // If they are not found after all the retries, it will return an empty NodeList
+  });
 ```
 
-All these three functions allow you to to specify the amount of retries and the delay between each one of them. Consult the [API](#api) section for more details.
+Either the async methods or the async dot notation allow you to to specify the amount of retries and the delay between each one of them. Consult the [API](#api) section for more details.
 
 ## Install
 
@@ -142,6 +184,7 @@ ShadowDomSelector.shadowRootQuerySelector;
 ShadowDomSelector.asyncQuerySelector;
 ShadowDomSelector.asyncQuerySelectorAll;
 ShadowDomSelector.asyncShadowRootQuerySelector;
+ShadowDomSelector.AsyncSelector;
 ```
 
 ## API
@@ -149,11 +192,11 @@ ShadowDomSelector.asyncShadowRootQuerySelector;
 #### querySelector
 
 ```typescript
-querySelector(selectors);
+querySelector(selectors): Element | null;
 ```
 
 ```typescript
-querySelector(root, selectors);
+querySelector(root, selectors): Element | null;
 ```
 
 | Parameter    | Optional      | Description                                        |
@@ -164,11 +207,11 @@ querySelector(root, selectors);
 #### querySelectorAll
 
 ```typescript
-querySelectorAll(selectors);
+querySelectorAll(selectors): NodeListOf<Element>;
 ```
 
 ```typescript
-querySelectorAll(root, selectors);
+querySelectorAll(root, selectors): NodeListOf<Element>;
 ```
 
 | Parameter    | Optional      | Description                                        |
@@ -179,11 +222,11 @@ querySelectorAll(root, selectors);
 #### shadowRootQuerySelector
 
 ```typescript
-shadowRootQuerySelector(selectors);
+shadowRootQuerySelector(selectors): ShadowRoot | null;
 ```
 
 ```typescript
-shadowRootQuerySelector(root, selectors);
+shadowRootQuerySelector(root, selectors): ShadowRoot | null;
 ```
 
 | Parameter    | Optional      | Description                                        |
@@ -194,20 +237,26 @@ shadowRootQuerySelector(root, selectors);
 #### asyncQuerySelector
 
 ```typescript
-asyncQuerySelector(selectors);
+asyncQuerySelector(selectors): Promise<Element | null>;
 ```
 
 ```typescript
-asyncQuerySelector(root, selectors);
+asyncQuerySelector(root, selectors): Promise<Element | null>;
 ```
 
 ```typescript
-asyncQuerySelector(selectors, asyncParams);
+asyncQuerySelector(selectors, asyncParams): Promise<Element | null>;
 ```
 
 ```typescript
-asyncQuerySelector(root, selectors, asyncParams);
+asyncQuerySelector(root, selectors, asyncParams): Promise<Element | null>;
 ```
+
+| Parameter    | Optional      | Description                                        |
+| ------------ | ------------- | -------------------------------------------------- |
+| selectors    | no            | A string containing one or more selectors to match. Selectors cannot end in a Shadow DOM (`$`) |
+| root         | yes           | The element from where the query should be performed, it defaults to `document` |
+| asyncParams  | yes           | An object containing the parameters which control the retries |
 
 ```typescript
 // asyncParams properties
@@ -216,37 +265,23 @@ asyncQuerySelector(root, selectors, asyncParams);
   delay?: number; // delay between each retry (defaults to 10)
 }
 ```
-
-| Parameter    | Optional      | Description                                        |
-| ------------ | ------------- | -------------------------------------------------- |
-| selectors    | no            | A string containing one or more selectors to match. Selectors cannot end in a Shadow DOM (`$`) |
-| root         | yes           | The element from where the query should be performed, it defaults to `document` |
-| asyncParams  | yes           | An object containing the parameters which control the retries |
 
 #### asyncQuerySelectorAll
 
 ```typescript
-asyncQuerySelectorAll(selectors);
+asyncQuerySelectorAll(selectors): Promise<NodeListOf<Element>>;
 ```
 
 ```typescript
-asyncQuerySelectorAll(root, selectors);
+asyncQuerySelectorAll(root, selectors): Promise<NodeListOf<Element>>;
 ```
 
 ```typescript
-asyncQuerySelectorAll(selectors, asyncParams);
+asyncQuerySelectorAll(selectors, asyncParams): Promise<NodeListOf<Element>>;
 ```
 
 ```typescript
-asyncQuerySelectorAll(root, selectors, asyncParams);
-```
-
-```typescript
-// asyncParams properties
-{
-  retries?: number; // how many retries before giving up (defaults to 10)
-  delay?: number; // delay between each retry (defaults to 10)
-}
+asyncQuerySelectorAll(root, selectors, asyncParams): Promise<NodeListOf<Element>>;
 ```
 
 | Parameter    | Optional      | Description                                        |
@@ -255,30 +290,30 @@ asyncQuerySelectorAll(root, selectors, asyncParams);
 | root         | yes           | The element from where the query should be performed, it defaults to `document` |
 | asyncParams  | yes           | An object containing the parameters which control the retries |
 
-#### asyncShadowRootQuerySelector
-
-```typescript
-asyncShadowRootQuerySelector(selectors);
-```
-
-```typescript
-asyncShadowRootQuerySelector(root, selectors);
-```
-
-```typescript
-asyncShadowRootQuerySelector(selectors, asyncParams);
-```
-
-```typescript
-asyncShadowRootQuerySelector(root, selectors, asyncParams);
-```
-
 ```typescript
 // asyncParams properties
 {
   retries?: number; // how many retries before giving up (defaults to 10)
   delay?: number; // delay between each retry (defaults to 10)
 }
+```
+
+#### asyncShadowRootQuerySelector
+
+```typescript
+asyncShadowRootQuerySelector(selectors): Promise<ShadowRoot | null>;
+```
+
+```typescript
+asyncShadowRootQuerySelector(root, selectors): Promise<ShadowRoot | null>;
+```
+
+```typescript
+asyncShadowRootQuerySelector(selectors, asyncParams): Promise<ShadowRoot | null>;
+```
+
+```typescript
+asyncShadowRootQuerySelector(root, selectors, asyncParams): Promise<ShadowRoot | null>;
 ```
 
 | Parameter    | Optional      | Description                                        |
@@ -287,6 +322,69 @@ asyncShadowRootQuerySelector(root, selectors, asyncParams);
 | root         | yes           | The element from where the query should be performed, it defaults to `document` |
 | asyncParams  | yes           | An object containing the parameters which control the retries |
 
+```typescript
+// asyncParams properties
+{
+  retries?: number; // how many retries before giving up (defaults to 10)
+  delay?: number; // delay between each retry (defaults to 10)
+}
+```
+
+#### AsyncSelector
+
+```typescript
+AsyncSelector(root): AsyncSelectorProxy;
+```
+
+```typescript
+AsyncSelector(root, asyncParams): AsyncSelectorProxy;
+```
+
+| Parameter    | Optional      | Description                                        |
+| ------------ | ------------- | -------------------------------------------------- |
+| root         | yes           | The element or shadowRoot from where the query should be performed, it defaults to `document` |
+| asyncParams  | yes           | An object containing the parameters which control the retries |
+
+```typescript
+// asyncParams properties
+{
+  retries?: number; // how many retries before giving up (defaults to 10)
+  delay?: number; // delay between each retry (defaults to 10)
+}
+```
+
+This function returns an object with the next properties:
+
+```typescript
+// AsyncSelectorProxy properties
+{
+  element: Promise<Document | Element | ShadowRoot | null>; // A promise that resolves in the first queried element
+  all: Promise<NodeListOf<Element>>; // A promise that resolves in all the queried elements
+  $: Promise<ShadowRoot | null>; // A promise that resolves in the shadowRoot of the first queried element
+  asyncParams: { retries: number; delay: number; } // The asyncParameters being used in the chain
+  [any other property]: AsyncSelectorProxy; // Returns another AsyncSelectorProxy pointing to the element queried by the property name
+}
+```
+
+##### Examples of AsyncSelector
+
+```typescript
+const selector = AsyncSelector(); // AsyncSelectorProxy starting in the document with the default asyncParams
+await selector.element === document;
+await selector.all; // Empty Node list
+await selector.$; // null
+```
+
+```typescript
+const selector = AsyncSelector({
+  retries: 100,
+  delay: 50
+}); // AsyncSelectorProxy starting in the document and with custom asyncParams
+await selector.section.$.element === document.querySelector('section').shadowRoot;
+await selector.section.$.all; // Empty Node list
+await selector.section.$.article.all === document.querySelector('section').shadowRoot.querySelectorAll('article');
+selector.section.$.article.asyncParams; // { retries: 100, delay: 50 }
+```
 
 [Shadow DOM]: https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_shadow_DOM
 [optional chaining]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining

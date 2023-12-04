@@ -1,7 +1,22 @@
-import { AsyncParams } from '@types';
-import { DEFAULT_RETRIES, DEFAULT_DELAY } from '@constants';
+import {
+    AsyncSelectorBase,
+    AsyncSelectorProxy,
+    AsyncParams
+} from '@types';
+import {
+    DEFAULT_RETRIES,
+    DEFAULT_DELAY,
+    INVALID_SELECTOR,
+    SHADOW_ROOT_SELECTOR,
+    ShadowDomSelectorProps,
+} from '@constants';
 import * as lib from '@lib';
-import { isParamsWithRoot } from '@utilities';
+import {
+    isParamsWithRoot,
+    getPromisableShadowRoot,
+    getPromisableElement,
+    getElementPromise
+} from '@utilities';
 
 export function querySelector<E extends Element = Element>(
     root: Document | Element,
@@ -170,3 +185,141 @@ export async function asyncShadowRootQuerySelector(
         asyncParams?.delay || DEFAULT_DELAY
     );
 }
+
+export function AsyncSelector(
+    asyncParams?: AsyncParams
+): AsyncSelectorProxy;
+export function AsyncSelector(
+    root: Document | Element | ShadowRoot,
+    asyncParams?: AsyncParams
+): AsyncSelectorProxy;
+export function AsyncSelector (
+    firstParameter: Document | Element | ShadowRoot | AsyncParams,
+    secondParameter?: AsyncParams
+): AsyncSelectorProxy {
+    if (firstParameter instanceof Node) {
+        const params = {
+            retries: DEFAULT_RETRIES,
+            delay: DEFAULT_DELAY,
+            ...(secondParameter || {})
+        };
+        return getShadowDomSelectorProxy({
+            _element: firstParameter,
+            asyncParams: params
+        });
+    }
+    const params = {
+        retries: DEFAULT_RETRIES,
+        delay: DEFAULT_DELAY,
+        ...(firstParameter || {})
+    };
+    return getShadowDomSelectorProxy({
+        _element: document,
+        asyncParams: params
+    });
+}
+
+const getShadowDomSelectorProxy = (
+    selector: AsyncSelectorBase
+): AsyncSelectorProxy => {
+    function getter(selector: AsyncSelectorBase, prop: `${ShadowDomSelectorProps.ELEMENT}`): Promise<Document | Element | ShadowRoot | null>;
+    function getter(selector: AsyncSelectorBase, prop: `${ShadowDomSelectorProps.ALL}`): Promise<NodeListOf<Element>>;
+    function getter(selector: AsyncSelectorBase, prop: `${ShadowDomSelectorProps.PARAMS}`): AsyncParams;
+    function getter(selector: AsyncSelectorBase, prop: string): AsyncSelectorProxy;
+    function getter(selector: AsyncSelectorBase, prop: string): Promise<Document | Element | ShadowRoot | NodeListOf<Element> | null> | AsyncParams | AsyncSelectorProxy {
+        if (prop === ShadowDomSelectorProps.PARAMS) {
+            return selector[prop];
+        }
+        if (prop === ShadowDomSelectorProps.ELEMENT) {
+            const element = getElementPromise(selector._element);
+            return element
+                .then((element: Document | Element | ShadowRoot | NodeListOf<Element> | null) => {
+                    if (element instanceof NodeList) {
+                        return element[0] || null;
+                    }
+                    return element;
+                });
+        }
+        if (prop === ShadowDomSelectorProps.ALL) {
+            const element = getElementPromise(selector._element);
+            return element
+                .then((element: Document | Element | ShadowRoot | NodeListOf<Element> | null) => {
+                    if (element instanceof NodeList) {
+                        return element;
+                    }
+                    return document.querySelectorAll(INVALID_SELECTOR);
+                });
+        }
+        if (prop === SHADOW_ROOT_SELECTOR) {
+            const element = getElementPromise(selector._element);
+            const promisableShadowRoot = element
+                .then((element: Element | ShadowRoot | NodeListOf<Element> | null) => {
+                    if (
+                        element instanceof ShadowRoot ||
+                        element === null ||
+                        (
+                            element instanceof NodeList &&
+                            element.length === 0
+                        )
+                    ) {
+                        return null;
+                    }
+                    if (element instanceof NodeList) {
+                        return getPromisableShadowRoot(
+                            element[0],
+                            selector.asyncParams.retries,
+                            selector.asyncParams.delay
+                        );
+                    }
+                    return getPromisableShadowRoot(
+                        element,
+                        selector.asyncParams.retries,
+                        selector.asyncParams.delay
+                    );
+                });
+            return getShadowDomSelectorProxy({
+                _element: promisableShadowRoot,
+                asyncParams: selector.asyncParams
+            });
+        }
+        const element = getElementPromise(selector._element);
+        const promisableElement = element
+            .then((element: Element | ShadowRoot | NodeListOf<Element> | null) => {
+                if (
+                    element === null ||
+                    (
+                        element instanceof NodeList &&
+                        element.length === 0
+                    )
+                ) {
+                    return null;
+                }
+                if (element instanceof NodeList) {
+                    return getPromisableElement(
+                        element[0],
+                        prop,
+                        selector.asyncParams.retries,
+                        selector.asyncParams.delay,
+                        true
+                    );
+                }
+                return getPromisableElement(
+                    element,
+                    prop,
+                    selector.asyncParams.retries,
+                    selector.asyncParams.delay,
+                    true
+                );
+            });
+        return getShadowDomSelectorProxy({
+            _element: promisableElement,
+            asyncParams: selector.asyncParams
+        });
+    }
+    return new Proxy(
+        selector,
+        {
+            get: getter
+        }
+    ) as AsyncSelectorProxy;
+};

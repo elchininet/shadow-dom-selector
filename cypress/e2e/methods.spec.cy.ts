@@ -8,7 +8,7 @@ describe('ShadowDomSelector spec', () => {
     cy.window()
       .then(async (win) => {
 
-        const document = win.document;
+        const doc = win.document;
         const ShadowDomSelector = win.ShadowDomSelector;
         const {
           querySelector,
@@ -17,8 +17,8 @@ describe('ShadowDomSelector spec', () => {
           asyncQuerySelectorAll
         } = ShadowDomSelector;
 
-        const section = document.querySelector('section');
-        const allSections = document.querySelectorAll('section');
+        const section = doc.querySelector('section');
+        const allSections = doc.querySelectorAll('section');
         const asyncParams = { retries: 1, delay: 0 };
 
         expect(querySelector('section')).to.equal(section);
@@ -43,7 +43,7 @@ describe('ShadowDomSelector spec', () => {
         expect(
           querySelector('p, a, section')
         ).to.equal(
-          document.querySelector('p, a, section')
+          doc.querySelector('p, a, section')
         );
 
       });
@@ -53,7 +53,7 @@ describe('ShadowDomSelector spec', () => {
     cy.window()
       .then((win) => {
 
-        const document = win.document;
+        const doc = win.document;
         const ShadowDomSelector = win.ShadowDomSelector;
         const { querySelector } = ShadowDomSelector;
 
@@ -74,19 +74,19 @@ describe('ShadowDomSelector spec', () => {
         );
 
         expect(
-          querySelector(document.querySelector('section'), '$ article$ li')
+          querySelector(doc.querySelector('section'), '$ article$ li')
         ).to.equal(
-          document.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelector('li')
+          doc.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelector('li')
         );
 
         expect(
           querySelector('section$ li, section$ article$ li')
         ).to.equal(
-          document.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelector('li')
+          doc.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelector('li')
         );
 
         expect(
-          querySelector(document.body, '$ article$ li')
+          querySelector(doc.body, '$ article$ li')
         ).to.null;
 
         expect(
@@ -117,26 +117,26 @@ describe('ShadowDomSelector spec', () => {
     cy.window()
       .then((win) => {
 
-        const document = win.document;
+        const doc = win.document;
         const ShadowDomSelector = win.ShadowDomSelector;
         const { querySelectorAll } = ShadowDomSelector;
 
         expect(
           querySelectorAll('section$ .article$ ul li')
         ).to.deep.equal(
-          document.querySelector('section').shadowRoot.querySelector('.article').shadowRoot.querySelectorAll('ul li')
+          doc.querySelector('section').shadowRoot.querySelector('.article').shadowRoot.querySelectorAll('ul li')
         );
 
         expect(
-          querySelectorAll(document.querySelector('section'), '$ article$ li')
+          querySelectorAll(doc.querySelector('section'), '$ article$ li')
         ).to.deep.equal(
-          document.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelectorAll('li')
+          doc.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelectorAll('li')
         );
 
         expect(
           querySelectorAll('section$ li, section$ article$ li')
         ).to.deep.equal(
-          document.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelectorAll('li')
+          doc.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelectorAll('li')
         );
 
         expect(
@@ -162,41 +162,41 @@ describe('ShadowDomSelector spec', () => {
     cy.window()
       .then((win) => {
 
-        const document = win.document;
+        const doc = win.document;
         const ShadowDomSelector = win.ShadowDomSelector;
         const { shadowRootQuerySelector } = ShadowDomSelector;
 
         expect(
           shadowRootQuerySelector('section$')
         ).to.equal(
-          document.querySelector('section').shadowRoot
+          doc.querySelector('section').shadowRoot
         );
 
         expect(
           shadowRootQuerySelector('section$ .article$')
         ).to.equal(
-          document.querySelector('section').shadowRoot.querySelector('.article').shadowRoot
+          doc.querySelector('section').shadowRoot.querySelector('.article').shadowRoot
         );
 
         expect(
-          shadowRootQuerySelector(document.querySelector('section'), '$ article$')
+          shadowRootQuerySelector(doc.querySelector('section'), '$ article$')
         ).to.equal(
-          document.querySelector('section').shadowRoot.querySelector('article').shadowRoot
+          doc.querySelector('section').shadowRoot.querySelector('article').shadowRoot
         );
 
         expect(
           shadowRootQuerySelector('section$ div$, section$ article$')
         ).to.equal(
-          document.querySelector('section').shadowRoot.querySelector('article').shadowRoot
+          doc.querySelector('section').shadowRoot.querySelector('article').shadowRoot
         );
 
         expect(
           shadowRootQuerySelector(
-            document.querySelector('section'),
+            doc.querySelector('section'),
             '$'
           )
         ).to.equal(
-          document.querySelector('section').shadowRoot
+          doc.querySelector('section').shadowRoot
         );
 
         expect(
@@ -232,20 +232,20 @@ describe('ShadowDomSelector spec', () => {
     cy.window()
       .then(async (win) => {
 
-        const document = win.document;
+        const doc = win.document;
         const ShadowDomSelector = win.ShadowDomSelector;
         const { asyncQuerySelector } = ShadowDomSelector;
 
         expect(
           await asyncQuerySelector('section')
         ).to.equal(
-          document.querySelector('section')
+          doc.querySelector('section')
         );
 
         expect(
           await asyncQuerySelector('#section$ .article')
         ).to.equal(
-          document.querySelector('#section').shadowRoot.querySelector('.article')
+          doc.querySelector('#section').shadowRoot.querySelector('.article')
         );
 
         expect(
@@ -263,36 +263,36 @@ describe('ShadowDomSelector spec', () => {
         expect(
           await asyncQuerySelector('section$ div, section$ article$ li:nth-of-type(2)')
         ).to.equal(
-          document.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelector('li:nth-of-type(2)')
+          doc.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelector('li:nth-of-type(2)')
         );
 
         expect(
           await asyncQuerySelector(
-            document.querySelector('section'),
+            doc.querySelector('section'),
             '$ article$ li:nth-of-type(2)'
           )
         ).to.equal(
-          document.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelector('li:nth-of-type(2)')
+          doc.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelector('li:nth-of-type(2)')
         );
 
         expect(
           await asyncQuerySelector(
-            document.querySelector('section'),
+            doc.querySelector('section'),
             '$ article$ li:nth-of-type(3)',
             { retries: 5 }
           )
         ).to.equal(
-          document.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelector('li:nth-of-type(3)')
+          doc.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelector('li:nth-of-type(3)')
         );
 
         expect(
           await asyncQuerySelector(
-            document.querySelector('section'),
+            doc.querySelector('section'),
             '$ article$ li',
             { delay: 10 }
           )
         ).to.equal(
-          document.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelector('li')
+          doc.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelector('li')
         );
 
         expect(
@@ -301,7 +301,7 @@ describe('ShadowDomSelector spec', () => {
             { retries: 10 }
           )
         ).to.equal(
-          document.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelector('ul > li')
+          doc.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelector('ul > li')
         );
 
         expect(
@@ -310,11 +310,11 @@ describe('ShadowDomSelector spec', () => {
             { delay: 1 }
           )
         ).to.equal(
-          document.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelector('li:nth-of-type(2)')
+          doc.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelector('li:nth-of-type(2)')
         );
 
         expect(
-          await asyncQuerySelector(document.body, '$ article$ li')
+          await asyncQuerySelector(doc.body, '$ article$ li')
         ).to.null;
 
         expect(
@@ -342,26 +342,26 @@ describe('ShadowDomSelector spec', () => {
     cy.window()
       .then(async (win) => {
 
-        const document = win.document;
+        const doc = win.document;
         const ShadowDomSelector = win.ShadowDomSelector;
         const { asyncQuerySelectorAll } = ShadowDomSelector;
 
         expect(
           await asyncQuerySelectorAll('section')
         ).to.deep.equal(
-          document.querySelectorAll('section')
+          doc.querySelectorAll('section')
         );
 
         expect(
           await asyncQuerySelectorAll('#section$ .article')
         ).to.deep.equal(
-          document.querySelector('#section').shadowRoot.querySelectorAll('.article')
+          doc.querySelector('#section').shadowRoot.querySelectorAll('.article')
         );
 
         expect(
           await asyncQuerySelectorAll('#section$ div li, #section$ .article$ li')
         ).to.deep.equal(
-          document.querySelector('#section').shadowRoot.querySelector('.article').shadowRoot.querySelectorAll('li')
+          doc.querySelector('#section').shadowRoot.querySelector('.article').shadowRoot.querySelectorAll('li')
         );
 
         cy.wrap(null).then(() => {
@@ -382,31 +382,31 @@ describe('ShadowDomSelector spec', () => {
 
         expect(
           await asyncQuerySelectorAll(
-            document.querySelector('section'),
+            doc.querySelector('section'),
             '$ article$ li'
           )
         ).to.deep.equal(
-          document.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelectorAll('li')
+          doc.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelectorAll('li')
         );
 
         expect(
           await asyncQuerySelectorAll(
-            document.querySelector('section'),
+            doc.querySelector('section'),
             '$ article$ li',
             { retries: 5 }
           )
         ).to.deep.equal(
-          document.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelectorAll('li')
+          doc.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelectorAll('li')
         );
 
         expect(
           await asyncQuerySelectorAll(
-            document.querySelector('section'),
+            doc.querySelector('section'),
             '$ article$ li',
             { delay: 10 }
           )
         ).to.deep.equal(
-          document.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelectorAll('li')
+          doc.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelectorAll('li')
         );
 
         expect(
@@ -415,7 +415,7 @@ describe('ShadowDomSelector spec', () => {
             { retries: 10 }
           )
         ).to.deep.equal(
-          document.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelectorAll('ul > li')
+          doc.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelectorAll('ul > li')
         );
 
         expect(
@@ -424,7 +424,7 @@ describe('ShadowDomSelector spec', () => {
             { delay: 1 }
           )
         ).to.deep.equal(
-          document.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelectorAll('li')
+          doc.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelectorAll('li')
         );
 
         expect(
@@ -466,26 +466,26 @@ describe('ShadowDomSelector spec', () => {
     cy.window()
       .then(async (win) => {
 
-        const document = win.document;
+        const doc = win.document;
         const ShadowDomSelector = win.ShadowDomSelector;
         const { asyncShadowRootQuerySelector } = ShadowDomSelector;
 
         expect(
           await asyncShadowRootQuerySelector('section$')
         ).to.equal(
-          document.querySelector('section').shadowRoot
+          doc.querySelector('section').shadowRoot
         );
 
         expect(
           await asyncShadowRootQuerySelector('#section$ .article$')
         ).to.deep.equal(
-          document.querySelector('#section').shadowRoot.querySelector('.article').shadowRoot
+          doc.querySelector('#section').shadowRoot.querySelector('.article').shadowRoot
         );
 
         expect(
           await asyncShadowRootQuerySelector('#section$ div$, #section$ .article$')
         ).to.deep.equal(
-          document.querySelector('#section').shadowRoot.querySelector('.article').shadowRoot
+          doc.querySelector('#section').shadowRoot.querySelector('.article').shadowRoot
         );
 
         cy.wrap(null).then(() => {
@@ -497,31 +497,31 @@ describe('ShadowDomSelector spec', () => {
 
         expect(
           await asyncShadowRootQuerySelector(
-            document.querySelector('section'),
+            doc.querySelector('section'),
             '$ article$'
           )
         ).to.equal(
-          document.querySelector('section').shadowRoot.querySelector('article').shadowRoot
+          doc.querySelector('section').shadowRoot.querySelector('article').shadowRoot
         );
 
         expect(
           await asyncShadowRootQuerySelector(
-            document.querySelector('section'),
+            doc.querySelector('section'),
             '$ article$',
             { retries: 5 }
           )
         ).to.equal(
-          document.querySelector('section').shadowRoot.querySelector('article').shadowRoot
+          doc.querySelector('section').shadowRoot.querySelector('article').shadowRoot
         );
 
         expect(
           await asyncShadowRootQuerySelector(
-            document.querySelector('section'),
+            doc.querySelector('section'),
             '$ article$',
             { delay: 10 },
           )
         ).to.equal(
-          document.querySelector('section').shadowRoot.querySelector('article').shadowRoot
+          doc.querySelector('section').shadowRoot.querySelector('article').shadowRoot
         );
 
         expect(
@@ -530,7 +530,7 @@ describe('ShadowDomSelector spec', () => {
             { retries: 10 }
           )
         ).to.equal(
-          document.querySelector('section').shadowRoot.querySelector('article').shadowRoot
+          doc.querySelector('section').shadowRoot.querySelector('article').shadowRoot
         );
 
         expect(
@@ -539,16 +539,16 @@ describe('ShadowDomSelector spec', () => {
             { delay: 1 }
           )
         ).to.equal(
-          document.querySelector('section').shadowRoot.querySelector('article').shadowRoot
+          doc.querySelector('section').shadowRoot.querySelector('article').shadowRoot
         );
 
         expect(
           await asyncShadowRootQuerySelector(
-            document.querySelector('section'),
+            doc.querySelector('section'),
             '$'
           )
         ).to.equal(
-          document.querySelector('section').shadowRoot
+          doc.querySelector('section').shadowRoot
         );
 
         expect(
