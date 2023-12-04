@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.0.3] - 2023-12-04
+
+- Allow `buildAsyncSelector` method to receive a Promise
+
 ## [2.0.2] - 2023-12-04
 
 - `AsyncSelector` has been renamed to `buildAsyncSelector`
