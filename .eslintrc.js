@@ -16,8 +16,9 @@ module.exports = {
     },
     plugins: ['@typescript-eslint'],
     rules: {
-        quotes: ['error', 'single', { 'avoidEscape': true, 'allowTemplateLiterals': true }],
+        quotes: ['error', 'single', { avoidEscape: true, allowTemplateLiterals: true }],
         semi: ['error', 'always'],
+        indent: ['error', 4],
         '@typescript-eslint/no-var-requires': 0,
         '@typescript-eslint/ban-ts-ignore': 0,
         '@typescript-eslint/ban-ts-comment': 0,
