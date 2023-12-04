@@ -119,9 +119,9 @@ asyncQuerySelectorAll('article$ div$ p')
   });
 
 // Using async dot notation
-import { AsyncSelector } from 'shadow-dom-selector';
+import { buildAsyncSelector } from 'shadow-dom-selector';
 
-const selector = AsyncSelector();
+const selector = buildAsyncSelector();
 
 selector.article.$.div.$.element
   .then((shadowRoot) => {
@@ -184,7 +184,7 @@ ShadowDomSelector.shadowRootQuerySelector;
 ShadowDomSelector.asyncQuerySelector;
 ShadowDomSelector.asyncQuerySelectorAll;
 ShadowDomSelector.asyncShadowRootQuerySelector;
-ShadowDomSelector.AsyncSelector;
+ShadowDomSelector.buildAsyncSelector;
 ```
 
 ## API
@@ -330,14 +330,14 @@ asyncShadowRootQuerySelector(root, selectors, asyncParams): Promise<ShadowRoot |
 }
 ```
 
-#### AsyncSelector
+#### buildAsyncSelector
 
 ```typescript
-AsyncSelector(root): AsyncSelectorProxy;
+buildAsyncSelector(root): AsyncSelectorProxy;
 ```
 
 ```typescript
-AsyncSelector(root, asyncParams): AsyncSelectorProxy;
+buildAsyncSelector(root, asyncParams): AsyncSelectorProxy;
 ```
 
 | Parameter    | Optional      | Description                                        |
@@ -366,17 +366,17 @@ This function returns an object with the next properties:
 }
 ```
 
-##### Examples of AsyncSelector
+##### Examples of buildAsyncSelector
 
 ```typescript
-const selector = AsyncSelector(); // AsyncSelectorProxy starting in the document with the default asyncParams
+const selector = buildAsyncSelector(); // AsyncSelectorProxy starting in the document with the default asyncParams
 await selector.element === document;
 await selector.all; // Empty Node list
 await selector.$; // null
 ```
 
 ```typescript
-const selector = AsyncSelector({
+const selector = buildAsyncSelector({
   retries: 100,
   delay: 50
 }); // AsyncSelectorProxy starting in the document and with custom asyncParams
