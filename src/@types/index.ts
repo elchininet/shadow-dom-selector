@@ -8,7 +8,7 @@ export type AsyncSelectorBase = {
     asyncParams: AsyncParams;
 };
 
-export type AsyncSelectorInstance = AsyncSelectorBase & {
+export type AsyncSelectorInstance = Exclude<AsyncSelectorBase, '_element'> & {
     element: Promise<Document | Element | ShadowRoot | null>;
     all: Promise<NodeListOf<Element>>;
 };

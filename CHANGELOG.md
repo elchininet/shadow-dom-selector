@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.0.1] - 2023-12-04
+
+- Export `AsyncParams` and `AsyncSelectorProxy`
+
 ## [2.0.0] - 2023-12-03
 
 - Implement query selection through dot notation
