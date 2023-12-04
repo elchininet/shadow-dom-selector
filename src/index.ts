@@ -186,14 +186,14 @@ export async function asyncShadowRootQuerySelector(
     );
 }
 
-export function AsyncSelector(
+export function buildAsyncSelector(
     asyncParams?: AsyncParams
 ): AsyncSelectorProxy;
-export function AsyncSelector(
+export function buildAsyncSelector(
     root: Document | Element | ShadowRoot,
     asyncParams?: AsyncParams
 ): AsyncSelectorProxy;
-export function AsyncSelector (
+export function buildAsyncSelector (
     firstParameter: Document | Element | ShadowRoot | AsyncParams,
     secondParameter?: AsyncParams
 ): AsyncSelectorProxy {
