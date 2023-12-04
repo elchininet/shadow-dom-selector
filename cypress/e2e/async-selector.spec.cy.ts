@@ -1,4 +1,4 @@
-describe('ShadowDomSelector AsyncSelector class spec', () => {
+describe('ShadowDomSelector buildAsyncSelector class spec', () => {
 
     beforeEach(() => {
         cy.visit('http://localhost:3000');
@@ -9,9 +9,9 @@ describe('ShadowDomSelector AsyncSelector class spec', () => {
             .then(async (win) => {
 
                 const doc = win.document;
-                const AsyncSelector = win.ShadowDomSelector.AsyncSelector;
+                const buildAsyncSelector = win.ShadowDomSelector.buildAsyncSelector;
 
-                const selector = AsyncSelector({
+                const selector = buildAsyncSelector({
                     retries: 1,
                     delay: 5
                 });
@@ -36,9 +36,9 @@ describe('ShadowDomSelector AsyncSelector class spec', () => {
             .then(async (win) => {
 
                 const doc = win.document;
-                const AsyncSelector = win.ShadowDomSelector.AsyncSelector;
+                const buildAsyncSelector = win.ShadowDomSelector.buildAsyncSelector;
 
-                const selector = AsyncSelector();
+                const selector = buildAsyncSelector();
 
                 const article = doc
                     .querySelector('section')
@@ -79,14 +79,14 @@ describe('ShadowDomSelector AsyncSelector class spec', () => {
             .then(async (win) => {
 
                 const doc = win.document;
-                const AsyncSelector = win.ShadowDomSelector.AsyncSelector;
+                const buildAsyncSelector = win.ShadowDomSelector.buildAsyncSelector;
 
                 const article = doc
                     .querySelector('section')
                     .shadowRoot
                     .querySelector('article');
 
-                const selector = AsyncSelector(article);
+                const selector = buildAsyncSelector(article);
 
                 expect(await selector.element).to.equal(article);
         
@@ -105,9 +105,9 @@ describe('ShadowDomSelector AsyncSelector class spec', () => {
         cy.window()
             .then(async (win) => {
 
-                const AsyncSelector = win.ShadowDomSelector.AsyncSelector;
+                const buildAsyncSelector = win.ShadowDomSelector.buildAsyncSelector;
 
-                const selector = AsyncSelector({
+                const selector = buildAsyncSelector({
                     retries: 100
                 });
 
@@ -128,9 +128,9 @@ describe('ShadowDomSelector AsyncSelector class spec', () => {
         cy.window()
             .then(async (win) => {
 
-                const AsyncSelector = win.ShadowDomSelector.AsyncSelector;
+                const buildAsyncSelector = win.ShadowDomSelector.buildAsyncSelector;
 
-                const selector = AsyncSelector({
+                const selector = buildAsyncSelector({
                     retries: 7,
                     delay: 13
                 });
@@ -152,13 +152,13 @@ describe('ShadowDomSelector AsyncSelector class spec', () => {
             .then(async (win) => {
 
                 const doc = win.document;
-                const AsyncSelector = win.ShadowDomSelector.AsyncSelector;
+                const buildAsyncSelector = win.ShadowDomSelector.buildAsyncSelector;
 
-                const selector = AsyncSelector({
+                const selector = buildAsyncSelector({
                     delay: 5
                 });
 
-                const selectorFromSection = AsyncSelector(
+                const selectorFromSection = buildAsyncSelector(
                     doc.querySelector('section').shadowRoot,
                     {
                         delay: 5
