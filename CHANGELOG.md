@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.0.4] - 2023-12-04
+
+- Fix a bug in `buildAsyncSelector`, if a Promise was sent, `document` was used
+
 ## [2.0.3] - 2023-12-04
 
 - Allow `buildAsyncSelector` method to receive a Promise

@@ -143,7 +143,7 @@ export function getMustErrorText(
 }
 
 export function getElementPromise(
-    element: Document | Element | ShadowRoot | Promise<NodeListOf<Element> | ShadowRoot | null>
+    element: Document | Element | ShadowRoot | Promise<NodeListOf<Element> | Element | ShadowRoot | null>
 ): Promise<Document | Element | NodeListOf<Element> | ShadowRoot | null> {
     return element instanceof Promise
         ? element
