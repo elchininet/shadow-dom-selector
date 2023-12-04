@@ -186,7 +186,6 @@ export async function asyncShadowRootQuerySelector(
     );
 }
 
-
 export function AsyncSelector(
     asyncParams?: AsyncParams
 ): AsyncSelectorProxy;
