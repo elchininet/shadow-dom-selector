@@ -190,14 +190,17 @@ export function buildAsyncSelector(
     asyncParams?: AsyncParams
 ): AsyncSelectorProxy;
 export function buildAsyncSelector(
-    root: Document | Element | ShadowRoot | Promise<Element | NodeListOf<Element> | ShadowRoot>,
+    root?: Document | Element | ShadowRoot | Promise<Element | NodeListOf<Element> | ShadowRoot>,
     asyncParams?: AsyncParams
 ): AsyncSelectorProxy;
 export function buildAsyncSelector (
-    firstParameter: Document | Element | ShadowRoot | Promise<Element | NodeListOf<Element> | ShadowRoot> | AsyncParams,
+    firstParameter?: Document | Element | ShadowRoot | Promise<Element | NodeListOf<Element> | ShadowRoot> | AsyncParams,
     secondParameter?: AsyncParams
 ): AsyncSelectorProxy {
-    if (firstParameter instanceof Node) {
+    if (
+        firstParameter instanceof Node ||
+        firstParameter instanceof Promise
+    ) {
         const params = {
             retries: DEFAULT_RETRIES,
             delay: DEFAULT_DELAY,

@@ -105,11 +105,26 @@ describe('ShadowDomSelector buildAsyncSelector class spec', () => {
         cy.window()
             .then(async (win) => {
 
+                const doc = win.document;
                 const buildAsyncSelector = win.ShadowDomSelector.buildAsyncSelector;
 
                 const selector = buildAsyncSelector({
                     retries: 100
                 });
+
+                const selectorFromDelayedSection = buildAsyncSelector(
+                    new win.Promise<Element>((resolve) => {
+                        setTimeout(() => {
+                            resolve(
+                                doc.querySelector('section')
+                            );
+                        }, 500);
+                    }),
+                    {
+                        retries: 20,
+                        delay: 50
+                    }
+                );
 
                 expect(
                     await selector['#section'].$['.article'].$['.delayed-list-container'].$.ul['li:nth-of-type(2)'].element
@@ -118,6 +133,12 @@ describe('ShadowDomSelector buildAsyncSelector class spec', () => {
                 expect(
                     (await selector.section.$.article.$['.delayed-list-container'].$['ul > li'].all).length
                 ).to.equal(3);
+
+                expect(
+                    await selectorFromDelayedSection.element
+                ).to.equal(
+                    doc.querySelector('section')
+                );
 
             });
 
@@ -165,6 +186,18 @@ describe('ShadowDomSelector buildAsyncSelector class spec', () => {
                     }
                 );
 
+                const selectorFromDelayedSection = buildAsyncSelector(
+                    new Promise<ShadowRoot>((resolve) => {
+                        setTimeout(() => {
+                            resolve(doc.querySelector('section').shadowRoot);
+                        }, 500);
+                    }),
+                    {
+                        retries: 20,
+                        delay: 50
+                    }
+                );
+
                 expect(
                     await selector.article.element
                 ).to.null;
@@ -179,6 +212,10 @@ describe('ShadowDomSelector buildAsyncSelector class spec', () => {
 
                 expect(
                     await selectorFromSection.$.element
+                ).to.null;
+
+                expect(
+                    await selectorFromDelayedSection.$.element
                 ).to.null;
 
                 expect(

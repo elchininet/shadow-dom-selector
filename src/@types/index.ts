@@ -4,7 +4,7 @@ export interface AsyncParams {
 }
 
 export type AsyncSelectorBase = {
-    _element: Document | Element | ShadowRoot | Promise<NodeListOf<Element> | ShadowRoot | null>;
+    _element: Document | Element | ShadowRoot | Promise<NodeListOf<Element> | Element | ShadowRoot | null>;
     asyncParams: AsyncParams;
 };
 
