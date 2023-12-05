@@ -370,8 +370,8 @@ And the next methods:
 
 | Method                    | Return                     | Description                                                      |
 | ------------------------- | -------------------------- | ---------------------------------------------------------------- |
-| `eq(index: number)`       | `Promise<Element \| null>` | A promise that resolves in the element in the index position of the queried elements (startig from `0`) |
-| `query(selector: string)` | `AsyncSelector`            | Perform a query an returns a new AsyncSelector instance |
+| `eq(index: number)`       | `Promise<Element \| null>` | Returns a promise that resolves in the element in the index position of the queried elements (startig from `0`) |
+| `query(selector: string)` | `AsyncSelector`            | Performs a query and returns a new AsyncSelector instance |
 
 ##### Examples of the AsyncSelector class
 
