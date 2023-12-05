@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.0.0] - 2023-12-05
+
+- Refactor the `buildAsyncSelector` from a function to a class (`AsyncSelector`)
+- Dot notation queries have changed to make them more type safe
+
 ## [2.0.4] - 2023-12-04
 
 - Fix a bug in `buildAsyncSelector`, if a Promise was sent, `document` was used

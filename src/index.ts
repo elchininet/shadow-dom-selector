@@ -1,14 +1,9 @@
-import type {
-    AsyncSelectorBase,
-    AsyncSelectorProxy,
-    AsyncParams
-} from '@types';
+import type { AsyncParams } from '@types';
 import {
     DEFAULT_RETRIES,
     DEFAULT_DELAY,
     INVALID_SELECTOR,
     SHADOW_ROOT_SELECTOR,
-    ShadowDomSelectorProps,
 } from '@constants';
 import * as lib from '@lib';
 import {
@@ -186,108 +181,115 @@ export async function asyncShadowRootQuerySelector(
     );
 }
 
-export function buildAsyncSelector(
-    asyncParams?: AsyncParams
-): AsyncSelectorProxy;
-export function buildAsyncSelector(
-    root?: Document | Element | ShadowRoot | Promise<Element | NodeListOf<Element> | ShadowRoot>,
-    asyncParams?: AsyncParams
-): AsyncSelectorProxy;
-export function buildAsyncSelector (
-    firstParameter?: Document | Element | ShadowRoot | Promise<Element | NodeListOf<Element> | ShadowRoot> | AsyncParams,
-    secondParameter?: AsyncParams
-): AsyncSelectorProxy {
-    if (
-        firstParameter instanceof Node ||
-        firstParameter instanceof Promise
+export class AsyncSelector<T extends Document | Element | ShadowRoot> {
+    constructor(
+        asyncParams?: AsyncParams
+    );
+    constructor(
+        root?: T | Promise<T | NodeListOf<Element>>,
+        asyncParams?: AsyncParams
+    );
+    constructor(
+        firstParameter?: T | Promise<T | NodeListOf<Element>> | AsyncParams,
+        secondParameter?: AsyncParams
     ) {
-        const params = {
-            retries: DEFAULT_RETRIES,
-            delay: DEFAULT_DELAY,
-            ...(secondParameter || {})
-        };
-        return getShadowDomSelectorProxy({
-            _element: firstParameter,
-            asyncParams: params
-        });
+        if (
+            firstParameter instanceof Node ||
+            firstParameter instanceof Promise
+        ) {
+            this.#element = firstParameter;
+            this.#asyncParams = {
+                retries: DEFAULT_RETRIES,
+                delay: DEFAULT_DELAY,
+                ...(secondParameter || {})
+            };
+        } else {
+            this.#element = document as T;
+            this.#asyncParams = {
+                retries: DEFAULT_RETRIES,
+                delay: DEFAULT_DELAY,
+                ...(firstParameter || {})
+            };
+        }
     }
-    const params = {
-        retries: DEFAULT_RETRIES,
-        delay: DEFAULT_DELAY,
-        ...(firstParameter || {})
-    };
-    return getShadowDomSelectorProxy({
-        _element: document,
-        asyncParams: params
-    });
-}
+    #element: T | Promise<NodeListOf<Element> | T | null>;
+    #asyncParams: AsyncParams;
 
-const getShadowDomSelectorProxy = (
-    selector: AsyncSelectorBase
-): AsyncSelectorProxy => {
-    function getter(selector: AsyncSelectorBase, prop: `${ShadowDomSelectorProps.ELEMENT}`): Promise<Document | Element | ShadowRoot | null>;
-    function getter(selector: AsyncSelectorBase, prop: `${ShadowDomSelectorProps.ALL}`): Promise<NodeListOf<Element>>;
-    function getter(selector: AsyncSelectorBase, prop: `${ShadowDomSelectorProps.PARAMS}`): AsyncParams;
-    function getter(selector: AsyncSelectorBase, prop: string): AsyncSelectorProxy;
-    function getter(selector: AsyncSelectorBase, prop: string): Promise<Document | Element | ShadowRoot | NodeListOf<Element> | null> | AsyncParams | AsyncSelectorProxy {
-        if (prop === ShadowDomSelectorProps.PARAMS) {
-            return selector[prop];
-        }
-        if (prop === ShadowDomSelectorProps.ELEMENT) {
-            const element = getElementPromise(selector._element);
-            return element
-                .then((element: Document | Element | ShadowRoot | NodeListOf<Element> | null) => {
-                    if (element instanceof NodeList) {
-                        return element[0] || null;
-                    }
-                    return element;
-                });
-        }
-        if (prop === ShadowDomSelectorProps.ALL) {
-            const element = getElementPromise(selector._element);
-            return element
-                .then((element: Document | Element | ShadowRoot | NodeListOf<Element> | null) => {
-                    if (element instanceof NodeList) {
-                        return element;
-                    }
-                    return document.querySelectorAll(INVALID_SELECTOR);
-                });
-        }
-        if (prop === SHADOW_ROOT_SELECTOR) {
-            const element = getElementPromise(selector._element);
-            const promisableShadowRoot = element
-                .then((element: Element | ShadowRoot | NodeListOf<Element> | null) => {
-                    if (
-                        element instanceof ShadowRoot ||
-                        element === null ||
-                        (
-                            element instanceof NodeList &&
-                            element.length === 0
-                        )
-                    ) {
-                        return null;
-                    }
-                    if (element instanceof NodeList) {
-                        return getPromisableShadowRoot(
-                            element[0],
-                            selector.asyncParams.retries,
-                            selector.asyncParams.delay
-                        );
-                    }
-                    return getPromisableShadowRoot(
-                        element,
-                        selector.asyncParams.retries,
-                        selector.asyncParams.delay
-                    );
-                });
-            return getShadowDomSelectorProxy({
-                _element: promisableShadowRoot,
-                asyncParams: selector.asyncParams
+    get element(): Promise<T | null> {
+        const promise = getElementPromise<T>(this.#element);
+        return promise
+            .then((element: T | NodeListOf<Element> | null) => {
+                if (element instanceof NodeList) {
+                    return element[0] as T || null;
+                }
+                return element;
             });
-        }
-        const element = getElementPromise(selector._element);
-        const promisableElement = element
-            .then((element: Element | ShadowRoot | NodeListOf<Element> | null) => {
+    }
+
+    get [SHADOW_ROOT_SELECTOR](): AsyncSelector<ShadowRoot> {
+        const promise = getElementPromise<T>(this.#element);
+        const promisableShadowRoot = promise
+            .then((element: T | NodeListOf<Element> | null) => {
+                if (
+                    element instanceof Document ||
+                    element instanceof ShadowRoot ||
+                    element === null ||
+                    (
+                        element instanceof NodeList &&
+                        element.length === 0
+                    )
+                ) {
+                    return null;
+                }
+                if (element instanceof NodeList) {
+                    return getPromisableShadowRoot(
+                        element[0],
+                        this.#asyncParams.retries,
+                        this.#asyncParams.delay
+                    );
+                }
+                return getPromisableShadowRoot(
+                    element,
+                    this.#asyncParams.retries,
+                    this.#asyncParams.delay
+                );
+            });
+        return new AsyncSelector(
+            promisableShadowRoot,
+            this.#asyncParams
+        );
+    }
+
+    get all(): Promise<NodeListOf<Element>> {
+        const promise = getElementPromise<T>(this.#element);
+        return promise
+            .then((element: T | NodeListOf<Element> | null) => {
+                if (element instanceof NodeList) {
+                    return element;
+                }
+                return document.querySelectorAll(INVALID_SELECTOR);
+            });
+    }
+
+    get asyncParams(): AsyncParams {
+        return this.#asyncParams;
+    }
+
+    public async eq(index: number): Promise<Element | null> {
+        const promise = getElementPromise<T>(this.#element);
+        return promise
+            .then((element: T | NodeListOf<Element> | null) => {
+                if (element instanceof NodeList) {
+                    return element[index] || null;
+                }
+                return null;
+            });
+    }
+
+    public query(selector: string): AsyncSelector<Element> {
+        const promise = getElementPromise<T>(this.#element);
+        const promisableElement = promise
+            .then((element: T | NodeListOf<Element> | null) => {
                 if (
                     element === null ||
                     (
@@ -300,34 +302,25 @@ const getShadowDomSelectorProxy = (
                 if (element instanceof NodeList) {
                     return getPromisableElement(
                         element[0],
-                        prop,
-                        selector.asyncParams.retries,
-                        selector.asyncParams.delay,
+                        selector,
+                        this.#asyncParams.retries,
+                        this.#asyncParams.delay,
                         true
                     );
                 }
                 return getPromisableElement(
                     element,
-                    prop,
-                    selector.asyncParams.retries,
-                    selector.asyncParams.delay,
+                    selector,
+                    this.#asyncParams.retries,
+                    this.#asyncParams.delay,
                     true
                 );
             });
-        return getShadowDomSelectorProxy({
-            _element: promisableElement,
-            asyncParams: selector.asyncParams
-        });
+        return new AsyncSelector<Element>(
+            promisableElement,
+            this.#asyncParams
+        );
     }
-    return new Proxy(
-        selector,
-        {
-            get: getter
-        }
-    ) as AsyncSelectorProxy;
-};
+}
 
-export type {
-    AsyncParams,
-    AsyncSelectorProxy
-};
+export type { AsyncParams };
