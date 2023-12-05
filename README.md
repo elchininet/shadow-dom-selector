@@ -359,19 +359,19 @@ new AsyncSelector(root, asyncParams);
 
 The instances of this class have the next properties:
 
-| Property         | Type                                 | Description                                                      |
-| ---------------- | ------------------------------------ | ---------------------------------------------------------------- |
-| `element`        | Promise<Element | ShadowRoot | null> | A promise that resolves in the queried element                   |
-| `all`            | Promise<NodeListOf<Element>>         | A promise that resolves in a Nodelist with all queried elements  |
-| `$`              | Promise<ShadowRoot | null>           | A promise that resolves in the shadowRoot of the queried element |
-| `asyncParams`    | Same `asyncParams` previously shown  | An object containing the parameters which control the retries    |
+| Property         | Type                                     | Description                                                      |
+| ---------------- | ---------------------------------------- | ---------------------------------------------------------------- |
+| `element`        | `Promise<Element \| ShadowRoot \| null>` | A promise that resolves in the queried element                   |
+| `all`            | `Promise<NodeListOf<Element>>`           | A promise that resolves in a Nodelist with all queried elements  |
+| `$`              | `Promise<ShadowRoot \| null>`            | A promise that resolves in the shadowRoot of the queried element |
+| `asyncParams`    | Same `asyncParams` previously shown      | An object containing the parameters which control the retries    |
 
 An the next methods:
 
-| Method                    | Return                  | Description                                                      |
-| ------------------------- | ----------------------- | ---------------------------------------------------------------- |
-| `eq(index: number)`       | Promise<Element | null> | A promise that resolves in the element in the 0 index position of the queried elements |
-| `query(selector: string)` | AsyncSelector           | Perform a query an returns a new AsyncSelector instance |
+| Method                    | Return                     | Description                                                      |
+| ------------------------- | -------------------------- | ---------------------------------------------------------------- |
+| `eq(index: number)`       | `Promise<Element \| null>` | A promise that resolves in the element in the 0 index position of the queried elements |
+| `query(selector: string)` | `AsyncSelector`            | Perform a query an returns a new AsyncSelector instance |
 
 ##### Examples of the AsyncSelector class
 
