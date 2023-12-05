@@ -366,7 +366,7 @@ The instances of this class have the next properties:
 | `$`              | `Promise<ShadowRoot \| null>`            | A promise that resolves in the shadowRoot of the queried element |
 | `asyncParams`    | Same `asyncParams` previously shown      | An object containing the parameters which control the retries    |
 
-An the next methods:
+And the next methods:
 
 | Method                    | Return                     | Description                                                      |
 | ------------------------- | -------------------------- | ---------------------------------------------------------------- |
