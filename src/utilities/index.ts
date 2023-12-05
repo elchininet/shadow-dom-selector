@@ -142,9 +142,9 @@ export function getMustErrorText(
     return `${method} must be used with a selector ending in a shadowRoot (${SHADOW_ROOT_SELECTOR}). If you don't want to select a shadowRoot, use ${insteadMethod} instead.`;
 }
 
-export function getElementPromise(
-    element: Document | Element | ShadowRoot | Promise<NodeListOf<Element> | Element | ShadowRoot | null>
-): Promise<Document | Element | NodeListOf<Element> | ShadowRoot | null> {
+export function getElementPromise<T extends Document | Element | ShadowRoot>(
+    element: T | Promise<NodeListOf<Element> | T | null>
+): Promise<T | NodeListOf<Element> | null> {
     return element instanceof Promise
         ? element
         : Promise.resolve(element);

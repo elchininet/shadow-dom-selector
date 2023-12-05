@@ -119,23 +119,23 @@ asyncQuerySelectorAll('article$ div$ p')
   });
 
 // Using async dot notation
-import { buildAsyncSelector } from 'shadow-dom-selector';
+import { AsyncSelector } from 'shadow-dom-selector';
 
-const selector = buildAsyncSelector();
+const selector = new AsyncSelector();
 
-selector.article.$.div.$.element
+selector.query('article').$.query('div').$.element
   .then((shadowRoot) => {
     // Do stuff with the shadowRoot
     // If it is not found after all the retries, it will return null
   });
 
-selector.article.$.div.$['section > h1'].element
+selector.query('article').$.query('div').$.query('section > h1').element
   .then((h1) => {
     // Do stuff with the h1 element
     // If it is not found after all the retries, it will return null
   });
 
-selector.article.$.div.$.p.all
+selector.query('article').$.query('div').$.query('p').all
   .then((paragraphs) => {
     // Do stuff with the paragraphs
     // If they are not found after all the retries, it will return an empty NodeList
@@ -184,7 +184,7 @@ ShadowDomSelector.shadowRootQuerySelector;
 ShadowDomSelector.asyncQuerySelector;
 ShadowDomSelector.asyncQuerySelectorAll;
 ShadowDomSelector.asyncShadowRootQuerySelector;
-ShadowDomSelector.buildAsyncSelector;
+ShadowDomSelector.AsyncSelector;
 ```
 
 ## API
@@ -201,8 +201,8 @@ querySelector(root, selectors): Element | null;
 
 | Parameter    | Optional      | Description                                        |
 | ------------ | ------------- | -------------------------------------------------- |
-| selectors    | no            | A string containing one or more selectors to match. Selectors cannot end in a Shadow DOM (`$`) |
-| root         | yes           | The element from where the query should be performed, it defaults to `document` |
+| `selectors`  | no            | A string containing one or more selectors to match. Selectors must end in a Shadow DOM (`$`) |
+| `root`       | yes           | The element from where the query should be performed, it defaults to `document` |
 
 #### querySelectorAll
 
@@ -216,8 +216,8 @@ querySelectorAll(root, selectors): NodeListOf<Element>;
 
 | Parameter    | Optional      | Description                                        |
 | ------------ | ------------- | -------------------------------------------------- |
-| selectors    | no            | A string containing one or more selectors to match. Selectors cannot end in a Shadow DOM (`$`) |
-| root         | yes           | The element from where the query should be performed, it defaults to `document` |
+| `selectors`  | no            | A string containing one or more selectors to match. Selectors must end in a Shadow DOM (`$`) |
+| `root`       | yes           | The element from where the query should be performed, it defaults to `document` |
 
 #### shadowRootQuerySelector
 
@@ -231,8 +231,8 @@ shadowRootQuerySelector(root, selectors): ShadowRoot | null;
 
 | Parameter    | Optional      | Description                                        |
 | ------------ | ------------- | -------------------------------------------------- |
-| selectors    | no            | A string containing one or more selectors to match. Selectors must end in a Shadow DOM (`$`) |
-| root         | yes           | The element from where the query should be performed, it defaults to `document` |
+| `selectors`  | no            | A string containing one or more selectors to match. Selectors must end in a Shadow DOM (`$`) |
+| `root`       | yes           | The element from where the query should be performed, it defaults to `document` |
 
 #### asyncQuerySelector
 
@@ -252,11 +252,11 @@ asyncQuerySelector(selectors, asyncParams): Promise<Element | null>;
 asyncQuerySelector(root, selectors, asyncParams): Promise<Element | null>;
 ```
 
-| Parameter    | Optional      | Description                                        |
-| ------------ | ------------- | -------------------------------------------------- |
-| selectors    | no            | A string containing one or more selectors to match. Selectors cannot end in a Shadow DOM (`$`) |
-| root         | yes           | The element from where the query should be performed, it defaults to `document` |
-| asyncParams  | yes           | An object containing the parameters which control the retries |
+| Parameter     | Optional      | Description                                        |
+| ------------- | ------------- | -------------------------------------------------- |
+| `selectors`   | no            | A string containing one or more selectors to match. Selectors must end in a Shadow DOM (`$`) |
+| `root`        | yes           | The element from where the query should be performed, it defaults to `document` |
+| `asyncParams` | yes           | An object containing the parameters which control the retries |
 
 ```typescript
 // asyncParams properties
@@ -284,11 +284,11 @@ asyncQuerySelectorAll(selectors, asyncParams): Promise<NodeListOf<Element>>;
 asyncQuerySelectorAll(root, selectors, asyncParams): Promise<NodeListOf<Element>>;
 ```
 
-| Parameter    | Optional      | Description                                        |
-| ------------ | ------------- | -------------------------------------------------- |
-| selectors    | no            | A string containing one or more selectors to match. Selectors cannot end in a Shadow DOM (`$`) |
-| root         | yes           | The element from where the query should be performed, it defaults to `document` |
-| asyncParams  | yes           | An object containing the parameters which control the retries |
+| Parameter     | Optional      | Description                                        |
+| ------------- | ------------- | -------------------------------------------------- |
+| `selectors`   | no            | A string containing one or more selectors to match. Selectors must end in a Shadow DOM (`$`) |
+| `root`        | yes           | The element from where the query should be performed, it defaults to `document` |
+| `asyncParams` | yes           | An object containing the parameters which control the retries |
 
 ```typescript
 // asyncParams properties
@@ -316,11 +316,11 @@ asyncShadowRootQuerySelector(selectors, asyncParams): Promise<ShadowRoot | null>
 asyncShadowRootQuerySelector(root, selectors, asyncParams): Promise<ShadowRoot | null>;
 ```
 
-| Parameter    | Optional      | Description                                        |
-| ------------ | ------------- | -------------------------------------------------- |
-| selectors    | no            | A string containing one or more selectors to match. Selectors must end in a Shadow DOM (`$`) |
-| root         | yes           | The element from where the query should be performed, it defaults to `document` |
-| asyncParams  | yes           | An object containing the parameters which control the retries |
+| Parameter     | Optional      | Description                                        |
+| ------------- | ------------- | -------------------------------------------------- |
+| `selectors`   | no            | A string containing one or more selectors to match. Selectors must end in a Shadow DOM (`$`) |
+| `root`        | yes           | The element from where the query should be performed, it defaults to `document` |
+| `asyncParams` | yes           | An object containing the parameters which control the retries |
 
 ```typescript
 // asyncParams properties
@@ -330,20 +330,24 @@ asyncShadowRootQuerySelector(root, selectors, asyncParams): Promise<ShadowRoot |
 }
 ```
 
-#### buildAsyncSelector
+#### AsyncSelector class
 
 ```typescript
-buildAsyncSelector(root): AsyncSelectorProxy;
+new AsyncSelector();
 ```
 
 ```typescript
-buildAsyncSelector(root, asyncParams): AsyncSelectorProxy;
+new AsyncSelector(root);
 ```
 
-| Parameter    | Optional      | Description                                        |
-| ------------ | ------------- | -------------------------------------------------- |
-| root         | yes           | The element or shadowRoot from where the query should be performed, it defaults to `document` |
-| asyncParams  | yes           | An object containing the parameters which control the retries |
+```typescript
+new AsyncSelector(root, asyncParams);
+```
+
+| Parameter     | Optional      | Description                                        |
+| ------------- | ------------- | -------------------------------------------------- |
+| `root`        | yes           | The element or shadowRoot from where the query should be performed, it defaults to `document` |
+| `asyncParams` | yes           | An object containing the parameters which control the retries |
 
 ```typescript
 // asyncParams properties
@@ -353,37 +357,42 @@ buildAsyncSelector(root, asyncParams): AsyncSelectorProxy;
 }
 ```
 
-This function returns an object with the next properties:
+The instances of this class have the next properties:
+
+| Property         | Type                                 | Description                                                      |
+| ---------------- | ------------------------------------ | ---------------------------------------------------------------- |
+| `element`        | Promise<Element | ShadowRoot | null> | A promise that resolves in the queried element                   |
+| `all`            | Promise<NodeListOf<Element>>         | A promise that resolves in a Nodelist with all queried elements  |
+| `$`              | Promise<ShadowRoot | null>           | A promise that resolves in the shadowRoot of the queried element |
+| `asyncParams`    | Same `asyncParams` previously shown  | An object containing the parameters which control the retries    |
+
+An the next methods:
+
+| Method                    | Return                  | Description                                                      |
+| ------------------------- | ----------------------- | ---------------------------------------------------------------- |
+| `eq(index: number)`       | Promise<Element | null> | A promise that resolves in the element in the 0 index position of the queried elements |
+| `query(selector: string)` | AsyncSelector           | Perform a query an returns a new AsyncSelector instance |
+
+##### Examples of the AsyncSelector class
 
 ```typescript
-// AsyncSelectorProxy properties
-{
-  element: Promise<Document | Element | ShadowRoot | null>; // A promise that resolves in the first queried element
-  all: Promise<NodeListOf<Element>>; // A promise that resolves in all the queried elements
-  $: Promise<ShadowRoot | null>; // A promise that resolves in the shadowRoot of the first queried element
-  asyncParams: { retries: number; delay: number; } // The asyncParameters being used in the chain
-  [any other property]: AsyncSelectorProxy; // Returns another AsyncSelectorProxy pointing to the element queried by the property name
-}
-```
-
-##### Examples of buildAsyncSelector
-
-```typescript
-const selector = buildAsyncSelector(); // AsyncSelectorProxy starting in the document with the default asyncParams
+const selector = new AsyncSelector(); // Starting to query in the document with the default asyncParams
 await selector.element === document;
 await selector.all; // Empty Node list
 await selector.$; // null
+await selector.eq(0); // null
 ```
 
 ```typescript
-const selector = buildAsyncSelector({
+const selector = AsyncSelector({
   retries: 100,
   delay: 50
-}); // AsyncSelectorProxy starting in the document and with custom asyncParams
-await selector.section.$.element === document.querySelector('section').shadowRoot;
-await selector.section.$.all; // Empty Node list
-await selector.section.$.article.all === document.querySelector('section').shadowRoot.querySelectorAll('article');
-selector.section.$.article.asyncParams; // { retries: 100, delay: 50 }
+}); // Starting to query in the document with custom asyncParams
+await selector.query('section').$.element === document.querySelector('section').shadowRoot;
+await selector.query('section').$.all; // Empty Node list
+await selector.query('section').$.query('article').all === document.querySelector('section').shadowRoot.querySelectorAll('article');
+await selector.query('section').$.query('ul li').eq(1) === document.querySelector('section').shadowRoot.querySelectorAll('ul li')[1];
+selector.query('section').$.query('article').asyncParams; // { retries: 100, delay: 50 }
 ```
 
 [Shadow DOM]: https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_shadow_DOM

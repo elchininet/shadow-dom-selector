@@ -1,4 +1,4 @@
-describe('ShadowDomSelector buildAsyncSelector class spec', () => {
+describe('ShadowDomSelector AsyncSelector class spec', () => {
 
     beforeEach(() => {
         cy.visit('http://localhost:3000');
@@ -9,9 +9,9 @@ describe('ShadowDomSelector buildAsyncSelector class spec', () => {
             .then(async (win) => {
 
                 const doc = win.document;
-                const buildAsyncSelector = win.ShadowDomSelector.buildAsyncSelector;
+                const AsyncSelector = win.ShadowDomSelector.AsyncSelector;
 
-                const selector = buildAsyncSelector({
+                const selector = new AsyncSelector({
                     retries: 1,
                     delay: 5
                 });
@@ -19,13 +19,13 @@ describe('ShadowDomSelector buildAsyncSelector class spec', () => {
                 const section = doc.querySelector('section');
                 const allSections = doc.querySelectorAll('section');
 
-                expect(await selector.section.element).to.equal(section);
-                expect(await selector.section.all).to.deep.equal(allSections);
-                expect(await selector.li.element).to.null;
-                expect(await selector.article.$.element).to.null;
-                expect((await selector.li.all).length).to.equal(0);
-                expect((await selector.article.$.div.$.span.all).length).to.equal(0);
-                expect(await selector.li.all).to.be.instanceOf(win.NodeList);
+                expect(await selector.query('section').element).to.equal(section);
+                expect(await selector.query('section').all).to.deep.equal(allSections);
+                expect(await selector.query('li').element).to.null;
+                expect(await selector.query('article').$.element).to.null;
+                expect((await selector.query('li').all).length).to.equal(0);
+                expect((await selector.query('article').$.query('div').$.query('span').all).length).to.equal(0);
+                expect(await selector.query('li').all).to.be.instanceOf(win.NodeList);
 
             });
     });
@@ -36,9 +36,9 @@ describe('ShadowDomSelector buildAsyncSelector class spec', () => {
             .then(async (win) => {
 
                 const doc = win.document;
-                const buildAsyncSelector = win.ShadowDomSelector.buildAsyncSelector;
+                const AsyncSelector = win.ShadowDomSelector.AsyncSelector;
 
-                const selector = buildAsyncSelector();
+                const selector = new AsyncSelector();
 
                 const article = doc
                     .querySelector('section')
@@ -52,19 +52,19 @@ describe('ShadowDomSelector buildAsyncSelector class spec', () => {
                 const allLis = ul.querySelectorAll('li');
 
                 expect(
-                    await selector.section.$.article.element
+                    await selector.query('section').$.query('article').element
                 ).to.equal(
                     article
                 );
 
                 expect(
-                    await selector['#section'].$['.article'].element
+                    await selector.query('#section').$.query('.article').element
                 ).to.equal(
                     article
                 );
 
                 expect(
-                    await selector.section.$.article.$.ul.li.all
+                    await selector.query('section').$.query('article').$.query('ul li').all
                 ).to.deep.equal(
                     allLis
                 );
@@ -79,19 +79,19 @@ describe('ShadowDomSelector buildAsyncSelector class spec', () => {
             .then(async (win) => {
 
                 const doc = win.document;
-                const buildAsyncSelector = win.ShadowDomSelector.buildAsyncSelector;
+                const AsyncSelector = win.ShadowDomSelector.AsyncSelector;
 
                 const article = doc
                     .querySelector('section')
                     .shadowRoot
                     .querySelector('article');
 
-                const selector = buildAsyncSelector(article);
+                const selector = new AsyncSelector(article);
 
                 expect(await selector.element).to.equal(article);
         
                 expect(
-                    await selector.$.ul.element
+                    await selector.$.query('ul').element
                 ).to.equal(
                     article.shadowRoot.querySelector('ul')
                 );
@@ -106,13 +106,13 @@ describe('ShadowDomSelector buildAsyncSelector class spec', () => {
             .then(async (win) => {
 
                 const doc = win.document;
-                const buildAsyncSelector = win.ShadowDomSelector.buildAsyncSelector;
+                const AsyncSelector = win.ShadowDomSelector.AsyncSelector;
 
-                const selector = buildAsyncSelector({
+                const selector = new AsyncSelector({
                     retries: 100
                 });
 
-                const selectorFromDelayedSection = buildAsyncSelector(
+                const selectorFromDelayedSection = new AsyncSelector(
                     new win.Promise<Element>((resolve) => {
                         setTimeout(() => {
                             resolve(
@@ -127,11 +127,15 @@ describe('ShadowDomSelector buildAsyncSelector class spec', () => {
                 );
 
                 expect(
-                    await selector['#section'].$['.article'].$['.delayed-list-container'].$.ul['li:nth-of-type(2)'].element
+                    await selector.query('#section').$.query('.article').$.query('.delayed-list-container').$.query('ul li:nth-of-type(2)').element
                 ).to.text('Delayed List item 2');
 
                 expect(
-                    (await selector.section.$.article.$['.delayed-list-container'].$['ul > li'].all).length
+                    await selector.query('#section').$.query('.article').$.query('.delayed-list-container').$.query('ul li').eq(1)
+                ).to.text('Delayed List item 2');
+
+                expect(
+                    (await selector.query('section').$.query('article').$.query('.delayed-list-container').$.query('ul > li').all).length
                 ).to.equal(3);
 
                 expect(
@@ -149,15 +153,15 @@ describe('ShadowDomSelector buildAsyncSelector class spec', () => {
         cy.window()
             .then(async (win) => {
 
-                const buildAsyncSelector = win.ShadowDomSelector.buildAsyncSelector;
+                const AsyncSelector = win.ShadowDomSelector.AsyncSelector;
 
-                const selector = buildAsyncSelector({
+                const selector = new AsyncSelector({
                     retries: 7,
                     delay: 13
                 });
 
                 expect(
-                    selector.section.$.asyncParams
+                    selector.query('section').$.asyncParams
                 ).to.deep.equal({
                     retries: 7,
                     delay: 13
@@ -173,20 +177,20 @@ describe('ShadowDomSelector buildAsyncSelector class spec', () => {
             .then(async (win) => {
 
                 const doc = win.document;
-                const buildAsyncSelector = win.ShadowDomSelector.buildAsyncSelector;
+                const AsyncSelector = win.ShadowDomSelector.AsyncSelector;
 
-                const selector = buildAsyncSelector({
+                const selector = new AsyncSelector({
                     delay: 5
                 });
 
-                const selectorFromSection = buildAsyncSelector(
+                const selectorFromSection = new AsyncSelector(
                     doc.querySelector('section').shadowRoot,
                     {
                         delay: 5
                     }
                 );
 
-                const selectorFromDelayedSection = buildAsyncSelector(
+                const selectorFromDelayedSection = new AsyncSelector(
                     new Promise<ShadowRoot>((resolve) => {
                         setTimeout(() => {
                             resolve(doc.querySelector('section').shadowRoot);
@@ -199,7 +203,11 @@ describe('ShadowDomSelector buildAsyncSelector class spec', () => {
                 );
 
                 expect(
-                    await selector.article.element
+                    await selector.query('article').element
+                ).to.null;
+
+                expect(
+                    await selector.query('section').query('div').element
                 ).to.null;
 
                 expect(
@@ -207,7 +215,7 @@ describe('ShadowDomSelector buildAsyncSelector class spec', () => {
                 ).to.null;
 
                 expect(
-                    await selector.section.$.$.element
+                    await selector.query('section').$.$.element
                 ).to.null;
 
                 expect(
@@ -221,6 +229,14 @@ describe('ShadowDomSelector buildAsyncSelector class spec', () => {
                 expect(
                     (await selector.all).length
                 ).to.equal(0);
+
+                expect(
+                    await selector.eq(0)
+                ).to.null;
+
+                expect(
+                    await selector.query('section').eq(10)
+                ).to.null;
 
             });
 
