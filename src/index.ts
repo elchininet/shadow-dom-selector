@@ -197,26 +197,26 @@ export class AsyncSelector<T extends Document | Element | ShadowRoot> {
             firstParameter instanceof Node ||
             firstParameter instanceof Promise
         ) {
-            this.#element = firstParameter;
-            this.#asyncParams = {
+            this._element = firstParameter;
+            this._asyncParams = {
                 retries: DEFAULT_RETRIES,
                 delay: DEFAULT_DELAY,
                 ...(secondParameter || {})
             };
         } else {
-            this.#element = document as T;
-            this.#asyncParams = {
+            this._element = document as T;
+            this._asyncParams = {
                 retries: DEFAULT_RETRIES,
                 delay: DEFAULT_DELAY,
                 ...(firstParameter || {})
             };
         }
     }
-    #element: T | Promise<NodeListOf<Element> | T | null>;
-    #asyncParams: AsyncParams;
+    private _element: T | Promise<NodeListOf<Element> | T | null>;
+    private _asyncParams: AsyncParams;
 
     get element(): Promise<T | null> {
-        const promise = getElementPromise<T>(this.#element);
+        const promise = getElementPromise<T>(this._element);
         return promise
             .then((element: T | NodeListOf<Element> | null) => {
                 if (element instanceof NodeList) {
@@ -227,7 +227,7 @@ export class AsyncSelector<T extends Document | Element | ShadowRoot> {
     }
 
     get [SHADOW_ROOT_SELECTOR](): AsyncSelector<ShadowRoot> {
-        const promise = getElementPromise<T>(this.#element);
+        const promise = getElementPromise<T>(this._element);
         const promisableShadowRoot = promise
             .then((element: T | NodeListOf<Element> | null) => {
                 if (
@@ -244,24 +244,24 @@ export class AsyncSelector<T extends Document | Element | ShadowRoot> {
                 if (element instanceof NodeList) {
                     return getPromisableShadowRoot(
                         element[0],
-                        this.#asyncParams.retries,
-                        this.#asyncParams.delay
+                        this._asyncParams.retries,
+                        this._asyncParams.delay
                     );
                 }
                 return getPromisableShadowRoot(
                     element,
-                    this.#asyncParams.retries,
-                    this.#asyncParams.delay
+                    this._asyncParams.retries,
+                    this._asyncParams.delay
                 );
             });
         return new AsyncSelector(
             promisableShadowRoot,
-            this.#asyncParams
+            this._asyncParams
         );
     }
 
     get all(): Promise<NodeListOf<Element>> {
-        const promise = getElementPromise<T>(this.#element);
+        const promise = getElementPromise<T>(this._element);
         return promise
             .then((element: T | NodeListOf<Element> | null) => {
                 if (element instanceof NodeList) {
@@ -272,11 +272,11 @@ export class AsyncSelector<T extends Document | Element | ShadowRoot> {
     }
 
     get asyncParams(): AsyncParams {
-        return this.#asyncParams;
+        return this._asyncParams;
     }
 
     public async eq(index: number): Promise<Element | null> {
-        const promise = getElementPromise<T>(this.#element);
+        const promise = getElementPromise<T>(this._element);
         return promise
             .then((element: T | NodeListOf<Element> | null) => {
                 if (element instanceof NodeList) {
@@ -287,7 +287,7 @@ export class AsyncSelector<T extends Document | Element | ShadowRoot> {
     }
 
     public query(selector: string): AsyncSelector<Element> {
-        const promise = getElementPromise<T>(this.#element);
+        const promise = getElementPromise<T>(this._element);
         const promisableElement = promise
             .then((element: T | NodeListOf<Element> | null) => {
                 if (
@@ -303,22 +303,22 @@ export class AsyncSelector<T extends Document | Element | ShadowRoot> {
                     return getPromisableElement(
                         element[0],
                         selector,
-                        this.#asyncParams.retries,
-                        this.#asyncParams.delay,
+                        this._asyncParams.retries,
+                        this._asyncParams.delay,
                         true
                     );
                 }
                 return getPromisableElement(
                     element,
                     selector,
-                    this.#asyncParams.retries,
-                    this.#asyncParams.delay,
+                    this._asyncParams.retries,
+                    this._asyncParams.delay,
                     true
                 );
             });
         return new AsyncSelector<Element>(
             promisableElement,
-            this.#asyncParams
+            this._asyncParams
         );
     }
 }
