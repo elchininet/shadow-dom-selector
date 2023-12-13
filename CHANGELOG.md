@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.0.1] - 2023-12-13
+
+- Removed private class properties to make the code ES5 compliant
+
 ## [3.0.0] - 2023-12-05
 
 - Refactor the `buildAsyncSelector` from a function to a class (`AsyncSelector`)
