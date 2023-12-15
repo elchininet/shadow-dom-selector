@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         setTimeout(() => {
             const delayedList = document.createElement('ul');
-            delayedList.innerHTML = ELEMENTS_STRINGS.list.map(text => `<li>Delayed ${text}</li>`).join('');
+            delayedList.innerHTML = ELEMENTS_STRINGS.list.map(text => `<li class="delayed-li">Delayed ${text}</li>`).join('');
             const shadowDelayedList = delayedListContainer.attachShadow({ mode: 'open' });
             shadowDelayedList.appendChild(delayedList);
         }, 500);

@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.0.0] - 2023-12-15
+
+- Implement a `deepQuerySelector` method to query for elements even if they are deep in the shadowDOM tree
+- Implement a `deepQuerySelectorAll` method to perform a querySelectorAll even if the elements are deep in the shadowDOM tree
+- Implement an `asyncDeepQuerySelector` method to query in an async way for elements even if they are deep in the shadowDOM tree
+- Implement an `asyncDeepQuerySelectorAll` method to perform an asynchronous querySelectorAll even if the elements are deep in the shadowDOM tree
+- Implement a `deepQuery` method in the `AsyncSelector` class to query for elements even if they are deep in the shadowDOM tree
+
 ## [3.0.1] - 2023-12-13
 
 - Removed private class properties to make the code ES5 compliant

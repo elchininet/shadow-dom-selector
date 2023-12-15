@@ -224,3 +224,55 @@ export async function asyncShadowRootQuerySelector(
     return null;
 
 }
+
+export const deepQuerySelector = <E extends Element = Element>(
+    element: Element | Document | ShadowRoot,
+    selector: string
+): NodeListOf<E> => {
+
+    const child = element.querySelectorAll<E>(selector);
+
+    if (child.length) return child;
+
+    if (element instanceof Element && element.shadowRoot) {
+        const shadowRootDeepChild = deepQuerySelector<E>(element.shadowRoot, selector);
+        if (shadowRootDeepChild.length) return shadowRootDeepChild;
+    }
+
+    const allChildren = Array.from(
+        element.querySelectorAll<E>('*')
+    );
+
+    for (const child of allChildren) {
+        const deepChild = deepQuerySelector<E>(child, selector);
+        if (deepChild.length) return deepChild;
+    }
+    
+    return document.querySelectorAll(INVALID_SELECTOR);
+
+};
+
+export const asyncDeepQuerySelector = <E extends Element = Element>(
+    root: Document | Element | ShadowRoot,
+    selector: string,
+    retries: number,
+    delay: number,
+): Promise<NodeListOf<E>> => {
+    return new Promise((resolve) => {
+        let attempts = 0;
+        const select = () => {
+            const element = deepQuerySelector<E>(root, selector);
+            if (element.length) {
+                resolve(element);
+            } else {
+                attempts++;
+                if (attempts < retries) {
+                    setTimeout(select, delay);
+                } else {
+                    resolve(element);
+                }
+            }
+        };
+        select();
+    });
+};
