@@ -14,7 +14,11 @@ describe('ShadowDomSelector spec', () => {
                     querySelector,
                     querySelectorAll,
                     asyncQuerySelector,
-                    asyncQuerySelectorAll
+                    asyncQuerySelectorAll,
+                    deepQuerySelector,
+                    deepQuerySelectorAll,
+                    asyncDeepQuerySelector,
+                    asyncDeepQuerySelectorAll
                 } = ShadowDomSelector;
 
                 const section = doc.querySelector('section');
@@ -26,12 +30,18 @@ describe('ShadowDomSelector spec', () => {
                 expect(querySelector('li')).to.null;
                 expect(querySelectorAll('li').length).to.equal(0);
                 expect(querySelectorAll('li')).to.be.instanceOf(win.NodeList);
+                expect(deepQuerySelector('section')).to.equal(section);
+                expect(deepQuerySelectorAll('section')).to.deep.equal(allSections);
 
                 const sectionPromised = await asyncQuerySelector('section', asyncParams);
                 const sectionAllPromised = await asyncQuerySelectorAll('section', asyncParams);
+                const deepSectionPromised = await asyncDeepQuerySelector('section', asyncParams);
+                const deepSectionAllPromised = await asyncDeepQuerySelectorAll('section', asyncParams);
 
                 expect(sectionPromised).to.equal(section);
                 expect(sectionAllPromised).to.deep.equal(allSections);
+                expect(deepSectionPromised).to.equal(section);
+                expect(deepSectionAllPromised).to.deep.equal(allSections);
 
                 const listPromised = await asyncQuerySelector('li');
                 const allListsPromised = await asyncQuerySelectorAll('li', asyncParams);
@@ -113,6 +123,50 @@ describe('ShadowDomSelector spec', () => {
             });
     });
 
+    it('deepQuerySelector tests', () => {
+        cy.window()
+            .then((win) => {
+
+                const doc = win.document;
+                const ShadowDomSelector = win.ShadowDomSelector;
+                const { deepQuerySelector } = ShadowDomSelector;
+
+                const ul = deepQuerySelector('ul');
+                expect(ul).to.not.null;
+                expect(ul).to.be.instanceOf(win.HTMLUListElement);
+        
+                expect(
+                    deepQuerySelector('li:nth-of-type(2)').textContent
+                ).to.equal(
+                    'List item 2'
+                );
+
+                expect(
+                    deepQuerySelector('li:last-of-type').textContent
+                ).to.equal(
+                    'List item 3'
+                );
+
+                expect(
+                    deepQuerySelector(doc.querySelector('section'), 'li')
+                ).to.equal(
+                    doc.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelector('li')
+                );
+        
+                expect(
+                    deepQuerySelector('article > li')
+                ).to.null;
+
+                expect(
+                    deepQuerySelector(
+                        doc.querySelector('section'),
+                        'article > li'
+                    )
+                ).to.null;
+
+            });
+    });
+
     it('querySelectorAll tests', () => {
         cy.window()
             .then((win) => {
@@ -154,6 +208,33 @@ describe('ShadowDomSelector spec', () => {
                 ).to.throw(
                     'You can not select a shadowRoot'
                 );
+
+            });
+    });
+
+    it('deepQuerySelectorAll tests', () => {
+        cy.window()
+            .then((win) => {
+
+                const doc = win.document;
+                const ShadowDomSelector = win.ShadowDomSelector;
+                const { deepQuerySelectorAll } = ShadowDomSelector;
+
+                expect(
+                    deepQuerySelectorAll('ul li')
+                ).to.deep.equal(
+                    doc.querySelector('section').shadowRoot.querySelector('.article').shadowRoot.querySelectorAll('ul li')
+                );
+
+                expect(
+                    deepQuerySelectorAll(doc.querySelector('section'), 'li')
+                ).to.deep.equal(
+                    doc.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelectorAll('li')
+                );
+
+                expect(
+                    deepQuerySelectorAll('article > li').length
+                ).to.equal(0);
 
             });
     });
@@ -338,6 +419,53 @@ describe('ShadowDomSelector spec', () => {
             });
     });
 
+    it('asyncDeepQuerySelector tests', () => {
+        cy.window()
+            .then(async (win) => {
+
+                const doc = win.document;
+                const ShadowDomSelector = win.ShadowDomSelector;
+                const { asyncDeepQuerySelector } = ShadowDomSelector;
+
+                expect(
+                    await asyncDeepQuerySelector('section')
+                ).to.equal(
+                    doc.querySelector('section')
+                );
+
+                expect(
+                    await asyncDeepQuerySelector('.article')
+                ).to.equal(
+                    doc.querySelector('#section').shadowRoot.querySelector('.article')
+                );
+
+                expect(
+                    (await asyncDeepQuerySelector('li:nth-of-type(3)')).textContent
+                ).to.equal(
+                    'List item 3'
+                );
+
+                expect(
+                    (await asyncDeepQuerySelector('li.delayed-li:nth-of-type(2)', { retries: 50, delay: 50 })).textContent
+                ).to.equal(
+                    'Delayed List item 2'
+                );
+
+                expect(
+                    await asyncDeepQuerySelector('section > ul')
+                ).to.null;
+
+                expect(
+                    await asyncDeepQuerySelector(doc.body, 'article > li')
+                ).to.null;
+
+                expect(
+                    await asyncDeepQuerySelector(doc.body, 'section > article', { retries: 2, delay: 5 })
+                ).to.null;
+
+            });
+    });
+
     it('asyncQuerySelectorAll tests', () => {
         cy.window()
             .then(async (win) => {
@@ -456,6 +584,95 @@ describe('ShadowDomSelector spec', () => {
                     return asyncQuerySelectorAll('$ section$ article li')
                         .catch((error: Error) => {
                             expect(error.message).to.contain('You can not select a shadowRoot');
+                        });
+                });
+
+            });
+    });
+
+    it('asyncDeepQuerySelectorAll tests', () => {
+        cy.window()
+            .then(async (win) => {
+
+                const doc = win.document;
+                const ShadowDomSelector = win.ShadowDomSelector;
+                const { asyncDeepQuerySelectorAll } = ShadowDomSelector;
+
+                expect(
+                    await asyncDeepQuerySelectorAll('.article')
+                ).to.deep.equal(
+                    doc.querySelector('#section').shadowRoot.querySelectorAll('.article')
+                );
+
+                expect(
+                    await asyncDeepQuerySelectorAll('li')
+                ).to.deep.equal(
+                    doc.querySelector('#section').shadowRoot.querySelector('.article').shadowRoot.querySelectorAll('li')
+                );
+
+                cy.wrap(null).then(() => {
+                    return asyncDeepQuerySelectorAll('li.delayed-li', { retries: 50, delay: 50 })
+                        .then(lists => {
+                            expect(lists.length).to.equal(3);
+                            expect(lists[1].textContent).to.equal('Delayed List item 2');
+                        });
+                });
+
+                expect(
+                    await asyncDeepQuerySelectorAll(
+                        doc.querySelector('section'),
+                        'li'
+                    )
+                ).to.deep.equal(
+                    doc.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelectorAll('li')
+                );
+
+                expect(
+                    await asyncDeepQuerySelectorAll(
+                        doc.querySelector('section'),
+                        'li',
+                        { retries: 5 }
+                    )
+                ).to.deep.equal(
+                    doc.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelectorAll('li')
+                );
+
+                expect(
+                    await asyncDeepQuerySelectorAll(
+                        doc.querySelector('section'),
+                        'li',
+                        { delay: 10 }
+                    )
+                ).to.deep.equal(
+                    doc.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelectorAll('li')
+                );
+
+                expect(
+                    await asyncDeepQuerySelectorAll(
+                        'li',
+                        { retries: 10 }
+                    )
+                ).to.deep.equal(
+                    doc.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelectorAll('ul > li')
+                );
+
+                expect(
+                    await asyncDeepQuerySelectorAll(
+                        'li',
+                        { delay: 1 }
+                    )
+                ).to.deep.equal(
+                    doc.querySelector('section').shadowRoot.querySelector('article').shadowRoot.querySelectorAll('li')
+                );
+
+                expect(
+                    (await asyncDeepQuerySelectorAll('span')).length
+                ).to.equal(0);
+
+                cy.wrap(null).then(() => {
+                    return asyncDeepQuerySelectorAll('article li')
+                        .then(ul => {
+                            expect(ul.length).to.equal(0);
                         });
                 });
 

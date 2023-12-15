@@ -36,6 +36,35 @@ export function querySelector<E extends Element = Element>(
     );
 }
 
+export function deepQuerySelector<E extends Element = Element>(
+    root: Document | Element,
+    selectors: string
+): E | null;
+export function deepQuerySelector<E extends Element = Element>(
+    selectors: string
+): E | null;
+export function deepQuerySelector<E extends Element = Element>(
+    ...params: [Document | Element, string] | [string]
+): E | null {
+    const [rootOrSelector, selectors] = params;
+    if (typeof rootOrSelector === 'string') {
+        return (
+            lib.deepQuerySelector<E>(
+                document,
+                rootOrSelector
+            )[0] ||
+            null
+        );
+    }
+    return (
+        lib.deepQuerySelector<E>(
+            rootOrSelector,
+            selectors
+        )[0] ||
+        null
+    );
+}
+
 export function querySelectorAll<E extends Element = Element>(
     root: Document | Element,
     selectors: string
@@ -56,6 +85,29 @@ export function querySelectorAll<E extends Element = Element>(
     return lib.querySelectorAll(
         selectors,
         rootOrSelector
+    );
+}
+
+export function deepQuerySelectorAll<E extends Element = Element>(
+    root: Document | Element,
+    selectors: string
+): NodeListOf<E>;
+export function deepQuerySelectorAll<E extends Element = Element>(
+    selectors: string
+): NodeListOf<E>;
+export function deepQuerySelectorAll<E extends Element = Element>(
+    ...params: [Document | Element, string] | [string]
+): NodeListOf<E> {
+    const [rootOrSelector, selectors] = params;
+    if (typeof rootOrSelector === 'string') {
+        return lib.deepQuerySelector<E>(
+            document,
+            rootOrSelector
+        );
+    }
+    return lib.deepQuerySelector<E>(
+        rootOrSelector,
+        selectors
     );
 }
 
@@ -115,6 +167,50 @@ export async function asyncQuerySelector<E extends Element = Element>(
     );
 }
 
+export async function asyncDeepQuerySelector<E extends Element = Element>(
+    root: Document | Element,
+    selectors: string,
+    asyncParams?: AsyncParams,
+): Promise<E | null >;
+export async function asyncDeepQuerySelector<E extends Element = Element>(
+    selectors: string,
+    asyncParams?: AsyncParams,
+): Promise<E | null >;
+export async function asyncDeepQuerySelector<E extends Element = Element>(
+    ...params: [Document | Element, string, AsyncParams?] | [string, AsyncParams?]
+): Promise<E | null > {
+
+    if (isParamsWithRoot(params)) {
+        const [root, selectors, asyncParams] = params;
+        return (
+            (
+                await lib.asyncDeepQuerySelector<E>(
+                    root,
+                    selectors,
+                    asyncParams?.retries || DEFAULT_RETRIES,
+                    asyncParams?.delay || DEFAULT_DELAY
+                )
+            )[0] ||
+            null
+        );
+    }
+
+    const [selectors, asyncParams] = params;
+
+    return (
+        (
+            await lib.asyncDeepQuerySelector<E>(
+                document,
+                selectors,
+                asyncParams?.retries || DEFAULT_RETRIES,
+                asyncParams?.delay || DEFAULT_DELAY
+            )
+        )[0] ||
+        null
+    );
+
+}
+
 export async function asyncQuerySelectorAll<E extends Element = Element>(
     root: Document | Element,
     selectors: string,
@@ -146,6 +242,40 @@ export async function asyncQuerySelectorAll<E extends Element = Element>(
         asyncParams?.retries || DEFAULT_RETRIES,
         asyncParams?.delay || DEFAULT_DELAY
     );
+}
+
+export function asyncDeepQuerySelectorAll<E extends Element = Element>(
+    root: Document | Element,
+    selectors: string,
+    asyncParams?: AsyncParams
+): Promise<NodeListOf<E>>;
+export function asyncDeepQuerySelectorAll<E extends Element = Element>(
+    selectors: string,
+    asyncParams?: AsyncParams
+): Promise<NodeListOf<E>>;
+export function asyncDeepQuerySelectorAll<E extends Element = Element>(
+    ...params: [Document | Element, string, AsyncParams?] | [string, AsyncParams?]
+): Promise<NodeListOf<E>> {
+
+    if (isParamsWithRoot(params)) {
+        const [root, selectors, asyncParams] = params;
+        return lib.asyncDeepQuerySelector<E>(
+            root,
+            selectors,
+            asyncParams?.retries || DEFAULT_RETRIES,
+            asyncParams?.delay || DEFAULT_DELAY
+        );
+    }
+
+    const [selectors, asyncParams] = params;
+
+    return lib.asyncDeepQuerySelector<E>(
+        document,
+        selectors,
+        asyncParams?.retries || DEFAULT_RETRIES,
+        asyncParams?.delay || DEFAULT_DELAY
+    );
+
 }
 
 export async function asyncShadowRootQuerySelector(
@@ -314,6 +444,44 @@ export class AsyncSelector<T extends Document | Element | ShadowRoot> {
                     this._asyncParams.retries,
                     this._asyncParams.delay,
                     true
+                );
+            });
+        return new AsyncSelector<Element>(
+            promisableElement,
+            this._asyncParams
+        );
+    }
+
+    public deepQuery(selector: string): AsyncSelector<Element> {
+        const promise = getElementPromise<T>(this._element);
+        const promisableElement = promise
+            .then((element: T | NodeListOf<Element> | null) => {
+                if (
+                    element === null ||
+                    (
+                        element instanceof NodeList &&
+                        element.length === 0
+                    )
+                ) {
+                    return null;
+                }
+                if (element instanceof NodeList) {
+                    return Promise.race(
+                        Array.from(element).map((child: Element): Promise<NodeListOf<Element>> => {
+                            return lib.asyncDeepQuerySelector(
+                                child,
+                                selector,
+                                this._asyncParams.retries,
+                                this._asyncParams.delay
+                            );
+                        })
+                    );
+                }
+                return lib.asyncDeepQuerySelector(
+                    element,
+                    selector,
+                    this._asyncParams.retries,
+                    this._asyncParams.delay
                 );
             });
         return new AsyncSelector<Element>(

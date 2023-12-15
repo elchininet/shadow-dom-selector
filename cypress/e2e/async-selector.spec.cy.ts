@@ -148,6 +148,136 @@ describe('ShadowDomSelector AsyncSelector class spec', () => {
 
     });
 
+    it('Deep query for delayed elements from document', () => {
+
+        cy.window()
+            .then(async (win) => {
+
+                const AsyncSelector = win.ShadowDomSelector.AsyncSelector;
+
+                const selector = new AsyncSelector({
+                    retries: 60,
+                    delay: 10
+                });
+                
+                expect(
+                    await selector.deepQuery('.delayed-list-container').element
+                ).not.null;
+
+                expect(
+                    await selector.query('section').deepQuery('.delayed-list-container').element
+                ).not.null;
+
+                expect(
+                    (await selector.deepQuery('li.delayed-li').all).length
+                ).to.equal(3);
+
+                expect(
+                    await selector.deepQuery('li.delayed-li').eq(2)
+                ).to.text('Delayed List item 3');
+
+                expect(
+                    await selector.deepQuery('li.delayed-li:nth-of-type(2)').element
+                ).to.text('Delayed List item 2');
+
+                expect(
+                    await selector.deepQuery('.non-existent-element').element
+                ).to.null;
+
+                expect(
+                    await selector.query('.non-existent-element').deepQuery('ul').element
+                ).to.null;
+
+            });
+
+    });
+
+    it('Deep query for delayed elements from element', () => {
+
+        cy.window()
+            .then(async (win) => {
+
+                const doc = win.document;
+                const AsyncSelector = win.ShadowDomSelector.AsyncSelector;
+
+                const selector = new AsyncSelector(
+                    doc.querySelector('section'),
+                    {
+                        retries: 60,
+                        delay: 10
+                    }
+                );
+
+                // From an element
+                expect(
+                    await selector.deepQuery('.delayed-list-container').element
+                ).not.null;
+
+                expect(
+                    (await selector.deepQuery('li.delayed-li').all).length
+                ).to.equal(3);
+
+                expect(
+                    await selector.deepQuery('li.delayed-li').eq(2)
+                ).to.text('Delayed List item 3');
+
+                expect(
+                    await selector.deepQuery('li.delayed-li:nth-of-type(2)').element
+                ).to.text('Delayed List item 2');
+
+                expect(
+                    await selector.deepQuery('.non-existent-element').element
+                ).to.null;
+
+                expect(
+                    await selector.deepQuery('.non-existent-element').element
+                ).to.null;
+
+            });
+
+    });
+
+    it('Deep query for delayed elements from shadowRoot', () => {
+
+        cy.window()
+            .then(async (win) => {
+
+                const doc = win.document;
+                const AsyncSelector = win.ShadowDomSelector.AsyncSelector;
+
+                const selector = new AsyncSelector(
+                    doc.querySelector('section').shadowRoot,
+                    {
+                        retries: 60,
+                        delay: 10
+                    }
+                );
+
+                // From a shadow Root
+                expect(
+                    await selector.deepQuery('.delayed-list-container').element
+                ).not.null;
+
+                expect(
+                    (await selector.deepQuery('li.delayed-li').all).length
+                ).to.equal(3);
+
+                expect(
+                    await selector.deepQuery('li.delayed-li').eq(2)
+                ).to.text('Delayed List item 3');
+
+                expect(
+                    await selector.deepQuery('li.delayed-li:nth-of-type(2)').element
+                ).to.text('Delayed List item 2');
+
+                expect(
+                    await selector.deepQuery('.non-existent-element').element
+                ).to.null;
+
+            });
+
+    });
+
     it('Inherited params', () => {
 
         cy.window()
