@@ -1,5 +1,10 @@
 # Changelog
 
+## [4.1.0] - 2023-12-16
+
+- Refactor the whole library to reduce repetitive and unnecessary code
+- All the methods admit at the moment a `shadowRoot` as a root element
+
 ## [4.0.0] - 2023-12-15
 
 - Implement a `deepQuerySelector` method to query for elements even if they are deep in the shadowDOM tree
