@@ -1,19 +1,20 @@
 import { AsyncParams } from '@types';
-import { SHADOW_ROOT_SELECTOR, INVALID_SELECTOR } from '@constants';
+import { SHADOW_ROOT_SELECTOR } from '@constants';
 
-const isElement = (param: unknown): param is (Document | Element) => {
+const isElement = (param: unknown): param is (Document | Element | ShadowRoot) => {
     return (
         param &&
         (
             param instanceof Document ||
-            param instanceof Element
+            param instanceof Element ||
+            param instanceof ShadowRoot
         )
     );
 };
 
 export const isParamsWithRoot = (
     params: unknown[]
-): params is [Document | Element, string, AsyncParams?] => {
+): params is [Document | Element | ShadowRoot, string, AsyncParams?] => {
     const [param1, param2] = params;
     return (
         isElement(param1) &&
@@ -46,84 +47,30 @@ export function getSubtreePaths(
     );
 }
 
-export function getPromisableElement<E extends Element>(
-    root: Document | Element | ShadowRoot,
-    selector: string,
+export const getPromisable = <T>(
+    getElement: () => T,
+    check: (element: T) => boolean,
     retries: number,
     delay: number,
-    selectAll?: false
-): Promise<E | null>;
-export function getPromisableElement<E extends Element>(
-    root: Document | Element | ShadowRoot,
-    selector: string,
-    retries: number,
-    delay: number,
-    selectAll?: true
-): Promise<NodeListOf<E>>;
-export function getPromisableElement<E extends Element>(
-    root: Document | Element | ShadowRoot,
-    selector: string,
-    retries: number,
-    delay: number,
-    selectAll = false
-): Promise<E | NodeListOf<E> | null> {
-    return new Promise<E | NodeListOf<E> | null>((resolve) => {
+): Promise<T | null> => {
+    return new Promise<T>((resolve) => {
         let attempts = 0;
         const select = () => {
-            const element = selectAll
-                ? root.querySelectorAll<E>(selector)
-                : root.querySelector<E>(selector);
-            if (
-                (
-                    selectAll &&
-                    (element as NodeListOf<E>).length
-                ) ||
-                (
-                    !selectAll &&
-                    element !== null
-                )
-            ) {
+            const element: T = getElement();
+            if (check(element)) {
                 resolve(element);
             } else {
                 attempts++;
                 if (attempts < retries) {
                     setTimeout(select, delay);
                 } else {
-                    resolve(
-                        selectAll
-                            ? document.querySelectorAll(INVALID_SELECTOR)
-                            : null
-                    );
+                    resolve(element);
                 }
             }
         };
         select();
     });
-}
-
-export function getPromisableShadowRoot(
-    element: Element,
-    retries: number,
-    retriesDelay: number,
-): Promise<ShadowRoot | null> {
-    return new Promise<ShadowRoot | null>((resolve) => {
-        let attempts = 0;
-        const getShadowRoot = () => {
-            const shadowRoot = element.shadowRoot;
-            if (shadowRoot) {
-                resolve(shadowRoot);
-            } else {
-                attempts++;
-                if (attempts < retries) {
-                    setTimeout(getShadowRoot, retriesDelay);
-                } else {
-                    resolve(null);
-                }
-            }
-        };
-        getShadowRoot();
-    });
-}
+};
 
 export function getCannotErrorText(
     method: string,
@@ -152,4 +99,8 @@ export function getElementPromise<T extends Document | Element | ShadowRoot>(
 
 export function getDocumentShadowRootError(): string {
     return `You can not select a shadowRoot (${SHADOW_ROOT_SELECTOR}) of the document.`;
+}
+
+export function getShadowRootShadowRootError(): string {
+    return `You can not select a shadowRoot (${SHADOW_ROOT_SELECTOR}) of a shadowRoot.`;
 }

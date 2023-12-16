@@ -6,22 +6,17 @@ import {
     SHADOW_ROOT_SELECTOR,
 } from '@constants';
 import * as lib from '@lib';
-import {
-    isParamsWithRoot,
-    getPromisableShadowRoot,
-    getPromisableElement,
-    getElementPromise
-} from '@utilities';
+import { isParamsWithRoot, getElementPromise } from '@utilities';
 
 export function querySelector<E extends Element = Element>(
-    root: Document | Element,
+    root: Document | Element | ShadowRoot,
     selectors: string
 ): E | null;
 export function querySelector<E extends Element = Element>(
     selectors: string
 ): E | null;
 export function querySelector<E extends Element = Element>(
-    ...params: [Document | Element, string] | [string]
+    ...params: [Document | Element | ShadowRoot, string] | [string]
 ): E | null {
     const [rootOrSelector, selectors] = params;
     if (typeof rootOrSelector === 'string') {
@@ -37,14 +32,14 @@ export function querySelector<E extends Element = Element>(
 }
 
 export function deepQuerySelector<E extends Element = Element>(
-    root: Document | Element,
+    root: Document | Element | ShadowRoot,
     selectors: string
 ): E | null;
 export function deepQuerySelector<E extends Element = Element>(
     selectors: string
 ): E | null;
 export function deepQuerySelector<E extends Element = Element>(
-    ...params: [Document | Element, string] | [string]
+    ...params: [Document | Element | ShadowRoot, string] | [string]
 ): E | null {
     const [rootOrSelector, selectors] = params;
     if (typeof rootOrSelector === 'string') {
@@ -66,14 +61,14 @@ export function deepQuerySelector<E extends Element = Element>(
 }
 
 export function querySelectorAll<E extends Element = Element>(
-    root: Document | Element,
+    root: Document | Element | ShadowRoot,
     selectors: string
 ): NodeListOf<E>;
 export function querySelectorAll<E extends Element = Element>(
     selectors: string
 ): NodeListOf<E>;
 export function querySelectorAll<E extends Element = Element>(
-    ...params: [Document | Element, string] | [string]
+    ...params: [Document | Element | ShadowRoot, string] | [string]
 ): NodeListOf<E> {
     const [rootOrSelector, selectors] = params;
     if (typeof rootOrSelector === 'string') {
@@ -89,14 +84,14 @@ export function querySelectorAll<E extends Element = Element>(
 }
 
 export function deepQuerySelectorAll<E extends Element = Element>(
-    root: Document | Element,
+    root: Document | Element | ShadowRoot,
     selectors: string
 ): NodeListOf<E>;
 export function deepQuerySelectorAll<E extends Element = Element>(
     selectors: string
 ): NodeListOf<E>;
 export function deepQuerySelectorAll<E extends Element = Element>(
-    ...params: [Document | Element, string] | [string]
+    ...params: [Document | Element | ShadowRoot, string] | [string]
 ): NodeListOf<E> {
     const [rootOrSelector, selectors] = params;
     if (typeof rootOrSelector === 'string') {
@@ -112,14 +107,14 @@ export function deepQuerySelectorAll<E extends Element = Element>(
 }
 
 export function shadowRootQuerySelector(
-    root: Document | Element,
+    root: Document | Element | ShadowRoot,
     selectors: string
 ): ShadowRoot | null;
 export function shadowRootQuerySelector(
     selectors: string
 ): ShadowRoot | null;
 export function shadowRootQuerySelector(
-    ...params: [Document | Element, string] | [string]
+    ...params: [Document | Element | ShadowRoot, string] | [string]
 ): ShadowRoot | null {
     const [rootOrSelector, selectors] = params;
     if (typeof rootOrSelector === 'string') {
@@ -135,7 +130,7 @@ export function shadowRootQuerySelector(
 }
 
 export async function asyncQuerySelector<E extends Element = Element>(
-    root: Document | Element,
+    root: Document | Element | ShadowRoot,
     selectors: string,
     asyncParams?: AsyncParams,
 ): Promise<E | null >;
@@ -144,7 +139,7 @@ export async function asyncQuerySelector<E extends Element = Element>(
     asyncParams?: AsyncParams,
 ): Promise<E | null >;
 export async function asyncQuerySelector<E extends Element = Element>(
-    ...params: [Document | Element, string, AsyncParams?] | [string, AsyncParams?]
+    ...params: [Document | Element | ShadowRoot, string, AsyncParams?] | [string, AsyncParams?]
 ): Promise<E | null > {
 
     if (isParamsWithRoot(params)) {
@@ -168,7 +163,7 @@ export async function asyncQuerySelector<E extends Element = Element>(
 }
 
 export async function asyncDeepQuerySelector<E extends Element = Element>(
-    root: Document | Element,
+    root: Document | Element | ShadowRoot,
     selectors: string,
     asyncParams?: AsyncParams,
 ): Promise<E | null >;
@@ -177,7 +172,7 @@ export async function asyncDeepQuerySelector<E extends Element = Element>(
     asyncParams?: AsyncParams,
 ): Promise<E | null >;
 export async function asyncDeepQuerySelector<E extends Element = Element>(
-    ...params: [Document | Element, string, AsyncParams?] | [string, AsyncParams?]
+    ...params: [Document | Element | ShadowRoot, string, AsyncParams?] | [string, AsyncParams?]
 ): Promise<E | null > {
 
     if (isParamsWithRoot(params)) {
@@ -212,7 +207,7 @@ export async function asyncDeepQuerySelector<E extends Element = Element>(
 }
 
 export async function asyncQuerySelectorAll<E extends Element = Element>(
-    root: Document | Element,
+    root: Document | Element | ShadowRoot,
     selectors: string,
     asyncParams?: AsyncParams
 ): Promise<NodeListOf<E>>;
@@ -221,7 +216,7 @@ export async function asyncQuerySelectorAll<E extends Element = Element>(
     asyncParams?: AsyncParams
 ): Promise<NodeListOf<E>>;
 export async function asyncQuerySelectorAll<E extends Element = Element>(
-    ...params: [Document | Element, string, AsyncParams?] | [string, AsyncParams?]
+    ...params: [Document | Element | ShadowRoot, string, AsyncParams?] | [string, AsyncParams?]
 ): Promise<NodeListOf<E>> {
     
     if (isParamsWithRoot(params)) {
@@ -245,7 +240,7 @@ export async function asyncQuerySelectorAll<E extends Element = Element>(
 }
 
 export function asyncDeepQuerySelectorAll<E extends Element = Element>(
-    root: Document | Element,
+    root: Document | Element | ShadowRoot,
     selectors: string,
     asyncParams?: AsyncParams
 ): Promise<NodeListOf<E>>;
@@ -254,7 +249,7 @@ export function asyncDeepQuerySelectorAll<E extends Element = Element>(
     asyncParams?: AsyncParams
 ): Promise<NodeListOf<E>>;
 export function asyncDeepQuerySelectorAll<E extends Element = Element>(
-    ...params: [Document | Element, string, AsyncParams?] | [string, AsyncParams?]
+    ...params: [Document | Element | ShadowRoot, string, AsyncParams?] | [string, AsyncParams?]
 ): Promise<NodeListOf<E>> {
 
     if (isParamsWithRoot(params)) {
@@ -279,7 +274,7 @@ export function asyncDeepQuerySelectorAll<E extends Element = Element>(
 }
 
 export async function asyncShadowRootQuerySelector(
-    root: Document | Element,
+    root: Document | Element | ShadowRoot,
     selectors: string,
     asyncParams?: AsyncParams
 ): Promise<ShadowRoot | null>;
@@ -288,7 +283,7 @@ export async function asyncShadowRootQuerySelector(
     asyncParams?: AsyncParams
 ): Promise<ShadowRoot | null>;
 export async function asyncShadowRootQuerySelector(
-    ...params: [Document | Element, string, AsyncParams?] | [string, AsyncParams?]
+    ...params: [Document | Element | ShadowRoot, string, AsyncParams?] | [string, AsyncParams?]
 ): Promise<ShadowRoot | null> {
 
     if (isParamsWithRoot(params)) {
@@ -372,16 +367,16 @@ export class AsyncSelector<T extends Document | Element | ShadowRoot> {
                     return null;
                 }
                 if (element instanceof NodeList) {
-                    return getPromisableShadowRoot(
+                    return asyncShadowRootQuerySelector(
                         element[0],
-                        this._asyncParams.retries,
-                        this._asyncParams.delay
+                        SHADOW_ROOT_SELECTOR,
+                        this._asyncParams
                     );
                 }
-                return getPromisableShadowRoot(
+                return asyncShadowRootQuerySelector(
                     element,
-                    this._asyncParams.retries,
-                    this._asyncParams.delay
+                    SHADOW_ROOT_SELECTOR,
+                    this._asyncParams
                 );
             });
         return new AsyncSelector(
@@ -430,20 +425,16 @@ export class AsyncSelector<T extends Document | Element | ShadowRoot> {
                     return null;
                 }
                 if (element instanceof NodeList) {
-                    return getPromisableElement(
+                    return asyncQuerySelectorAll(
                         element[0],
                         selector,
-                        this._asyncParams.retries,
-                        this._asyncParams.delay,
-                        true
+                        this._asyncParams
                     );
                 }
-                return getPromisableElement(
+                return asyncQuerySelectorAll(
                     element,
                     selector,
-                    this._asyncParams.retries,
-                    this._asyncParams.delay,
-                    true
+                    this._asyncParams
                 );
             });
         return new AsyncSelector<Element>(

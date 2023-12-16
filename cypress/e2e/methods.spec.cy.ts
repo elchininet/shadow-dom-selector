@@ -116,9 +116,17 @@ describe('ShadowDomSelector spec', () => {
                 expect(
                     () => querySelector('$ section$ article')
                 ).to.throw(
-                    'You can not select a shadowRoot'
+                    'You can not select a shadowRoot ($) of the document'
                 );
-        
+
+                expect(
+                    () => querySelector(
+                        doc.querySelector('section').shadowRoot,
+                        '$ article'
+                    )
+                ).to.throw(
+                    'You can not select a shadowRoot ($) of a shadowRoot'
+                );
 
             });
     });
@@ -206,7 +214,16 @@ describe('ShadowDomSelector spec', () => {
                 expect(
                     () => querySelectorAll('$ section$ article$ ul')
                 ).to.throw(
-                    'You can not select a shadowRoot'
+                    'You can not select a shadowRoot ($) of the document'
+                );
+
+                expect(
+                    () => querySelectorAll(
+                        doc.querySelector('section').shadowRoot,
+                        '$ article'
+                    )
+                ).to.throw(
+                    'You can not select a shadowRoot ($) of a shadowRoot'
                 );
 
             });
@@ -297,13 +314,22 @@ describe('ShadowDomSelector spec', () => {
                 expect(
                     () => shadowRootQuerySelector('$ section$ article$')
                 ).to.throw(
-                    'You can not select a shadowRoot'
+                    'You can not select a shadowRoot ($) of the document'
                 );
 
                 expect(
                     () => shadowRootQuerySelector('$')
                 ).to.throw(
-                    'You can not select a shadowRoot'
+                    'You can not select a shadowRoot ($) of the document'
+                );
+
+                expect(
+                    () => shadowRootQuerySelector(
+                        doc.querySelector('section').shadowRoot,
+                        '$'
+                    )
+                ).to.throw(
+                    'You can not select a shadowRoot ($) of a shadowRoot'
                 );
 
             });
@@ -412,7 +438,17 @@ describe('ShadowDomSelector spec', () => {
                 cy.wrap(null).then(() => {
                     return asyncQuerySelector('$ section$ article')
                         .catch((error: Error) => {
-                            expect(error.message).to.contain('You can not select a shadowRoot');
+                            expect(error.message).to.contain('You can not select a shadowRoot ($) of the document');
+                        });
+                });
+
+                cy.wrap(null).then(() => {
+                    return asyncQuerySelector(
+                        doc.querySelector('section').shadowRoot,
+                        '$ article'
+                    )
+                        .catch((error: Error) => {
+                            expect(error.message).to.contain('You can not select a shadowRoot ($) of a shadowRoot');
                         });
                 });
 
@@ -583,7 +619,17 @@ describe('ShadowDomSelector spec', () => {
                 cy.wrap(null).then(() => {
                     return asyncQuerySelectorAll('$ section$ article li')
                         .catch((error: Error) => {
-                            expect(error.message).to.contain('You can not select a shadowRoot');
+                            expect(error.message).to.contain('You can not select a shadowRoot ($) of the document');
+                        });
+                });
+
+                cy.wrap(null).then(() => {
+                    return asyncQuerySelectorAll(
+                        doc.querySelector('section').shadowRoot,
+                        '$ article'
+                    )
+                        .catch((error: Error) => {
+                            expect(error.message).to.contain('You can not select a shadowRoot ($) of a shadowRoot');
                         });
                 });
 
@@ -789,14 +835,24 @@ describe('ShadowDomSelector spec', () => {
                 cy.wrap(null).then(() => {
                     return asyncShadowRootQuerySelector('$ section$ article$')
                         .catch((error: Error) => {
-                            expect(error.message).to.contain('You can not select a shadowRoot');
+                            expect(error.message).to.contain('You can not select a shadowRoot ($) of the document');
                         });
                 });
 
                 cy.wrap(null).then(() => {
                     return asyncShadowRootQuerySelector('$')
                         .catch((error: Error) => {
-                            expect(error.message).to.contain('You can not select a shadowRoot');
+                            expect(error.message).to.contain('You can not select a shadowRoot ($) of the document');
+                        });
+                });
+
+                cy.wrap(null).then(() => {
+                    return asyncShadowRootQuerySelector(
+                        doc.querySelector('section').shadowRoot,
+                        '$'
+                    )
+                        .catch((error: Error) => {
+                            expect(error.message).to.contain('You can not select a shadowRoot ($) of a shadowRoot');
                         });
                 });
 

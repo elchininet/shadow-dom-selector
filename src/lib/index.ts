@@ -2,26 +2,26 @@ import { INVALID_SELECTOR } from '@constants';
 import {
     querySelectorInternal,
     querySelectorAllInternal,
-    shadowRootQuerySelectorInternal,
-    asyncQuerySelectorInternal,
-    asyncQuerySelectorAllInternal,
-    asyncShadowRootQuerySelectorInternal
+    shadowRootQuerySelectorInternal
 } from '@selectors';
 import {
     getSubtreePaths,
     getCannotErrorText,
-    getMustErrorText
+    getMustErrorText,
+    getPromisable
 } from '@utilities';
 
 export function querySelector<E extends Element>(
     selectors: string,
-    root: Document | Element
+    root: Document | Element | ShadowRoot,
+    method = 'querySelector',
+    insteadMethod = 'shadowRootQuerySelector'
 ): E | null {
 
     const selectorsPaths = getSubtreePaths(selectors, (path: string[]): string[] => {
         if (!path[path.length - 1].length) {
             throw new SyntaxError(
-                getCannotErrorText('querySelector', 'shadowRootQuerySelector')
+                getCannotErrorText(method, insteadMethod)
             );
         }
         return path;
@@ -48,17 +48,20 @@ export function querySelector<E extends Element>(
 
 export function querySelectorAll<E extends Element = Element>(
     selectors: string,
-    root: Document | Element
+    root: Document | Element | ShadowRoot,
+    method = 'querySelectorAll'
 ): NodeListOf<E> {
-
-    const selectorsPaths = getSubtreePaths(selectors, (path: string[]): string[] => {
-        if (!path[path.length - 1].length) {
-            throw new SyntaxError(
-                getCannotErrorText('querySelectorAll')
-            );
+    const selectorsPaths = getSubtreePaths(
+        selectors,
+        (path: string[]): string[] => {
+            if (!path[path.length - 1].length) {
+                throw new SyntaxError(
+                    getCannotErrorText(method)
+                );
+            }
+            return path;
         }
-        return path;
-    });
+    );
 
     const total = selectorsPaths.length;
 
@@ -81,14 +84,16 @@ export function querySelectorAll<E extends Element = Element>(
 
 export function shadowRootQuerySelector(
     selectors: string,
-    root: Document | Element
+    root: Document | Element | ShadowRoot,
+    method = 'shadowRootQuerySelector',
+    insteadMethod = 'querySelector'
 ): ShadowRoot | null {
 
     const selectorsPaths = getSubtreePaths(selectors, (path: string[]): string[] => {
         const lastSelector = path.pop();
         if (lastSelector.length) {
             throw new SyntaxError(
-                getMustErrorText('shadowRootQuerySelector', 'querySelector')
+                getMustErrorText(method, insteadMethod)
             );
         }
         return path;
@@ -115,114 +120,58 @@ export function shadowRootQuerySelector(
 
 export async function asyncQuerySelector<E extends Element = Element>(
     selectors: string,
-    root: Document | Element,
+    root: Document | Element | ShadowRoot,
     retries: number,
     delay: number
 ): Promise<E | null> {
-
-    const selectorsPaths = getSubtreePaths(selectors, (path: string[]): string[] => {
-        if (!path[path.length - 1].length) {
-            throw new SyntaxError(
-                getCannotErrorText('asyncQuerySelector', 'asyncShadowRootQuerySelector')
-            );
-        }
-        return path;
-    });
-
-    const total = selectorsPaths.length;
-
-    for (let index = 0; index < total; index++) {
-
-        const foundElement = await asyncQuerySelectorInternal<E>(
-            selectorsPaths[index],
+    return getPromisable(
+        () => querySelector<E | null>(
+            selectors,
             root,
-            retries,
-            delay
-        );
-
-        if (foundElement) {
-            return foundElement;
-        }
-
-    }
-
-    return null;
-
+            'asyncQuerySelector',
+            'asyncShadowRootQuerySelector'
+        ),
+        (element: E): boolean => !!element,
+        retries,
+        delay
+    );
 }
 
 export async function asyncQuerySelectorAll<E extends Element = Element>(
     selectors: string,
-    root: Document | Element,
+    root: Document | Element | ShadowRoot,
     retries: number,
     delay: number
 ): Promise<NodeListOf<E>> {
-
-    const selectorsPaths = getSubtreePaths(selectors, (path: string[]): string[] => {
-        if (!path[path.length - 1].length) {
-            throw new SyntaxError(
-                getCannotErrorText('asyncQuerySelectorAll')
-            );
-        }
-        return path;
-    });
-
-    const total = selectorsPaths.length;
-
-    for (let index = 0; index < total; index++) {
-
-        const foundElements = await asyncQuerySelectorAllInternal<E>(
-            selectorsPaths[index],
+    return getPromisable<NodeListOf<E>>(
+        () => querySelectorAll<E>(
+            selectors,
             root,
-            retries,
-            delay
-        );
-
-        if (foundElements?.length) {
-            return foundElements;
-        }
-
-    }
-
-    return document.querySelectorAll(INVALID_SELECTOR);
-
+            'asyncQuerySelectorAll'
+        ),
+        (elements: NodeListOf<E>): boolean => !!elements.length,
+        retries,
+        delay
+    );
 }
 
 export async function asyncShadowRootQuerySelector(
     selectors: string,
-    root: Document | Element,
+    root: Document | Element | ShadowRoot,
     retries: number,
     delay: number
 ): Promise<ShadowRoot | null> {
-
-    const selectorsPaths = getSubtreePaths(selectors, (path: string[]): string[] => {
-        const lastSelector = path.pop();
-        if (lastSelector.length) {
-            throw new SyntaxError(
-                getMustErrorText('asyncShadowRootQuerySelector', 'asyncQuerySelector')
-            );
-        }
-        return path;
-    });
-
-    const total = selectorsPaths.length;
-
-    for (let index = 0; index < total; index++) {
-
-        const shadowRoot = await asyncShadowRootQuerySelectorInternal(
-            selectorsPaths[index],
+    return getPromisable<ShadowRoot | null>(
+        () => shadowRootQuerySelector(
+            selectors,
             root,
-            retries,
-            delay
-        );
-
-        if (shadowRoot) {
-            return shadowRoot;
-        }
-
-    }
-
-    return null;
-
+            'asyncShadowRootQuerySelector',
+            'asyncQuerySelector'
+        ),
+        (shadowRoot: ShadowRoot): boolean => !!shadowRoot,
+        retries,
+        delay
+    );
 }
 
 export const deepQuerySelector = <E extends Element = Element>(
@@ -258,21 +207,10 @@ export const asyncDeepQuerySelector = <E extends Element = Element>(
     retries: number,
     delay: number,
 ): Promise<NodeListOf<E>> => {
-    return new Promise((resolve) => {
-        let attempts = 0;
-        const select = () => {
-            const element = deepQuerySelector<E>(root, selector);
-            if (element.length) {
-                resolve(element);
-            } else {
-                attempts++;
-                if (attempts < retries) {
-                    setTimeout(select, delay);
-                } else {
-                    resolve(element);
-                }
-            }
-        };
-        select();
-    });
+    return getPromisable<NodeListOf<E>>(
+        () => deepQuerySelector<E>(root, selector),
+        (elements: NodeListOf<E>) => !!elements.length,
+        retries,
+        delay
+    );
 };
