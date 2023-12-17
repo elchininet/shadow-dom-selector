@@ -5,5 +5,21 @@
         <script src="./scripts/demo.js"></script>
     </head>
     <body>
+        <section id="section">
+            <template shadowrootmode="open">
+                <h1 class="title">Section title</h1>
+                <article class="article">
+                    <template shadowrootmode="open">
+                        <h2 class="subtitle">Article title</h2>
+                        <ul>
+                            <li>List item 1</li>
+                            <li>List item 2</li>
+                            <li>List item 3</li>
+                        </ul>
+                        <delayed-list-container />
+                    </template>
+                </article>
+            </template>
+        </section>
     </body>
 </html>
