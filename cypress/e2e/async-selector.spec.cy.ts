@@ -127,15 +127,15 @@ describe('ShadowDomSelector AsyncSelector class spec', () => {
                 );
 
                 expect(
-                    await selector.query('#section').$.query('.article').$.query('.delayed-list-container').$.query('ul li:nth-of-type(2)').element
+                    await selector.query('#section').$.query('.article').$.query('delayed-list-container').$.query('ul li:nth-of-type(2)').element
                 ).to.text('Delayed List item 2');
 
                 expect(
-                    await selector.query('#section').$.query('.article').$.query('.delayed-list-container').$.query('ul li').eq(1)
+                    await selector.query('#section').$.query('.article').$.query('delayed-list-container').$.query('ul li').eq(1)
                 ).to.text('Delayed List item 2');
 
                 expect(
-                    (await selector.query('section').$.query('article').$.query('.delayed-list-container').$.query('ul > li').all).length
+                    (await selector.query('section').$.query('article').$.query('delayed-list-container').$.query('ul > li').all).length
                 ).to.equal(3);
 
                 expect(
@@ -161,11 +161,11 @@ describe('ShadowDomSelector AsyncSelector class spec', () => {
                 });
                 
                 expect(
-                    await selector.deepQuery('.delayed-list-container').element
+                    await selector.deepQuery('delayed-list-container').element
                 ).not.null;
 
                 expect(
-                    await selector.query('section').deepQuery('.delayed-list-container').element
+                    await selector.query('section').deepQuery('delayed-list-container').element
                 ).not.null;
 
                 expect(
@@ -210,7 +210,7 @@ describe('ShadowDomSelector AsyncSelector class spec', () => {
 
                 // From an element
                 expect(
-                    await selector.deepQuery('.delayed-list-container').element
+                    await selector.deepQuery('delayed-list-container').element
                 ).not.null;
 
                 expect(
@@ -255,7 +255,7 @@ describe('ShadowDomSelector AsyncSelector class spec', () => {
 
                 // From a shadow Root
                 expect(
-                    await selector.deepQuery('.delayed-list-container').element
+                    await selector.deepQuery('delayed-list-container').element
                 ).not.null;
 
                 expect(

@@ -3,68 +3,23 @@ import * as ShadowDomSelector from '../src';
 // @ts-ignore
 window.ShadowDomSelector = ShadowDomSelector;
 
-document.addEventListener('DOMContentLoaded', () => {
-
-    const SELECTORS = {
-        section: 'section',
-        article: 'article',
-        title: 'title',
-        subtitle: 'subtitle'
-    };
-    
-    const ELEMENTS_STRINGS = {
-        title: 'Section title',
-        article: 'Article title',
-        list: [
-            'List item 1',
-            'List item 2',
-            'List item 3'
-        ]
-    };
-    
-    const section = document.createElement('section');
-    section.id = SELECTORS.section;
-    
-    const article = document.createElement('article');
-    article.classList.add(SELECTORS.article);
-    
-    const sectionTitle = document.createElement('h1');
-    sectionTitle.classList.add(SELECTORS.title);
-    sectionTitle.textContent = ELEMENTS_STRINGS.title;
-    
-    const articleTitle = document.createElement('h2');
-    articleTitle.classList.add(SELECTORS.subtitle);
-    articleTitle.textContent = ELEMENTS_STRINGS.article;
-    
-    const list = document.createElement('ul');
-    list.innerHTML = ELEMENTS_STRINGS.list.map(text => `<li>${text}</li>`).join('');
-    
-    const shadowSection = section.attachShadow({ mode: 'open' });
-    const shadowArticle = article.attachShadow({ mode: 'open' });
-    
-    shadowSection.appendChild(sectionTitle);
-    shadowSection.appendChild(article);
-    shadowArticle.appendChild(articleTitle);
-    shadowArticle.appendChild(list);
-    document.body.appendChild(section);
-
-    setTimeout(() => {
-        const delayedListContainer = document.createElement('div');
-        delayedListContainer.classList.add('delayed-list-container');
-
-        const emptyDiv = document.createElement('div');
-        emptyDiv.classList.add('empty-div');
-
-        shadowArticle.appendChild(delayedListContainer);
-        shadowArticle.appendChild(emptyDiv);
-
+class DelayedListContainer extends HTMLElement {
+    constructor() {
+        super();
+    }
+    connectedCallback() {
         setTimeout(() => {
-            const delayedList = document.createElement('ul');
-            delayedList.innerHTML = ELEMENTS_STRINGS.list.map(text => `<li class="delayed-li">Delayed ${text}</li>`).join('');
-            const shadowDelayedList = delayedListContainer.attachShadow({ mode: 'open' });
-            shadowDelayedList.appendChild(delayedList);
+            const shadow = this.attachShadow({ mode: 'open' });
+            shadow.innerHTML = `
+                <ul>
+                    <li class="delayed-li">Delayed List item 1</li>
+                    <li class="delayed-li">Delayed List item 2</li>
+                    <li class="delayed-li">Delayed List item 3</li>
+                </ul>
+            `;
         }, 500);
         
-    }, 500);
+    }
+}
 
-});
+customElements.define('delayed-list-container', DelayedListContainer);

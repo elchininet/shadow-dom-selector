@@ -4,7 +4,9 @@ import istanbul from 'rollup-plugin-istanbul';
 
 export default {
     plugins: [
-        ts(),
+        ts({
+            tsconfig: './tsconfig.test.json'
+        }),
         istanbul({
             exclude: [
                 'demo/demo.ts',

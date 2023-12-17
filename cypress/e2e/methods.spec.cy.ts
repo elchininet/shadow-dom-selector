@@ -362,7 +362,7 @@ describe('ShadowDomSelector spec', () => {
                 );
 
                 expect(
-                    (await asyncQuerySelector('#section$ .article$ > .delayed-list-container$ ul > li:nth-of-type(2)', { retries: 50, delay: 50 })).textContent
+                    (await asyncQuerySelector('#section$ .article$ > delayed-list-container$ ul > li:nth-of-type(2)', { retries: 50, delay: 50 })).textContent
                 ).to.equal(
                     'Delayed List item 2'
                 );
@@ -537,7 +537,7 @@ describe('ShadowDomSelector spec', () => {
                 });
 
                 cy.wrap(null).then(() => {
-                    return asyncQuerySelectorAll('#section$ .article$ > .delayed-list-container$ ul > li', { retries: 50, delay: 50 })
+                    return asyncQuerySelectorAll('#section$ .article$ > delayed-list-container$ ul > li', { retries: 50, delay: 50 })
                         .then(lists => {
                             expect(lists.length).to.equal(3);
                             expect(lists[1].textContent).to.equal('Delayed List item 2');
@@ -596,7 +596,7 @@ describe('ShadowDomSelector spec', () => {
                 ).to.equal(0);
 
                 cy.wrap(null).then(() => {
-                    return asyncQuerySelectorAll('#section$ .article$ > .delayed-list-container$ ul$ li')
+                    return asyncQuerySelectorAll('#section$ .article$ > delayed-list-container$ ul$ li')
                         .then(ul => {
                             expect(ul.length).to.equal(0);
                         });
@@ -752,7 +752,7 @@ describe('ShadowDomSelector spec', () => {
                 );
 
                 cy.wrap(null).then(() => {
-                    return asyncShadowRootQuerySelector('#section$ .article$ > .delayed-list-container$', { retries: 50, delay: 50 })
+                    return asyncShadowRootQuerySelector('#section$ .article$ > delayed-list-container$', { retries: 50, delay: 50 })
                         .then(shadowRoot => {
                             expect(shadowRoot).not.null;
                         });
@@ -826,7 +826,7 @@ describe('ShadowDomSelector spec', () => {
                 });
 
                 cy.wrap(null).then(() => {
-                    return asyncShadowRootQuerySelector('section$ article$ > .delayed-list-container$ ul > li')
+                    return asyncShadowRootQuerySelector('section$ article$ > delayed-list-container$ ul > li')
                         .catch((error: Error) => {
                             expect(error.message).to.contain('asyncShadowRootQuerySelector must be used with a selector ending in a shadowRoot');
                         });
