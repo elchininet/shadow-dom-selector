@@ -1,6 +1,6 @@
 # Changelog
 
-## [4.1.1] - 2023-12-19
+## [4.1.2] - 2023-12-19
 
 - Publish the package using npm provenance
 
