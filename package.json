@@ -35,6 +35,10 @@
   ],
   "author": "ElChiniNet",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elchininet/shadow-dom-selector"
+  },
   "scripts": {
     "build": "rollup --config rollup.config.js --bundleConfigAsCjs",
     "clean": "rm -rf dist .nyc_output coverage || true",
