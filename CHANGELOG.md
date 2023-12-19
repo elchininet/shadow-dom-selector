@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.1.1] - 2023-12-19
+
+- Publish the package using npm provenance
+
 ## [4.1.0] - 2023-12-16
 
 - Refactor the whole library to reduce repetitive and unnecessary code

@@ -8,6 +8,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     container:
       image: cypress/browsers
     steps:
@@ -28,7 +30,7 @@ jobs:
       - name: Publish
         run: |
           yarn install --frozen-lockfile
-          npm publish
+          npm publish --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Build Changelog
