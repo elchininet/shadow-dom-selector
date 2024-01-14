@@ -56,13 +56,13 @@
     "postversion": "git push && git push --tags"
   },
   "devDependencies": {
-    "@cypress/code-coverage": "^3.12.17",
-    "@types/eslint": "^8.56.1",
-    "@typescript-eslint/eslint-plugin": "^6.18.0",
-    "@typescript-eslint/parser": "^6.18.0",
+    "@cypress/code-coverage": "^3.12.18",
+    "@types/eslint": "^8.56.2",
+    "@typescript-eslint/eslint-plugin": "^6.18.1",
+    "@typescript-eslint/parser": "^6.18.1",
     "cypress": "^13.6.2",
     "eslint": "^8.56.0",
-    "rollup": "^4.9.4",
+    "rollup": "^4.9.5",
     "rollup-plugin-istanbul": "^5.0.0",
     "rollup-plugin-serve": "^2.0.3",
     "rollup-plugin-terser": "^7.0.2",
