@@ -58,9 +58,9 @@
   "devDependencies": {
     "@cypress/code-coverage": "^3.12.18",
     "@types/eslint": "^8.56.2",
-    "@typescript-eslint/eslint-plugin": "^6.18.1",
-    "@typescript-eslint/parser": "^6.18.1",
-    "cypress": "^13.6.2",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "cypress": "^13.6.3",
     "eslint": "^8.56.0",
     "rollup": "^4.9.5",
     "rollup-plugin-istanbul": "^5.0.0",
