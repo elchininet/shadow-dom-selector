@@ -351,7 +351,7 @@ export class AsyncSelector<T extends Document | Element | ShadowRoot> {
             });
     }
 
-    get [SHADOW_ROOT_SELECTOR](): AsyncSelector<ShadowRoot> {
+    get $(): AsyncSelector<ShadowRoot> {
         const promise = getElementPromise<T>(this._element);
         const promisableShadowRoot = promise
             .then((element: T | NodeListOf<Element> | null) => {
