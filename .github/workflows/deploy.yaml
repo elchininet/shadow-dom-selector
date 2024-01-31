@@ -31,7 +31,7 @@ jobs:
       - name: Publish
         run: |
           yarn install --frozen-lockfile
-          npx playwright install --with-deps
+          npx playwright install --with-deps chromium
           npm publish --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

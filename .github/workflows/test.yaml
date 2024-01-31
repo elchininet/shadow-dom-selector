@@ -30,7 +30,7 @@ jobs:
       - name: Install
         run: |
           yarn install --frozen-lockfile
-          npx playwright install --with-deps 
+          npx playwright install --with-deps chromium
       - name: Linting Code
         run: yarn lint
       - name: TypeScript Check
