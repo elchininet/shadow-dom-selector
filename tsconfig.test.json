@@ -4,7 +4,7 @@
     "module": "esnext",
     "target": "ES2015",
     "lib": ["DOM", "ES2017"],
-    "types": ["cypress", "node"],
+    "types": ["node"],
     "moduleResolution": "node",
     "esModuleInterop": true,
     "resolveJsonModule": true,
