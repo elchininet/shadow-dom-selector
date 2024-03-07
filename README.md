@@ -2,7 +2,11 @@
 
 A very small JavaScript utility to query DOM elements through the [Shadow DOM] subtrees in a sync or an async way.
 
-[![Deployment Status](https://github.com/elchininet/shadow-dom-selector/actions/workflows/deploy.yaml/badge.svg)](https://github.com/elchininet/shadow-dom-selector/actions/workflows/deploy.yaml) &nbsp; [![Coverage Status](https://coveralls.io/repos/github/elchininet/shadow-dom-selector/badge.svg?branch=master)](https://coveralls.io/github/elchininet/shadow-dom-selector?branch=master) &nbsp; [![npm version](https://badge.fury.io/js/shadow-dom-selector.svg)](https://badge.fury.io/js/shadow-dom-selector) &nbsp; [![downloads](https://img.shields.io/npm/dw/shadow-dom-selector)](https://www.npmjs.com/package/shadow-dom-selector)
+[![Deployment Status](https://github.com/elchininet/shadow-dom-selector/actions/workflows/deploy.yaml/badge.svg)](https://github.com/elchininet/shadow-dom-selector/actions/workflows/deploy.yaml)
+[![Tests](https://github.com/elchininet/shadow-dom-selector/actions/workflows/tests.yaml/badge.svg)](https://github.com/elchininet/shadow-dom-selector/actions/workflows/tests.yaml)
+[![Coverage Status](https://coveralls.io/repos/github/elchininet/shadow-dom-selector/badge.svg?branch=master)](https://coveralls.io/github/elchininet/shadow-dom-selector?branch=master)
+[![npm version](https://badge.fury.io/js/shadow-dom-selector.svg)](https://badge.fury.io/js/shadow-dom-selector)
+[![downloads](https://img.shields.io/npm/dw/shadow-dom-selector)](https://www.npmjs.com/package/shadow-dom-selector)
 
 ## Introduction
 
