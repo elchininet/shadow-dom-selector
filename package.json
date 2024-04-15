@@ -50,7 +50,6 @@
     "test:run": "playwright test",
     "test:open": "playwright test --ui",
     "test:ci": "pnpm clean && start-server-and-test demo http://localhost:3000 test:run",
-    "preinstall": "npx -y only-allow pnpm",
     "prepare": "pnpm build",
     "prepublishOnly": "pnpm lint && pnpm test:ts && pnpm test:ci",
     "version": "git add .",
