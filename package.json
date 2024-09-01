@@ -49,7 +49,7 @@
     "test:ts": "tsc --noEmit",
     "test:run": "playwright test",
     "test:open": "playwright test --ui",
-    "test:ci": "pnpm clean && start-server-and-test demo http://localhost:3000 test:run",
+    "test:ci": "pnpm clean && start-server-and-test 'pnpm demo' http://localhost:3000 'pnpm test:run'",
     "prepare": "pnpm build",
     "prepublishOnly": "pnpm lint && pnpm test:ts && pnpm test:ci",
     "version": "git add .",
