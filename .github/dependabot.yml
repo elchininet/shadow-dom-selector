@@ -8,6 +8,9 @@ updates:
     commit-message:
       prefix: "[Dependencies]"
     ignore:
+      ## Ignoring rollup until the issue with Error: server closed unexpectedly is solved
+      ## It doesn't happen in rollup v4.21.0
+      - dependency-name: rollup
       - dependency-name: "rollup-plugin-serve"
     groups:
       dependencies-dev:
