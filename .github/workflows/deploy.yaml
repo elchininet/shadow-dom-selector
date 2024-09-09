@@ -1,5 +1,9 @@
 name: Deploy
 
+defaults:
+  run:
+    shell: 'script -q /dev/null bash -e {0}'
+
 on:
   push:
     tags:
