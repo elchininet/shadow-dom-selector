@@ -47,31 +47,6 @@ export function getSubtreePaths(
     );
 }
 
-export const getPromisable = <T>(
-    getElement: () => T,
-    check: (element: T) => boolean,
-    retries: number,
-    delay: number,
-): Promise<T | null> => {
-    return new Promise<T>((resolve) => {
-        let attempts = 0;
-        const select = () => {
-            const element: T = getElement();
-            if (check(element)) {
-                resolve(element);
-            } else {
-                attempts++;
-                if (attempts < retries) {
-                    setTimeout(select, delay);
-                } else {
-                    resolve(element);
-                }
-            }
-        };
-        select();
-    });
-};
-
 export function getCannotErrorText(
     method: string,
     insteadMethod?: string
