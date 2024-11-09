@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.1.3] - 2024-11-10
+
+- Remove local `getPromisable` utility and replace it by the `getPromisableResult` utility from `get-promisable-result` package
+
 ## [4.1.2] - 2023-12-19
 
 - Publish the package using npm provenance

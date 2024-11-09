@@ -1,3 +1,4 @@
+import { getPromisableResult } from 'get-promisable-result';
 import { INVALID_SELECTOR } from '@constants';
 import {
     querySelectorInternal,
@@ -7,8 +8,7 @@ import {
 import {
     getSubtreePaths,
     getCannotErrorText,
-    getMustErrorText,
-    getPromisable
+    getMustErrorText
 } from '@utilities';
 
 export function querySelector<E extends Element>(
@@ -124,7 +124,7 @@ export async function asyncQuerySelector<E extends Element = Element>(
     retries: number,
     delay: number
 ): Promise<E | null> {
-    return getPromisable(
+    return getPromisableResult(
         () => querySelector<E | null>(
             selectors,
             root,
@@ -132,8 +132,12 @@ export async function asyncQuerySelector<E extends Element = Element>(
             'asyncShadowRootQuerySelector'
         ),
         (element: E): boolean => !!element,
-        retries,
-        delay
+        {
+            retries,
+            delay,
+            shouldReject: false
+        }
+        
     );
 }
 
@@ -143,15 +147,18 @@ export async function asyncQuerySelectorAll<E extends Element = Element>(
     retries: number,
     delay: number
 ): Promise<NodeListOf<E>> {
-    return getPromisable<NodeListOf<E>>(
+    return getPromisableResult<NodeListOf<E>>(
         () => querySelectorAll<E>(
             selectors,
             root,
             'asyncQuerySelectorAll'
         ),
         (elements: NodeListOf<E>): boolean => !!elements.length,
-        retries,
-        delay
+        {
+            retries,
+            delay,
+            shouldReject: false
+        }
     );
 }
 
@@ -161,7 +168,7 @@ export async function asyncShadowRootQuerySelector(
     retries: number,
     delay: number
 ): Promise<ShadowRoot | null> {
-    return getPromisable<ShadowRoot | null>(
+    return getPromisableResult<ShadowRoot | null>(
         () => shadowRootQuerySelector(
             selectors,
             root,
@@ -169,8 +176,11 @@ export async function asyncShadowRootQuerySelector(
             'asyncQuerySelector'
         ),
         (shadowRoot: ShadowRoot): boolean => !!shadowRoot,
-        retries,
-        delay
+        {
+            retries,
+            delay,
+            shouldReject: false
+        }
     );
 }
 
@@ -207,10 +217,13 @@ export const asyncDeepQuerySelector = <E extends Element = Element>(
     retries: number,
     delay: number,
 ): Promise<NodeListOf<E>> => {
-    return getPromisable<NodeListOf<E>>(
+    return getPromisableResult<NodeListOf<E>>(
         () => deepQuerySelector<E>(root, selector),
         (elements: NodeListOf<E>) => !!elements.length,
-        retries,
-        delay
+        {
+            retries,
+            delay,
+            shouldReject: false
+        }
     );
 };

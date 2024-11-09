@@ -1,9 +1,11 @@
+import { nodeResolve } from '@rollup/plugin-node-resolve';
 import ts from 'rollup-plugin-ts';
 import terser from '@rollup/plugin-terser';
 
 export default [
     {
         plugins: [
+            nodeResolve(),
             ts(),
             terser({
                 output: {
