@@ -197,24 +197,22 @@ Either the async methods or the async dot notation allow you to to specify the a
 
 ## Install
 
-The package needs the [get-promisable-result](https://github.com/elchininet/get-promisable-result) package as a peer dependency.
-
 #### npm
 
 ```bash
-npm install get-promisable-result shadow-dom-selector
+npm install shadow-dom-selector
 ```
 
 #### yarn
 
 ```bash
-yarn add get-promisable-result shadow-dom-selector
+yarn add shadow-dom-selector
 ```
 
 #### PNPM
 
 ```bash
-pnpm add get-promisable-result shadow-dom-selector
+pnpm add shadow-dom-selector
 ```
 
 #### In the browser

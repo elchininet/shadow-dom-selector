@@ -1,5 +1,9 @@
 # Changelog
 
+## [5.0.1] - 2024-11-10
+
+- Remove `get-promisable-result` package as a peer dependency and set it as a dependency
+
 ## [5.0.0] - 2024-11-10
 
 - Set `get-promisable-result` package as a peer dependency and create a separate bundle for web
