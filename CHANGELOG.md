@@ -1,5 +1,9 @@
 # Changelog
 
+## [5.0.0] - 2024-11-10
+
+- Set `get-promisable-result` package as a peer dependency and create a separate bundle for web
+
 ## [4.1.3] - 2024-11-10
 
 - Remove local `getPromisable` utility and replace it by the `getPromisableResult` utility from `get-promisable-result` package
