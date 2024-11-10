@@ -1,6 +1,6 @@
 .DS_Store
 /node_modules
-/dist
+/dist/*
 /demo/scripts/*.js
 /demo/scripts/*.d.ts
 /coverage
@@ -9,3 +9,4 @@
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+!/dist/shadow-dom-selector-web.js

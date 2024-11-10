@@ -197,34 +197,36 @@ Either the async methods or the async dot notation allow you to to specify the a
 
 ## Install
 
+The package needs the [get-promisable-result](https://github.com/elchininet/get-promisable-result) package as a peer dependency.
+
 #### npm
 
 ```bash
-npm install shadow-dom-selector
+npm install get-promisable-result shadow-dom-selector
 ```
 
 #### yarn
 
 ```bash
-yarn add shadow-dom-selector
+yarn add get-promisable-result shadow-dom-selector
 ```
 
 #### PNPM
 
 ```bash
-pnpm add shadow-dom-selector
+pnpm add get-promisable-result shadow-dom-selector
 ```
 
 #### In the browser
 
 It is possible to include a compiled version of the package directly in an HTML file. It will create a global `ShadowDomSelector` object containing all the exported functions that can be accessed from anywhere in your JavaScript code.
 
-1. Copy the JavaScript file `index.js`, located in the root of the `dist/` folder
+1. Copy the JavaScript file `shadow-dom-selector-web.js`, located in the root of the `dist/` folder
 2. Put it in the folder that you prefer in your web server
 3. Include it in your HTML file
 
 ```html
-<script src="wherever/you/want/to/place/index.js"></script>
+<script src="wherever/you/want/to/place/shadow-dom-selector-web.js"></script>
 ```
 
 ```javascript
