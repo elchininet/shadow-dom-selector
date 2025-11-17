@@ -75,5 +75,10 @@
   },
   "dependencies": {
     "get-promisable-result": "^1.0.1"
+  },
+  "pnpm": {
+    "overrides": {
+      "js-yaml@<4.1.1": ">=4.1.1"
+    }
   }
 }
