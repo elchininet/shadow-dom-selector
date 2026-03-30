@@ -3,7 +3,7 @@ import { SHADOW_ROOT_SELECTOR } from '@constants';
 
 const isElement = (param: unknown): param is (Document | Element | ShadowRoot) => {
     return (
-        param &&
+        !!param &&
         (
             param instanceof Document ||
             param instanceof Element ||
