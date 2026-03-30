@@ -91,7 +91,7 @@ export function shadowRootQuerySelector(
 
     const selectorsPaths = getSubtreePaths(selectors, (path: string[]): string[] => {
         const lastSelector = path.pop();
-        if (lastSelector.length) {
+        if (lastSelector!.length) {
             throw new SyntaxError(
                 getMustErrorText(method, insteadMethod)
             );
@@ -118,20 +118,20 @@ export function shadowRootQuerySelector(
 
 }
 
-export async function asyncQuerySelector<E extends Element = Element>(
+export async function asyncQuerySelector<E extends Element>(
     selectors: string,
     root: Document | Element | ShadowRoot,
     retries: number,
     delay: number
 ): Promise<E | null> {
-    return getPromisableResult(
-        () => querySelector<E | null>(
+    return getPromisableResult<E | null>(
+        () => querySelector<E>(
             selectors,
             root,
             'asyncQuerySelector',
             'asyncShadowRootQuerySelector'
         ),
-        (element: E): boolean => !!element,
+        (element: E | null): boolean => !!element,
         {
             retries,
             delay,
@@ -175,7 +175,7 @@ export async function asyncShadowRootQuerySelector(
             'asyncShadowRootQuerySelector',
             'asyncQuerySelector'
         ),
-        (shadowRoot: ShadowRoot): boolean => !!shadowRoot,
+        (shadowRoot: ShadowRoot | null): boolean => !!shadowRoot,
         {
             retries,
             delay,

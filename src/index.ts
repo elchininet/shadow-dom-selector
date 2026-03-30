@@ -26,7 +26,7 @@ export function querySelector<E extends Element = Element>(
         );
     }
     return lib.querySelector(
-        selectors,
+        selectors!,
         rootOrSelector
     );
 }
@@ -54,7 +54,7 @@ export function deepQuerySelector<E extends Element = Element>(
     return (
         lib.deepQuerySelector<E>(
             rootOrSelector,
-            selectors
+            selectors!
         )[0] ||
         null
     );
@@ -78,7 +78,7 @@ export function querySelectorAll<E extends Element = Element>(
         );
     }
     return lib.querySelectorAll(
-        selectors,
+        selectors!,
         rootOrSelector
     );
 }
@@ -102,7 +102,7 @@ export function deepQuerySelectorAll<E extends Element = Element>(
     }
     return lib.deepQuerySelector<E>(
         rootOrSelector,
-        selectors
+        selectors!
     );
 }
 
@@ -124,7 +124,7 @@ export function shadowRootQuerySelector(
         );
     }
     return lib.shadowRootQuerySelector(
-        selectors,
+        selectors!,
         rootOrSelector
     );
 }
@@ -379,8 +379,8 @@ export class AsyncSelector<T extends Document | Element | ShadowRoot> {
                     this._asyncParams
                 );
             });
-        return new AsyncSelector(
-            promisableShadowRoot,
+        return new AsyncSelector<ShadowRoot>(
+            promisableShadowRoot as Promise<ShadowRoot>,
             this._asyncParams
         );
     }
@@ -438,7 +438,7 @@ export class AsyncSelector<T extends Document | Element | ShadowRoot> {
                 );
             });
         return new AsyncSelector<Element>(
-            promisableElement,
+            promisableElement as Promise<NodeListOf<Element>>,
             this._asyncParams
         );
     }
@@ -462,8 +462,8 @@ export class AsyncSelector<T extends Document | Element | ShadowRoot> {
                             return lib.asyncDeepQuerySelector(
                                 child,
                                 selector,
-                                this._asyncParams.retries,
-                                this._asyncParams.delay
+                                this._asyncParams.retries!,
+                                this._asyncParams.delay!
                             );
                         })
                     );
@@ -471,12 +471,12 @@ export class AsyncSelector<T extends Document | Element | ShadowRoot> {
                 return lib.asyncDeepQuerySelector(
                     element,
                     selector,
-                    this._asyncParams.retries,
-                    this._asyncParams.delay
+                    this._asyncParams.retries!,
+                    this._asyncParams.delay!
                 );
             });
         return new AsyncSelector<Element>(
-            promisableElement,
+            promisableElement as Promise<NodeListOf<Element>>,
             this._asyncParams
         );
     }

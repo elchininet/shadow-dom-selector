@@ -28,7 +28,7 @@ export function querySelectorInternal<E extends Element>(
                 foundElement = root.querySelector(path[index]);
             }
         } else {
-            foundElement = foundElement.shadowRoot?.querySelector<E>(`${HOST_SELECTOR} ${path[index]}`) || null;
+            foundElement = foundElement!.shadowRoot?.querySelector<E>(`${HOST_SELECTOR} ${path[index]}`) || null;
         }
         if (foundElement === null) {
             return null;
@@ -49,7 +49,7 @@ export function querySelectorAllInternal<E extends Element>(
     const lastSelector = pathLocal.pop();
     
     if (!pathLocal.length) {
-        return root.querySelectorAll<E>(lastSelector);
+        return root.querySelectorAll<E>(lastSelector!) as NodeListOf<E>;
     }
 
     const lastElement = querySelectorInternal(
