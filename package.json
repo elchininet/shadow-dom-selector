@@ -77,7 +77,10 @@
     "typescript-eslint": "^8.57.2"
   },
   "dependencies": {
-    "get-promisable-result": "^1.0.2"
+    "get-promisable-result": "^2.0.0"
+  },
+  "peerDependencies": {
+    "get-promisable-result": "^2.0.0"
   },
   "pnpm": {
     "overrides": {

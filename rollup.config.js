@@ -5,18 +5,23 @@ import { dts } from 'rollup-plugin-dts';
 import tsConfigPaths from 'rollup-plugin-tsconfig-paths';
 import terser from '@rollup/plugin-terser';
 
+const plugins = [
+    nodeResolve(),
+    ts(),
+    terser({
+        output: {
+            comments: false
+        }
+    })
+];
+
+const input =  'src/index.ts';
+
 export default [
     {
-        plugins: [
-            nodeResolve(),
-            ts(),
-            terser({
-                output: {
-                    comments: false
-                }
-            })
-        ],
-        input: 'src/index.ts',
+        plugins,
+        external: ['get-promisable-result'],
+        input,
         output: [
             {
                 file: packageJson.exports['.'].require.default,
@@ -25,20 +30,24 @@ export default [
             {
                 file: packageJson.exports['.'].import.default,
                 format: 'es'
-            },
-            {
-                file: `dist/shadow-dom-selector-web.js`,
-                format: 'iife',
-                name: 'ShadowDomSelector'
-            }  
+            }
         ]
+    },
+    {
+        plugins,
+        input,
+        output: {
+            file: `dist/shadow-dom-selector-web.js`,
+            format: 'iife',
+            name: 'ShadowDomSelector'
+        }  
     },
     {
         plugins: [
             tsConfigPaths(),
             dts()
         ],
-        input: 'src/index.ts',
+        input,
         output: [
             {
                 file: packageJson.exports['.'].require.types,

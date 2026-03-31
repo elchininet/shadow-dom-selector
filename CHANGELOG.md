@@ -1,5 +1,9 @@
 # Changelog
 
+## [6.1.0] - 2026-03-31
+
+- Restore `get-promisable-result` package as a peer dependency and avoid bundling it with the library
+
 ## [6.0.0] - 2026-03-30
 
 - Migrated to `TypeScript 6`, so the target of the library is now `es6` instead of the previous `es5`
