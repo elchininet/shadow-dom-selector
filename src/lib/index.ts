@@ -12,8 +12,8 @@ import {
 } from '@utilities';
 
 export function querySelector<E extends Element>(
-    selectors: string,
     root: Document | Element | ShadowRoot,
+    selectors: string,
     method = 'querySelector',
     insteadMethod = 'shadowRootQuerySelector'
 ): E | null {
@@ -47,8 +47,8 @@ export function querySelector<E extends Element>(
 }
 
 export function querySelectorAll<E extends Element = Element>(
-    selectors: string,
     root: Document | Element | ShadowRoot,
+    selectors: string,
     method = 'querySelectorAll'
 ): NodeListOf<E> {
     const selectorsPaths = getSubtreePaths(
@@ -83,8 +83,8 @@ export function querySelectorAll<E extends Element = Element>(
 }
 
 export function shadowRootQuerySelector(
-    selectors: string,
     root: Document | Element | ShadowRoot,
+    selectors: string,
     method = 'shadowRootQuerySelector',
     insteadMethod = 'querySelector'
 ): ShadowRoot | null {
@@ -119,15 +119,16 @@ export function shadowRootQuerySelector(
 }
 
 export async function asyncQuerySelector<E extends Element>(
-    selectors: string,
     root: Document | Element | ShadowRoot,
+    selectors: string,
     retries: number,
-    delay: number
+    delay: number,
+    shouldReject: boolean
 ): Promise<E | null> {
     return getPromisableResult<E | null>(
         () => querySelector<E>(
-            selectors,
             root,
+            selectors,
             'asyncQuerySelector',
             'asyncShadowRootQuerySelector'
         ),
@@ -135,43 +136,44 @@ export async function asyncQuerySelector<E extends Element>(
         {
             retries,
             delay,
-            shouldReject: false
+            shouldReject
         }
-        
     );
 }
 
 export async function asyncQuerySelectorAll<E extends Element = Element>(
-    selectors: string,
     root: Document | Element | ShadowRoot,
+    selectors: string,
     retries: number,
-    delay: number
+    delay: number,
+    shouldReject: boolean
 ): Promise<NodeListOf<E>> {
     return getPromisableResult<NodeListOf<E>>(
         () => querySelectorAll<E>(
-            selectors,
             root,
+            selectors,
             'asyncQuerySelectorAll'
         ),
         (elements: NodeListOf<E>): boolean => !!elements.length,
         {
             retries,
             delay,
-            shouldReject: false
+            shouldReject
         }
     );
 }
 
 export async function asyncShadowRootQuerySelector(
-    selectors: string,
     root: Document | Element | ShadowRoot,
+    selectors: string,
     retries: number,
-    delay: number
+    delay: number,
+    shouldReject: boolean
 ): Promise<ShadowRoot | null> {
     return getPromisableResult<ShadowRoot | null>(
         () => shadowRootQuerySelector(
-            selectors,
             root,
+            selectors,
             'asyncShadowRootQuerySelector',
             'asyncQuerySelector'
         ),
@@ -179,7 +181,7 @@ export async function asyncShadowRootQuerySelector(
         {
             retries,
             delay,
-            shouldReject: false
+            shouldReject
         }
     );
 }
@@ -216,6 +218,7 @@ export const asyncDeepQuerySelector = <E extends Element = Element>(
     selector: string,
     retries: number,
     delay: number,
+    shouldReject: boolean
 ): Promise<NodeListOf<E>> => {
     return getPromisableResult<NodeListOf<E>>(
         () => deepQuerySelector<E>(root, selector),
@@ -223,7 +226,7 @@ export const asyncDeepQuerySelector = <E extends Element = Element>(
         {
             retries,
             delay,
-            shouldReject: false
+            shouldReject
         }
     );
 };

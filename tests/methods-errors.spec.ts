@@ -8,10 +8,6 @@ test.beforeEach(async ({ page }) => {
 
 test('querySelector errors tests', async ({ page }) => {
 
-    page.on('pageerror', error => {
-        expect(error.message).toBe('querySelector cannot be used with a selector ending in a shadowRoot');
-    });
-
     const result = await page.evaluate(async () => {
 
         const errors: string[] = [];
@@ -22,14 +18,14 @@ test('querySelector errors tests', async ({ page }) => {
 
         try {
             querySelector('section$ article$');
-        } catch (error) {
-            errors.push(error.toString());
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
         }
 
         try {
             querySelector('$ section$ article');
-        } catch (error) {
-            errors.push(error.toString());
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
         }
 
         try {
@@ -37,8 +33,15 @@ test('querySelector errors tests', async ({ page }) => {
                 document.querySelector('section')!.shadowRoot!,
                 '$ article'
             );
-        } catch (error) {
-            errors.push(error.toString());
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
+        }
+
+        try {
+            // @ts-ignore
+            querySelector([], 123);
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
         }
 
         return errors;
@@ -48,7 +51,8 @@ test('querySelector errors tests', async ({ page }) => {
     expect(result).toMatchObject([
         'SyntaxError: querySelector cannot be used with a selector ending in a shadowRoot ($). If you want to select a shadowRoot, use shadowRootQuerySelector instead.',
         'SyntaxError: You can not select a shadowRoot ($) of the document.',
-        'SyntaxError: You can not select a shadowRoot ($) of a shadowRoot.'
+        'SyntaxError: You can not select a shadowRoot ($) of a shadowRoot.',
+        'TypeError: Wrong parameters have been provided.'
     ]);
 
 });
@@ -65,14 +69,14 @@ test('querySelectorAll errors tests', async ({ page }) => {
 
         try {
             querySelectorAll('section$ article$ ul$');
-        } catch (error) {
-            errors.push(error.toString());
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
         }
 
         try {
             querySelectorAll('$ section$ article$ ul');
-        } catch (error) {
-            errors.push(error.toString());
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
         }
 
         try {
@@ -80,8 +84,15 @@ test('querySelectorAll errors tests', async ({ page }) => {
                 document.querySelector('section')!.shadowRoot!,
                 '$ article'
             );
-        } catch (error) {
-            errors.push(error.toString());
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
+        }
+
+        try {
+            // @ts-ignore
+            querySelectorAll([], 123);
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
         }
 
         return errors;
@@ -91,7 +102,8 @@ test('querySelectorAll errors tests', async ({ page }) => {
     expect(result).toMatchObject([
         'SyntaxError: querySelectorAll cannot be used with a selector ending in a shadowRoot ($).',
         'SyntaxError: You can not select a shadowRoot ($) of the document.',
-        'SyntaxError: You can not select a shadowRoot ($) of a shadowRoot.'
+        'SyntaxError: You can not select a shadowRoot ($) of a shadowRoot.',
+        'TypeError: Wrong parameters have been provided.'
     ]);
 
 });
@@ -108,20 +120,20 @@ test('shadowRootQuerySelector errors tests', async ({ page }) => {
 
         try {
             shadowRootQuerySelector('section$ article$ ul li');
-        } catch (error) {
-            errors.push(error.toString());
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
         }
 
         try {
             shadowRootQuerySelector('$ section$ article$');
-        } catch (error) {
-            errors.push(error.toString());
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
         }
 
         try {
             shadowRootQuerySelector('$');
-        } catch (error) {
-            errors.push(error.toString());
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
         }
 
         try {
@@ -129,8 +141,15 @@ test('shadowRootQuerySelector errors tests', async ({ page }) => {
                 document.querySelector('section')!.shadowRoot!,
                 '$'
             );
-        } catch (error) {
-            errors.push(error.toString());
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
+        }
+
+        try {
+            // @ts-ignore
+            shadowRootQuerySelector([], 123);
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
         }
 
         return errors;
@@ -141,7 +160,8 @@ test('shadowRootQuerySelector errors tests', async ({ page }) => {
         'SyntaxError: shadowRootQuerySelector must be used with a selector ending in a shadowRoot ($). If you don\'t want to select a shadowRoot, use querySelector instead.',
         'SyntaxError: You can not select a shadowRoot ($) of the document.',
         'SyntaxError: You can not select a shadowRoot ($) of the document.',
-        'SyntaxError: You can not select a shadowRoot ($) of a shadowRoot.'
+        'SyntaxError: You can not select a shadowRoot ($) of a shadowRoot.',
+        'TypeError: Wrong parameters have been provided.'
     ]);
 
 });
@@ -158,14 +178,14 @@ test('asyncQuerySelector errors tests', async ({ page }) => {
 
         try {
             await asyncQuerySelector('section$ article$');
-        } catch (error) {
-            errors.push(error.toString());
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
         }
 
         try {
             await asyncQuerySelector('$ section$ article');
-        } catch (error) {
-            errors.push(error.toString());
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
         }
 
         try {
@@ -173,8 +193,31 @@ test('asyncQuerySelector errors tests', async ({ page }) => {
                 document.querySelector('section')!.shadowRoot!,
                 '$ article'
             );
-        } catch (error) {
-            errors.push(error.toString());
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
+        }
+
+        try {
+            // @ts-ignore
+            await asyncQuerySelector([], 123);
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
+        }
+
+        try {
+            await asyncQuerySelector('section.non-existent', { shouldReject: true });
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
+        }
+
+        try {
+            await asyncQuerySelector(
+                document.querySelector('section')!,
+                '.non-existent',
+                { shouldReject: true }
+            );
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
         }
 
         return errors;
@@ -184,7 +227,10 @@ test('asyncQuerySelector errors tests', async ({ page }) => {
     expect(result).toMatchObject([
         'SyntaxError: asyncQuerySelector cannot be used with a selector ending in a shadowRoot ($). If you want to select a shadowRoot, use asyncShadowRootQuerySelector instead.',
         'SyntaxError: You can not select a shadowRoot ($) of the document.',
-        'SyntaxError: You can not select a shadowRoot ($) of a shadowRoot.'
+        'SyntaxError: You can not select a shadowRoot ($) of a shadowRoot.',
+        'TypeError: Wrong parameters have been provided.',
+        'Error: Could not get the result after 10 retries',
+        'Error: Could not get the result after 10 retries'
     ]);
 
 });
@@ -201,14 +247,14 @@ test('asyncQuerySelectorAll errors tests', async ({ page }) => {
 
         try {
             await asyncQuerySelectorAll('section$ article$');
-        } catch (error) {
-            errors.push(error.toString());
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
         }
 
         try {
             await asyncQuerySelectorAll('$ section$ article li');
-        } catch (error) {
-            errors.push(error.toString());
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
         }
 
         try {
@@ -216,8 +262,31 @@ test('asyncQuerySelectorAll errors tests', async ({ page }) => {
                 document.querySelector('section')!.shadowRoot!,
                 '$ article'
             );
-        } catch (error) {
-            errors.push(error.toString());
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
+        }
+
+        try {
+            // @ts-ignore
+            await asyncQuerySelectorAll([], 123);
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
+        }
+
+        try {
+            await asyncQuerySelectorAll('section.non-existent', { shouldReject: true });
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
+        }
+
+        try {
+            await asyncQuerySelectorAll(
+                document.querySelector('section')!,
+                '.non-existent',
+                { shouldReject: true }
+            );
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
         }
 
         return errors;
@@ -227,7 +296,10 @@ test('asyncQuerySelectorAll errors tests', async ({ page }) => {
     expect(result).toMatchObject([
         'SyntaxError: asyncQuerySelectorAll cannot be used with a selector ending in a shadowRoot ($).',
         'SyntaxError: You can not select a shadowRoot ($) of the document.',
-        'SyntaxError: You can not select a shadowRoot ($) of a shadowRoot.'
+        'SyntaxError: You can not select a shadowRoot ($) of a shadowRoot.',
+        'TypeError: Wrong parameters have been provided.',
+        'Error: Could not get the result after 10 retries',
+        'Error: Could not get the result after 10 retries'
     ]);
 
 });
@@ -244,20 +316,20 @@ test('asyncShadowRootQuerySelector errors tests', async ({ page }) => {
 
         try {
             await asyncShadowRootQuerySelector('section$ article$ > delayed-list-container$ ul > li');
-        } catch (error) {
-            errors.push(error.toString());
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
         }
 
         try {
             await asyncShadowRootQuerySelector('$ section$ article$');
-        } catch (error) {
-            errors.push(error.toString());
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
         }
 
         try {
             await asyncShadowRootQuerySelector('$');
-        } catch (error) {
-            errors.push(error.toString());
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
         }
 
         try {
@@ -265,8 +337,31 @@ test('asyncShadowRootQuerySelector errors tests', async ({ page }) => {
                 document.querySelector('section')!.shadowRoot!,
                 '$'
             );
-        } catch (error) {
-            errors.push(error.toString());
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
+        }
+
+        try {
+            // @ts-ignore
+            await asyncShadowRootQuerySelector([], 123);
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
+        }
+
+        try {
+            await asyncShadowRootQuerySelector('section.non-existent$', { shouldReject: true });
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
+        }
+
+        try {
+            await asyncShadowRootQuerySelector(
+                document.querySelector('section')!,
+                '.non-existent$',
+                { shouldReject: true }
+            );
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
         }
 
         return errors;
@@ -277,7 +372,10 @@ test('asyncShadowRootQuerySelector errors tests', async ({ page }) => {
         'SyntaxError: asyncShadowRootQuerySelector must be used with a selector ending in a shadowRoot ($). If you don\'t want to select a shadowRoot, use asyncQuerySelector instead.',
         'SyntaxError: You can not select a shadowRoot ($) of the document.',
         'SyntaxError: You can not select a shadowRoot ($) of the document.',
-        'SyntaxError: You can not select a shadowRoot ($) of a shadowRoot.'
+        'SyntaxError: You can not select a shadowRoot ($) of a shadowRoot.',
+        'TypeError: Wrong parameters have been provided.',
+        'Error: Could not get the result after 10 retries',
+        'Error: Could not get the result after 10 retries'
     ]);
 
 });

@@ -364,6 +364,7 @@ asyncQuerySelector(root, selectors, asyncParams): Promise<Element | null>;
 {
   retries?: number; // how many retries before giving up (defaults to 10)
   delay?: number; // delay between each retry (defaults to 10)
+  shouldReject?: boolean; // if the element is not found, should the promise reject or return null (defaults to false)
 }
 ```
 
@@ -400,6 +401,7 @@ asyncDeepQuerySelector(root, selectors, asyncParams): Promise<Element | null>;
 {
   retries?: number; // how many retries before giving up (defaults to 10)
   delay?: number; // delay between each retry (defaults to 10)
+  shouldReject?: boolean; // if the element is not found, should the promise reject or return null (defaults to false)
 }
 ```
 
@@ -434,6 +436,7 @@ asyncQuerySelectorAll(root, selectors, asyncParams): Promise<NodeListOf<Element>
 {
   retries?: number; // how many retries before giving up (defaults to 10)
   delay?: number; // delay between each retry (defaults to 10)
+  shouldReject?: boolean; // if the element is not found, should the promise reject or return null (defaults to false)
 }
 ```
 
@@ -470,6 +473,7 @@ asyncDeepQuerySelectorAll(root, selectors, asyncParams): Promise<NodeListOf<Elem
 {
   retries?: number; // how many retries before giving up (defaults to 10)
   delay?: number; // delay between each retry (defaults to 10)
+  shouldReject?: boolean; // if the element is not found, should the promise reject or return null (defaults to false)
 }
 ```
 
@@ -504,6 +508,7 @@ asyncShadowRootQuerySelector(root, selectors, asyncParams): Promise<ShadowRoot |
 {
   retries?: number; // how many retries before giving up (defaults to 10)
   delay?: number; // delay between each retry (defaults to 10)
+  shouldReject?: boolean; // if the element is not found, should the promise reject or return null (defaults to false)
 }
 ```
 
@@ -533,6 +538,7 @@ new AsyncSelector(root, asyncParams);
 {
   retries?: number; // how many retries before giving up (defaults to 10)
   delay?: number; // delay between each retry (defaults to 10)
+  shouldReject?: boolean; // if an element is not found, should the promise reject or return null (defaults to false)
 }
 ```
 
