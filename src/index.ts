@@ -237,9 +237,19 @@ export class AsyncSelector<T extends Document | Element | ShadowRoot> {
         return promise
             .then((element: T | NodeListOf<Element> | null) => {
                 if (element instanceof NodeList) {
-                    return element[0] as T || null;
+                    if (element[0]) {
+                        return element[0] as T;
+                    } else if (!this._asyncParams.shouldReject) {
+                        return null;
+                    }
+                    throw new SyntaxError('The "element" method can only be called from a NodeList with elements.');
                 }
-                return element;
+                if (element) {
+                    return element;
+                } else if (!this._asyncParams.shouldReject) {
+                    return null;
+                }
+                throw new SyntaxError('The "element" method can only be called from a non-null element.');
             });
     }
 
@@ -311,7 +321,7 @@ export class AsyncSelector<T extends Document | Element | ShadowRoot> {
                 } else if (!this._asyncParams.shouldReject) {
                     return null;
                 }
-                throw new SyntaxError('The "eq" method only be called in a NodeList element.');
+                throw new SyntaxError('The "eq" method can only be called in a NodeList element.');
             });
     }
 
@@ -326,7 +336,10 @@ export class AsyncSelector<T extends Document | Element | ShadowRoot> {
                         element.length === 0
                     )
                 ) {
-                    return null;
+                    if (!this._asyncParams.shouldReject) {
+                        return null;
+                    }
+                    throw new SyntaxError('The "query" method can only be called from a defined element.');
                 }
                 if (element instanceof NodeList) {
                     return asyncQuerySelectorAll(
@@ -358,7 +371,10 @@ export class AsyncSelector<T extends Document | Element | ShadowRoot> {
                         element.length === 0
                     )
                 ) {
-                    return null;
+                    if (!this._asyncParams.shouldReject) {
+                        return null;
+                    }
+                    throw new SyntaxError('The "deepQuery" method can only be called from a defined element.');
                 }
                 if (element instanceof NodeList) {
                     return Promise.race(
