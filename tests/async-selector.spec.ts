@@ -472,6 +472,24 @@ test('Non existent elements with errors', async ({ page }) => {
             asyncParams
         );
 
+        const selectorFromNullPromise = new AsyncSelector(
+            new Promise<Element>((resolve) => {
+                setTimeout(() => {
+                    resolve(document.querySelector('article')!);
+                }, 500);
+            }),
+            asyncParams
+        );
+
+        const selectorFromEmptyNodeListPromise = new AsyncSelector(
+            new Promise<NodeListOf<Element>>((resolve) => {
+                setTimeout(() => {
+                    resolve(document.querySelectorAll('.non-existent'));
+                }, 500);
+            }),
+            asyncParams
+        );
+
         try {
             await selector.query('article').element;
         } catch (error: unknown) {
@@ -532,6 +550,30 @@ test('Non existent elements with errors', async ({ page }) => {
             errors.push((error as Error).toString());
         }
 
+        try {
+            await selectorFromNullPromise.element;
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
+        }
+
+        try {
+            await selectorFromNullPromise.query('section').element;
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
+        }
+
+        try {
+            await selectorFromNullPromise.deepQuery('section').element;
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
+        }
+
+        try {
+            await selectorFromEmptyNodeListPromise.element;
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
+        }
+
         return errors;
 
     });
@@ -544,9 +586,13 @@ test('Non existent elements with errors', async ({ page }) => {
         'SyntaxError: The "$" method can only be called in an element with a ShadowRoot.',
         'SyntaxError: The "$" method can only be called in an element with a ShadowRoot.',
         'SyntaxError: The "all" method can only be called in a NodeList element.',
-        'SyntaxError: The "eq" method only be called in a NodeList element.',
+        'SyntaxError: The "eq" method can only be called in a NodeList element.',
         'SyntaxError: Could not get any element at index 1.',
-        'Error: Could not get the result after 5 retries'
+        'Error: Could not get the result after 5 retries',
+        'SyntaxError: The "element" method can only be called from a non-null element.',
+        'SyntaxError: The "query" method can only be called from a defined element.',
+        'SyntaxError: The "deepQuery" method can only be called from a defined element.',
+        'SyntaxError: The "element" method can only be called from a NodeList with elements.'
     ]);
 
 });

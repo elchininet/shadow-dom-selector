@@ -1,5 +1,9 @@
 # Changelog
 
+## [6.2.1] - 2026-05-09
+
+- Covered more error cases when the "shouldReject" property of the "asyncParams" parameter is true.
+
 ## [6.2.0] - 2026-05-09
 
 - Added a new "shouldReject" property to the "asyncParams" parameter. This property will decide what happens if an element is not found. By default it is `false` so the promises will not reject and they will resolve in a `null` or an empty `NodeList` value. If it is set to `true`, the promises will reject in these cases.
