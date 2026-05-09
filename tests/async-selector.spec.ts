@@ -533,6 +533,12 @@ test('Non existent elements with errors', async ({ page }) => {
         }
 
         try {
+            await selectorFromEmptyNodeListPromise.all;
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
+        }
+
+        try {
             await selector.eq(0);
         } catch (error: unknown) {
             errors.push((error as Error).toString());
@@ -586,6 +592,7 @@ test('Non existent elements with errors', async ({ page }) => {
         'SyntaxError: The "$" method can only be called in an element with a ShadowRoot.',
         'SyntaxError: The "$" method can only be called in an element with a ShadowRoot.',
         'SyntaxError: The "all" method can only be called in a NodeList element.',
+        'SyntaxError: The "all" method can only be called in a valid element.',
         'SyntaxError: The "eq" method can only be called in a NodeList element.',
         'SyntaxError: Could not get any element at index 1.',
         'Error: Could not get the result after 5 retries',
