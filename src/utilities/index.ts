@@ -1,5 +1,19 @@
 import { AsyncParams } from '@types';
-import { SHADOW_ROOT_SELECTOR } from '@constants';
+import {
+    DEFAULT_RETRIES,
+    DEFAULT_DELAY,
+    DEFAULT_SHOULD_REJECT,
+    SHADOW_ROOT_SELECTOR,
+    WRONG_PARAMETERS_ERROR
+} from '@constants';
+
+export const getDocumentShadowRootError = (): string => `You can not select a shadowRoot (${SHADOW_ROOT_SELECTOR}) of the document.`;
+
+export const getShadowRootShadowRootError = (): string => `You can not select a shadowRoot (${SHADOW_ROOT_SELECTOR}) of a shadowRoot.`;
+
+export const isString = (value: unknown): value is string => typeof value === 'string';
+
+export const isObject = <T = Record<string, unknown>>(variable: unknown): variable is T => Object.prototype.toString.call(variable) === '[object Object]';
 
 const isElement = (param: unknown): param is (Document | Element | ShadowRoot) => {
     return (
@@ -12,14 +26,72 @@ const isElement = (param: unknown): param is (Document | Element | ShadowRoot) =
     );
 };
 
-export const isParamsWithRoot = (
-    params: unknown[]
-): params is [Document | Element | ShadowRoot, string, AsyncParams?] => {
-    const [param1, param2] = params;
+export const isAsyncPrams = (value: unknown): value is AsyncParams => {
+    const defaultAsyncParams = ['retries', 'delay', 'shouldReject'];
     return (
-        isElement(param1) &&
-        typeof param2 === 'string'
+        isObject(value) &&
+        (
+            Object.keys(value).length === 0 ||
+            Object.keys(value).every((key: string) => defaultAsyncParams.includes(key))
+        )
     );
+};
+
+export const getQueryParams = (
+    firstParam: Document | Element | ShadowRoot | string,
+    secondParam?: string
+): [Document | Element | ShadowRoot, string] => {
+    if (isString(firstParam)) {
+        return [ document, firstParam ];
+    }
+    if (isElement(firstParam) && isString(secondParam)) {
+        return [firstParam, secondParam];
+    }
+    throw new TypeError(WRONG_PARAMETERS_ERROR);
+};
+
+export const getAsyncQueryParams = (
+    firstParam: Document | Element | ShadowRoot | string,
+    secondParam?: AsyncParams | string,
+    thirdParameter?: AsyncParams
+): [Document | Element | ShadowRoot, string, number, number, boolean] => {
+    if (isString(firstParam)) {
+        if (isAsyncPrams(secondParam)) {
+            return [
+                document,
+                firstParam,
+                secondParam.retries ?? DEFAULT_RETRIES,
+                secondParam.delay ?? DEFAULT_DELAY,
+                secondParam.shouldReject ?? DEFAULT_SHOULD_REJECT
+            ];
+        }
+        return [
+            document,
+            firstParam,
+            DEFAULT_RETRIES,
+            DEFAULT_DELAY,
+            DEFAULT_SHOULD_REJECT
+        ];
+    }
+    if (isElement(firstParam) && isString(secondParam)) {
+        if (isAsyncPrams(thirdParameter)) {
+            return [
+                firstParam,
+                secondParam,
+                thirdParameter.retries ?? DEFAULT_RETRIES,
+                thirdParameter.delay ?? DEFAULT_DELAY,
+                thirdParameter.shouldReject ?? DEFAULT_SHOULD_REJECT
+            ];
+        }
+        return [
+            firstParam,
+            secondParam,
+            DEFAULT_RETRIES,
+            DEFAULT_DELAY,
+            DEFAULT_SHOULD_REJECT
+        ];
+    }
+    throw new TypeError(WRONG_PARAMETERS_ERROR);
 };
 
 function getSelectorsArray(selectors: string): string[] {
@@ -70,12 +142,4 @@ export function getElementPromise<T extends Document | Element | ShadowRoot>(
     return element instanceof Promise
         ? element
         : Promise.resolve(element);
-}
-
-export function getDocumentShadowRootError(): string {
-    return `You can not select a shadowRoot (${SHADOW_ROOT_SELECTOR}) of the document.`;
-}
-
-export function getShadowRootShadowRootError(): string {
-    return `You can not select a shadowRoot (${SHADOW_ROOT_SELECTOR}) of a shadowRoot.`;
 }

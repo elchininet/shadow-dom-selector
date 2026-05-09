@@ -351,20 +351,23 @@ test('Inherited params', async ({ page }) => {
 
         const selector = new AsyncSelector({
             retries: 7,
-            delay: 13
+            delay: 13,
+            shouldReject: true
         });
 
         const query = selector.query('section').$.asyncParams;
 
         return [
-            Object.keys(query).length === 2,
+            Object.keys(query).length === 3,
             query.retries === 7,
-            query.delay === 13
+            query.delay === 13,
+            query.shouldReject === true
         ];
 
     });
 
     expect(result).toMatchObject([
+        true,
         true,
         true,
         true
@@ -435,6 +438,115 @@ test('Non existent elements', async ({ page }) => {
         true,
         true,
         true
+    ]);
+
+});
+
+test('Non existent elements with errors', async ({ page }) => {
+
+    const result = await page.evaluate(async () => {
+
+        const errors: string[] = [];
+
+        const AsyncSelector = window.ShadowDomSelector.AsyncSelector;
+
+        const asyncParams = {
+            delay: 5,
+            retries: 5,
+            shouldReject: true
+        };
+
+        const selector = new AsyncSelector(asyncParams);
+
+        const selectorFromSection = new AsyncSelector(
+            document.querySelector('section')!.shadowRoot!,
+            asyncParams
+        );
+
+        const selectorFromDelayedSection = new AsyncSelector(
+            new Promise<ShadowRoot>((resolve) => {
+                setTimeout(() => {
+                    resolve(document.querySelector('section')!.shadowRoot!);
+                }, 500);
+            }),
+            asyncParams
+        );
+
+        try {
+            await selector.query('article').element;
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
+        }
+
+        try {
+            await selector.query('section').query('div').element;
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
+        }
+
+        try {
+            await selector.$.element;
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
+        }
+
+        try {
+            await selector.query('section').$.$.element;
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
+        }
+
+        try {
+            await selectorFromSection.$.element;
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
+        }
+
+        try {
+            await selectorFromDelayedSection.$.element;
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
+        }
+
+        try {
+            await selector.all;
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
+        }
+
+        try {
+            await selector.eq(0);
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
+        }
+
+        try {
+            await selectorFromSection.query('h1').eq(1);
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
+        }
+
+        try {
+            await selector.query('section').$.deepQuery('h3').element;
+        } catch (error: unknown) {
+            errors.push((error as Error).toString());
+        }
+
+        return errors;
+
+    });
+
+    expect(result).toMatchObject([
+        'Error: Could not get the result after 5 retries',
+        'Error: Could not get the result after 5 retries',
+        'SyntaxError: The "$" method can only be called in an element with a ShadowRoot.',
+        'SyntaxError: The "$" method can only be called in an element with a ShadowRoot.',
+        'SyntaxError: The "$" method can only be called in an element with a ShadowRoot.',
+        'SyntaxError: The "$" method can only be called in an element with a ShadowRoot.',
+        'SyntaxError: The "all" method can only be called in a NodeList element.',
+        'SyntaxError: The "eq" method only be called in a NodeList element.',
+        'SyntaxError: Could not get any element at index 1.',
+        'Error: Could not get the result after 5 retries'
     ]);
 
 });
