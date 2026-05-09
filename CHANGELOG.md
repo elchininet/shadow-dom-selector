@@ -1,5 +1,9 @@
 # Changelog
 
+## [6.2.2] - 2026-05-09
+
+- Covered one more case of error when the "shouldReject" property of the "asyncParams" parameter is true.
+
 ## [6.2.1] - 2026-05-09
 
 - Covered more error cases when the "shouldReject" property of the "asyncParams" parameter is true.

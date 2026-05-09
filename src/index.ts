@@ -295,6 +295,9 @@ export class AsyncSelector<T extends Document | Element | ShadowRoot> {
         return promise
             .then((element: T | NodeListOf<Element> | null) => {
                 if (element instanceof NodeList) {
+                    if (element.length === 0 && this._asyncParams.shouldReject) {
+                        throw new SyntaxError('The "all" method can only be called in a valid element.');
+                    }
                     return element;
                 } else if (!this._asyncParams.shouldReject) {
                     return document.querySelectorAll(INVALID_SELECTOR);
