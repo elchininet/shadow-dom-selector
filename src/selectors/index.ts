@@ -1,12 +1,16 @@
+import { Return, Root } from '@types';
 import { HOST_SELECTOR } from '@constants';
-import { getDocumentShadowRootError, getShadowRootShadowRootError } from '@utilities';
+import {
+    getDocumentShadowRootError,
+    getShadowRootShadowRootError
+} from '@utilities';
 
 export function querySelectorInternal<E extends Element>(
     path: string[],
-    root: Document | Element | ShadowRoot,
-): E | null {
+    root: Root,
+): Return<E> {
 
-    let foundElement: E | null = null;
+    let foundElement: Return<E> = null;
 
     const total = path.length;
 
@@ -41,8 +45,8 @@ export function querySelectorInternal<E extends Element>(
 
 export function querySelectorAllInternal<E extends Element>(
     path: string[],
-    root: Document | Element | ShadowRoot
-): NodeListOf<E> | null {
+    root: Root
+): Return<NodeListOf<E>> {
 
     const pathLocal = [...path];
 
@@ -66,8 +70,8 @@ export function querySelectorAllInternal<E extends Element>(
 
 export function shadowRootQuerySelectorInternal(
     path: string[],
-    root: Document | Element | ShadowRoot
-): ShadowRoot | null {
+    root: Root
+): Return<ShadowRoot> {
 
     if (
         path.length === 1 &&
