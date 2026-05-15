@@ -1,4 +1,8 @@
-import { AsyncParams } from '@types';
+import {
+    AsyncParams,
+    Return,
+    Root
+} from '@types';
 import {
     DEFAULT_RETRIES,
     DEFAULT_DELAY,
@@ -15,7 +19,7 @@ export const isString = (value: unknown): value is string => typeof value === 's
 
 export const isObject = <T = Record<string, unknown>>(variable: unknown): variable is T => Object.prototype.toString.call(variable) === '[object Object]';
 
-const isElement = (param: unknown): param is (Document | Element | ShadowRoot) => {
+const isElement = (param: unknown): param is Root => {
     return (
         !!param &&
         (
@@ -38,9 +42,9 @@ export const isAsyncPrams = (value: unknown): value is AsyncParams => {
 };
 
 export const getQueryParams = (
-    firstParam: Document | Element | ShadowRoot | string,
+    firstParam: Root | string,
     secondParam?: string
-): [Document | Element | ShadowRoot, string] => {
+): [Root, string] => {
     if (isString(firstParam)) {
         return [ document, firstParam ];
     }
@@ -51,10 +55,10 @@ export const getQueryParams = (
 };
 
 export const getAsyncQueryParams = (
-    firstParam: Document | Element | ShadowRoot | string,
+    firstParam: Root | string,
     secondParam?: AsyncParams | string,
     thirdParameter?: AsyncParams
-): [Document | Element | ShadowRoot, string, number, number, boolean] => {
+): [Root, string, number, number, boolean] => {
     if (isString(firstParam)) {
         if (isAsyncPrams(secondParam)) {
             return [
@@ -136,9 +140,9 @@ export function getMustErrorText(
     return `${method} must be used with a selector ending in a shadowRoot (${SHADOW_ROOT_SELECTOR}). If you don't want to select a shadowRoot, use ${insteadMethod} instead.`;
 }
 
-export function getElementPromise<T extends Document | Element | ShadowRoot>(
-    element: T | Promise<NodeListOf<Element> | T | null>
-): Promise<T | NodeListOf<Element> | null> {
+export function getElementPromise<T extends Root>(
+    element: T | Promise<NodeListOf<Element> | Return<T>>
+): Promise<NodeListOf<Element> | Return<T>> {
     return element instanceof Promise
         ? element
         : Promise.resolve(element);
