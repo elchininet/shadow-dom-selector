@@ -1,5 +1,9 @@
 # Changelog
 
+## [6.2.3] - 2026-06-26
+
+- Fix a bug that provoked that an asyncParams parameter got ignored if it didn't contained exactly all its parameters. In these cases, the default values (10 and 10 respectively were used).
+
 ## [6.2.2] - 2026-05-09
 
 - Covered one more case of error when the "shouldReject" property of the "asyncParams" parameter is true.
