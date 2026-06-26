@@ -36,7 +36,7 @@ export const isAsyncPrams = (value: unknown): value is AsyncParams => {
         isObject(value) &&
         (
             Object.keys(value).length === 0 ||
-            Object.keys(value).every((key: string) => defaultAsyncParams.includes(key))
+            defaultAsyncParams.some((key: string) => key in value)
         )
     );
 };

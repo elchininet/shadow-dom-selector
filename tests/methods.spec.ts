@@ -324,6 +324,20 @@ test('asyncQuerySelector tests', async ({ page }) => {
         );
         const query12 = await asyncQuerySelector('#section$ .article$ > ul$ li');
 
+        const start = Date.now();
+
+        const query13 = await asyncQuerySelector(
+            document.querySelector('section')!,
+            '$ .non-exitent',
+            {
+                delay: 50,
+                retries: 50,
+                other: 'other'
+            }
+        );
+
+        const end = Date.now() - start;
+
         return [
             query1 !== null,
             query1 === document.querySelector('section'),
@@ -337,12 +351,16 @@ test('asyncQuerySelector tests', async ({ page }) => {
             query9 === document.querySelector('section')!.shadowRoot!.querySelector('article')!.shadowRoot!.querySelector('ul > li'),
             query10 === document.querySelector('section')!.shadowRoot!.querySelector('article')!.shadowRoot!.querySelector('li:nth-of-type(2)'),
             query11 === null,
-            query12 === null
+            query12 === null,
+            query13 === null,
+            end > 150
         ];
 
     });
 
     expect(result).toMatchObject([
+        true,
+        true,
         true,
         true,
         true,
