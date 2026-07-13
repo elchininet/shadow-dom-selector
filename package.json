@@ -64,8 +64,8 @@
     "@rollup/plugin-terser": "^1.0.0",
     "@rollup/plugin-typescript": "^12.3.0",
     "@types/eslint": "^9.6.1",
-    "@types/node": "^26.1.0",
-    "eslint": "^10.6.0",
+    "@types/node": "^26.1.1",
+    "eslint": "^10.7.0",
     "globals": "^17.7.0",
     "nyc": "^18.0.0",
     "playwright-test-coverage": "^1.2.12",
@@ -76,12 +76,13 @@
     "rollup-plugin-tsconfig-paths": "^1.5.2",
     "tslib": "^2.8.1",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.62.1"
+    "typescript-eslint": "^8.63.0"
   },
   "dependencies": {
     "get-promisable-result": "^2.0.0"
   },
   "peerDependencies": {
     "get-promisable-result": "^2.0.0"
-  }
+  },
+  "packageManager": "pnpm@11.11.0"
 }
