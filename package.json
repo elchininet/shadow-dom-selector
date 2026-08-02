@@ -15,6 +15,7 @@
     "javascript-library",
     "library"
   ],
+  "type": "module",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
@@ -40,9 +41,9 @@
     "url": "git+https://github.com/elchininet/shadow-dom-selector"
   },
   "scripts": {
-    "build": "rollup --config rollup.config.js --bundleConfigAsCjs",
+    "build": "rollup --config rollup.config.mjs",
     "clean": "rm -rf dist .nyc_output coverage || true",
-    "demo": "rollup --config rollup.test.config.js --bundleConfigAsCjs -w",
+    "demo": "rollup --config rollup.test.config.mjs -w",
     "coverage:report": "nyc report --reporter=lcov --reporter=text-summary",
     "lint": "eslint \"src/**/*.ts\" \"demo/**/*.ts\" \"tests/**/*.ts\"",
     "lint:fix": "pnpm lint --fix",
