@@ -80,10 +80,10 @@
     "typescript-eslint": "^8.68.0"
   },
   "dependencies": {
-    "get-promisable-result": "^2.0.0"
+    "get-promisable-result": "^2.1.0"
   },
   "peerDependencies": {
-    "get-promisable-result": "^2.0.0"
+    "get-promisable-result": "^2.1.0"
   },
   "packageManager": "pnpm@11.15.0"
 }
