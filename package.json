@@ -16,14 +16,14 @@
     "library"
   ],
   "type": "module",
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
   "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "require": {
         "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
+        "default": "./dist/index.cjs"
       },
       "import": {
         "types": "./dist/esm/index.d.ts",
@@ -80,10 +80,10 @@
     "typescript-eslint": "^8.73.0"
   },
   "dependencies": {
-    "get-promisable-result": "^2.1.0"
+    "get-promisable-result": "^2.1.1"
   },
   "peerDependencies": {
-    "get-promisable-result": "^2.1.0"
+    "get-promisable-result": "^2.1.1"
   },
   "packageManager": "pnpm@11.15.0"
 }
